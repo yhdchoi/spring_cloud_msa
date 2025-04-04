@@ -1,0 +1,17 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: fiorano-vc
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PWD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${MARIADB_UN}
+      MYSQL_PASSWORD: ${MARIADB_PWD}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    restart: unless-stopped
+
+
