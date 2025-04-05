@@ -1,4 +1,4 @@
-package com.yhdc.video_catalog_server;
+package com.yhdc.video_catalog_server.transaction;
 
 import com.yhdc.video_catalog_server.data.VideoInfo;
 import com.yhdc.video_catalog_server.data.VideoInfoRepository;
@@ -16,14 +16,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.yhdc.video_catalog_server.transaction.Constants.VIDEO_BASE_DIR;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class VideoInfoServiceImpl {
-
-    private static final String VIDEO_BASE_DIR = "classpath:videos/";
+public class VideoInfoServiceImpl implements VideoInfoService {
 
     private final VideoInfoRepository videoInfoRepository;
+    private final DataConverter dataConverter;
 
 
     /**
@@ -32,18 +33,11 @@ public class VideoInfoServiceImpl {
      * @param videoInfoSaveRecordList
      * @implNote
      */
+    @Override
     @Transactional
     public List<VideoInfo> createVideoInfo(List<VideoInfoSaveRecord> videoInfoSaveRecordList) {
-        List<VideoInfo> videoInfoList = videoInfoSaveRecordList.stream().map(this::convertVideoInfoDtoToVideoInfo).toList();
+        List<VideoInfo> videoInfoList = videoInfoSaveRecordList.stream().map(dataConverter::convertVideoInfoDtoToVideoInfo).toList();
         return videoInfoRepository.saveAll(videoInfoList);
-    }
-
-    private VideoInfo convertVideoInfoDtoToVideoInfo(VideoInfoSaveRecord videoInfoSaveRecord) {
-        VideoInfo videoInfo = new VideoInfo();
-        videoInfo.setTitle(videoInfoSaveRecord.title());
-        videoInfo.setDescription(videoInfoSaveRecord.description());
-        videoInfo.setFilePath(VIDEO_BASE_DIR + videoInfoSaveRecord.videoTitleExt());
-        return videoInfo;
     }
 
 
@@ -52,6 +46,7 @@ public class VideoInfoServiceImpl {
      *
      * @return
      */
+    @Override
     @Transactional(readOnly = true)
     public List<VideoInfo> getVideoInfoList() {
         return videoInfoRepository.findAll();
@@ -64,6 +59,7 @@ public class VideoInfoServiceImpl {
      * @param videoInfoId
      * @return
      */
+    @Override
     @Transactional(readOnly = true)
     public String getVideoPathByVideoInfoId(String videoInfoId) {
         Optional<VideoInfo> videoInfoOptional = videoInfoRepository.findById(UUID.fromString(videoInfoId));
@@ -84,6 +80,7 @@ public class VideoInfoServiceImpl {
      * @param videoInfoUpdateRecord
      * @implNote
      */
+    @Override
     @Transactional
     public ResponseEntity<?> updateVideoInfo(VideoInfoUpdateRecord videoInfoUpdateRecord) {
         Optional<VideoInfo> videoInfoOptional = videoInfoRepository.findById(UUID.fromString(videoInfoUpdateRecord.videoInfoId()));
@@ -93,7 +90,7 @@ public class VideoInfoServiceImpl {
             videoInfo.setDescription(videoInfoUpdateRecord.description());
             videoInfo.setFilePath(VIDEO_BASE_DIR + videoInfoUpdateRecord.videoPath());
 
-            VideoInfoDto response = convertVideoInfoToVideoInfoDto(videoInfo);
+            VideoInfoDto response = dataConverter.convertVideoInfoToVideoInfoDto(videoInfo);
             log.info("videoInfo: {}", videoInfo);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
@@ -101,12 +98,5 @@ public class VideoInfoServiceImpl {
         }
     }
 
-    private VideoInfoDto convertVideoInfoToVideoInfoDto(VideoInfo videoInfo) {
-        VideoInfoDto videoInfoDto = new VideoInfoDto();
-        videoInfoDto.setTitle(videoInfo.getTitle());
-        videoInfoDto.setDescription(videoInfo.getDescription());
-        videoInfoDto.setFilePath(videoInfo.getFilePath());
-        return videoInfoDto;
-    }
 
 }

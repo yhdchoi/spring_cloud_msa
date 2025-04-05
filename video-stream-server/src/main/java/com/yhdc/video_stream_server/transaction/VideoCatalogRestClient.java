@@ -9,14 +9,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
+import static com.yhdc.video_stream_server.transaction.Constants.VIDEO_CATALOG_SERVER_URI;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class VideoCatalogComponent {
+public class VideoCatalogRestClient {
 
     private final RestTemplate restTemplate;
 
-    private static final String VIDEO_CATALOG_SERVER_URI = "http://video-catalog-server";
 
     public String loadVideoPath(String videoInfoId) {
 

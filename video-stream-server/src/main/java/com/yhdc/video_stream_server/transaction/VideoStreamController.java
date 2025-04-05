@@ -16,7 +16,7 @@ import java.io.IOException;
 public class VideoStreamController {
 
     private final VideoStreamServiceImpl videoStreamService;
-    private final VideoCatalogComponent videoCatalogComponent;
+    private final VideoCatalogRestClient videoCatalogRestClient;
 
 
     /**
@@ -39,7 +39,7 @@ public class VideoStreamController {
      */
     @GetMapping("/video-stream/videoInfoId")
     public ResponseEntity<StreamingResponseBody> streamVideoInfo(@RequestParam String videoInfoId) {
-        final String videoPath = videoCatalogComponent.loadVideoPath(videoInfoId);
+        final String videoPath = videoCatalogRestClient.loadVideoPath(videoInfoId);
         return videoStreamService.getVideoStream(videoPath);
     }
 

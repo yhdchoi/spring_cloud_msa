@@ -1,4 +1,4 @@
-package com.yhdc.video_catalog_server;
+package com.yhdc.video_catalog_server.transaction;
 
 import com.yhdc.video_catalog_server.data.VideoInfo;
 import com.yhdc.video_catalog_server.object.VideoInfoSaveRecord;

@@ -14,7 +14,7 @@ import java.io.*;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class VideoStreamServiceImpl {
+public class VideoStreamServiceImpl implements VideoStreamService {
 
     private final ResourceLoader resourceLoader;
 
@@ -24,9 +24,10 @@ public class VideoStreamServiceImpl {
      * @param videoPath
      * @implNote
      */
+    @Override
     public ResponseEntity<StreamingResponseBody> getVideoStream(String videoPath) {
         try {
-            Resource resource = resourceLoader.getResource( videoPath);
+            Resource resource = resourceLoader.getResource(videoPath);
             File file = resource.getFile();
             if (!file.isFile()) {
                 log.error("Video file not found path: {}", videoPath);
