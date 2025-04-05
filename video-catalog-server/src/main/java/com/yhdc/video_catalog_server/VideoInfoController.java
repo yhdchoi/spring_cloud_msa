@@ -2,7 +2,9 @@ package com.yhdc.video_catalog_server;
 
 import com.yhdc.video_catalog_server.data.VideoInfo;
 import com.yhdc.video_catalog_server.object.VideoInfoDto;
+import com.yhdc.video_catalog_server.object.VideoInfoUpdateRecord;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,9 +25,21 @@ public class VideoInfoController {
         return videoInfoService.getVideoInfoList();
     }
 
+
+    /**
+     * LOAD VIDEO PATH BY VIDEO INFO ID
+     *
+     * @param videoInfoId
+     * @apiNote Used by the video stream server
+     */
     @GetMapping("/video-info/find-path")
     public String findVideoInfoByVideoInfoId(@RequestParam(name = "videoInfoId") String videoInfoId) {
         return videoInfoService.getVideoPathByVideoInfoId(videoInfoId);
+    }
+
+    @PutMapping("/video-info/update")
+    public ResponseEntity<?> updateVideoInfo(@RequestBody VideoInfoUpdateRecord videoInfoUpdateRecord) {
+        return videoInfoService.updateVideoInfo(videoInfoUpdateRecord);
     }
 
 }

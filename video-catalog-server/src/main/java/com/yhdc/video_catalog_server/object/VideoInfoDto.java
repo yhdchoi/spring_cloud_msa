@@ -1,12 +1,16 @@
 package com.yhdc.video_catalog_server.object;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class VideoInfoDto {
 
-    private final String title;
-    private final String description;
-    private final String filePath;
+    private String title;
+    private String description;
+    private String filePath;
 
 }
