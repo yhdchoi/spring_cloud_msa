@@ -1,7 +1,7 @@
 package com.yhdc.video_catalog_server;
 
 import com.yhdc.video_catalog_server.data.VideoInfo;
-import com.yhdc.video_catalog_server.object.VideoInfoDto;
+import com.yhdc.video_catalog_server.object.VideoInfoSaveRecord;
 import com.yhdc.video_catalog_server.object.VideoInfoUpdateRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +16,8 @@ public class VideoInfoController {
     private final VideoInfoServiceImpl videoInfoService;
 
     @PostMapping("/video-info/save")
-    public List<VideoInfo> saveVideoInfo(@RequestBody List<VideoInfoDto> videoInfoDtoList) {
-        return videoInfoService.createVideoInfo(videoInfoDtoList);
+    public List<VideoInfo> saveVideoInfo(@RequestBody List<VideoInfoSaveRecord> videoInfoSaveRecordList) {
+        return videoInfoService.createVideoInfo(videoInfoSaveRecordList);
     }
 
     @GetMapping("/video-info/list")

@@ -3,6 +3,7 @@ package com.yhdc.video_catalog_server;
 import com.yhdc.video_catalog_server.data.VideoInfo;
 import com.yhdc.video_catalog_server.data.VideoInfoRepository;
 import com.yhdc.video_catalog_server.object.VideoInfoDto;
+import com.yhdc.video_catalog_server.object.VideoInfoSaveRecord;
 import com.yhdc.video_catalog_server.object.VideoInfoUpdateRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,20 +29,20 @@ public class VideoInfoServiceImpl {
     /**
      * SAVE VIDEO INFO
      *
-     * @param videoInfoDtoList
+     * @param videoInfoSaveRecordList
      * @implNote
      */
     @Transactional
-    public List<VideoInfo> createVideoInfo(List<VideoInfoDto> videoInfoDtoList) {
-        List<VideoInfo> videoInfoList = videoInfoDtoList.stream().map(this::convertVideoInfoDtoToVideoInfo).toList();
+    public List<VideoInfo> createVideoInfo(List<VideoInfoSaveRecord> videoInfoSaveRecordList) {
+        List<VideoInfo> videoInfoList = videoInfoSaveRecordList.stream().map(this::convertVideoInfoDtoToVideoInfo).toList();
         return videoInfoRepository.saveAll(videoInfoList);
     }
 
-    private VideoInfo convertVideoInfoDtoToVideoInfo(VideoInfoDto videoInfoDto) {
+    private VideoInfo convertVideoInfoDtoToVideoInfo(VideoInfoSaveRecord videoInfoSaveRecord) {
         VideoInfo videoInfo = new VideoInfo();
-        videoInfo.setTitle(videoInfoDto.getTitle());
-        videoInfo.setDescription(videoInfoDto.getDescription());
-        videoInfo.setFilePath(VIDEO_BASE_DIR + videoInfoDto.getFilePath());
+        videoInfo.setTitle(videoInfoSaveRecord.title());
+        videoInfo.setDescription(videoInfoSaveRecord.description());
+        videoInfo.setFilePath(VIDEO_BASE_DIR + videoInfoSaveRecord.videoTitleExt());
         return videoInfo;
     }
 
