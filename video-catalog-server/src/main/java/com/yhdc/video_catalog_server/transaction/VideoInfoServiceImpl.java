@@ -67,7 +67,7 @@ public class VideoInfoServiceImpl implements VideoInfoService {
             VideoInfo videoInfo = videoInfoOptional.get();
 
             log.info("videoInfo: {}", videoInfo);
-            return videoInfo.getFilePath();
+            return videoInfo.getVideoPath();
         } else {
             throw new NullPointerException("videoInfo not found");
         }
@@ -88,7 +88,7 @@ public class VideoInfoServiceImpl implements VideoInfoService {
             VideoInfo videoInfo = videoInfoOptional.get();
             videoInfo.setTitle(videoInfoUpdateRecord.title());
             videoInfo.setDescription(videoInfoUpdateRecord.description());
-            videoInfo.setFilePath(VIDEO_BASE_DIR + videoInfoUpdateRecord.videoPath());
+            videoInfo.setVideoPath(VIDEO_BASE_DIR + videoInfoUpdateRecord.videoPath());
 
             VideoInfoDto response = dataConverter.convertVideoInfoToVideoInfoDto(videoInfo);
             log.info("videoInfo: {}", videoInfo);

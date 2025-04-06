@@ -15,7 +15,7 @@ public class DataConverter {
         VideoInfo videoInfo = new VideoInfo();
         videoInfo.setTitle(videoInfoSaveRecord.title());
         videoInfo.setDescription(videoInfoSaveRecord.description());
-        videoInfo.setFilePath(VIDEO_BASE_DIR + videoInfoSaveRecord.videoTitleExt());
+        videoInfo.setVideoPath(VIDEO_BASE_DIR + videoInfoSaveRecord.videoTitleExt());
         return videoInfo;
     }
 
@@ -23,7 +23,7 @@ public class DataConverter {
         VideoInfoDto videoInfoDto = new VideoInfoDto();
         videoInfoDto.setTitle(videoInfo.getTitle());
         videoInfoDto.setDescription(videoInfo.getDescription());
-        videoInfoDto.setFilePath(videoInfo.getFilePath());
+        videoInfoDto.setVideoPath(videoInfo.getVideoPath());
         return videoInfoDto;
     }
 }

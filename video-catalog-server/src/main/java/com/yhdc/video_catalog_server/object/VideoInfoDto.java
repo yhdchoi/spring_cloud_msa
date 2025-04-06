@@ -11,6 +11,6 @@ public class VideoInfoDto {
 
     private String title;
     private String description;
-    private String filePath;
+    private String videoPath;
 
 }

@@ -1,0 +1,13 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: fiorano
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: fiorano-acc
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PWD}
+      MYSQL_USER: ${MARIADB_UN}
+      MYSQL_PASSWORD: ${MARIADB_PWD}
+
+
