@@ -31,6 +31,9 @@ dependencies {
     // WEB
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    // CONFIG
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
     // EUREKA
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 

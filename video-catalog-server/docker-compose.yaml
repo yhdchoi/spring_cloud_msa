@@ -5,7 +5,7 @@ services:
     ports:
       - "3308:3306"
     environment:
-      MYSQL_DATABASE: fiorano-vid
+      MYSQL_DATABASE: ${DATABASE_NAME}
       MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PWD}
       MYSQL_USER: ${MARIADB_UN}
       MYSQL_PASSWORD: ${MARIADB_PWD}

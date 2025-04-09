@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.yhdc'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 
 java {
     toolchain {
@@ -34,6 +34,10 @@ dependencies {
     // DATA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+    // CONFIG
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     // INFRA
     annotationProcessor 'org.springframework.boot:spring-boot-docker-compose'
