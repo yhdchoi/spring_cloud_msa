@@ -41,7 +41,7 @@ dependencies {
     // LOAD BALANCER
     implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
 
-    // DEV
+    // TOOL
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

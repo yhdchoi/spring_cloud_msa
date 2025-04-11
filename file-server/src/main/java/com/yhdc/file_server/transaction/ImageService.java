@@ -1,6 +1,6 @@
-package com.yhdc.image_server.transaction;
+package com.yhdc.file_server.transaction;
 
-import com.yhdc.image_server.object.ImageInfoDto;
+import com.yhdc.file_server.object.ImageInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.yhdc.image_server.type.Constants.IMAGE_BASE_DIR;
+import static com.yhdc.file_server.type.Constants.IMAGE_BASE_DIR;
 import static java.lang.System.out;
 
 @Slf4j
@@ -34,6 +34,7 @@ import static java.lang.System.out;
 public class ImageService {
 
     private final FileService fileService;
+
     /**
      * SAVE IMAGE TO A DIRECTORY
      *
@@ -234,21 +235,42 @@ public class ImageService {
 
 
     /**
-     * DELETE PRODUCT IMAGE(S)
+     * DELETE SELECTED PRODUCT IMAGE(S)
      *
      * @param dirId
      * @param deletedFileNameList
      */
-    public ResponseEntity<?> deleteImageDir(String dirId,
-                                            List<String> deletedFileNameList) {
-
+    public ResponseEntity<?> deleteImagesFromDir(String dirId,
+                                                 List<String> deletedFileNameList) {
         final String productImageDir = IMAGE_BASE_DIR + dirId;
         if (deletedFileNameList != null && !deletedFileNameList.isEmpty()) {
             for (String fileName : deletedFileNameList) {
                 fileService.deleteFileFromDir(productImageDir, fileName);
             }
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+    /**
+     * DELETE ALL PRODUCT IMAGES
+     *
+     * @param dirId
+     */
+    public ResponseEntity<?> deleteImageDir(String dirId) {
+        boolean imageDirDeleted;
+        final String imageDirStr = IMAGE_BASE_DIR + dirId;
+        // Delete image directory
+        File imageDir = new File(imageDirStr);
+        if (!imageDir.exists()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            imageDirDeleted = imageDir.delete();
+            return new ResponseEntity<>(imageDirDeleted, HttpStatus.OK);
+        }
+    }
+
+
 }

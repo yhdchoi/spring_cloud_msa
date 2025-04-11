@@ -21,7 +21,10 @@ public class Constants {
     public static final String PRODUCT_SUSPENDED = "SUSPENDED";
 
     // FILE
+    public static final String FILE_SERVER_URI = "http://file-server";
     public static final String IMAGE_BASE_DIR = "/stackcore/etc/file/images/";
+    public static final String COMMON_RESPONSE_STATUS_OK = "OK";
+    public static final String COMMON_RESPONSE_STATUS_ERROR = "ERROR";
 
     // MIME
     public static final MimeType DOC_PDF = MimeType.valueOf("application/pdf");

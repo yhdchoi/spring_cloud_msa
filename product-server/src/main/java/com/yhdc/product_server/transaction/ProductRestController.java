@@ -1,6 +1,6 @@
 package com.yhdc.product_server.transaction;
 
-import com.yhdc.product_server.object.ImageInfoDto;
+import com.yhdc.product_server.object.ImageInfoListDto;
 import com.yhdc.product_server.object.ProductCreateRecord;
 import com.yhdc.product_server.object.ProductImageDeleteRecord;
 import com.yhdc.product_server.object.ProductPutRecord;
@@ -11,15 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class ProductRestController {
 
     private final ProductServiceImpl productService;
-    private final ImageService imageService;
+    private final ProductImageRestClient productImageRestClient;
 
 
     /**
@@ -46,7 +44,7 @@ public class ProductRestController {
     @PostMapping("/save/image")
     public ResponseEntity<?> saveImage(@RequestPart(value = "productId") String productId,
                                        @RequestPart(value = "fileArray") MultipartFile[] fileArray) {
-        return imageService.saveImages(productId, fileArray);
+        return productImageRestClient.saveProductImages(productId, fileArray);
     }
 
 
@@ -72,7 +70,7 @@ public class ProductRestController {
     @GetMapping("/download/image")
     public ResponseEntity<Resource> downloadImage(@RequestParam String productId,
                                                   @RequestParam String fileName) {
-        return imageService.loadImage(productId, fileName);
+        return productImageRestClient.downloadProductImage(productId, fileName);
     }
 
     /**
@@ -82,8 +80,8 @@ public class ProductRestController {
      * @apiNote
      */
     @GetMapping("/download/image/all")
-    public ResponseEntity<List<ImageInfoDto>> downloadImageAll(@RequestParam String productId) {
-        return imageService.loadAllImages(productId);
+    public ResponseEntity<ImageInfoListDto> downloadImageAll(@RequestParam String productId) {
+        return productImageRestClient.loadProductImagesInfo(productId);
     }
 
 
@@ -95,7 +93,7 @@ public class ProductRestController {
      */
     @GetMapping("/download/image/zip")
     public ResponseEntity<Resource> downloadProductImage(@RequestParam String productId) {
-        return imageService.downloadImageDirZip(productId);
+        return productImageRestClient.downloadProductImageZip(productId);
     }
 
 
@@ -180,7 +178,7 @@ public class ProductRestController {
     @PatchMapping("/patch/image")
     public ResponseEntity<?> patchProductImage(@RequestParam(value = "productId", required = true) String productId,
                                                @RequestParam(value = "fileArray", required = true) MultipartFile[] fileArray) {
-        return imageService.patchImage(productId, fileArray);
+        return productImageRestClient.patchProductImages(productId, fileArray);
     }
 
 
@@ -191,8 +189,8 @@ public class ProductRestController {
      * @apiNote
      */
     @DeleteMapping("/delete/image")
-    public ResponseEntity<?> deleteProductImage(@RequestBody ProductImageDeleteRecord productImageDeleteRecord) {
-        return imageService.deleteImageDir(productImageDeleteRecord.productId(),
+    public ResponseEntity<?> deleteSelectedProductImages(@RequestBody ProductImageDeleteRecord productImageDeleteRecord) {
+        return productImageRestClient.deleteSelectedProductImages(productImageDeleteRecord.productId(),
                 productImageDeleteRecord.fileNameList());
     }
 

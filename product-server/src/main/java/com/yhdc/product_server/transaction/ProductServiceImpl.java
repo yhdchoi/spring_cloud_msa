@@ -1,6 +1,7 @@
 package com.yhdc.product_server.transaction;
 
 
+import com.yhdc.product_server.object.CommonResponseRecord;
 import com.yhdc.product_server.object.ProductCreateRecord;
 import com.yhdc.product_server.object.ProductDto;
 import com.yhdc.product_server.object.ProductPutRecord;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,7 +30,7 @@ import static com.yhdc.product_server.type.Constants.*;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final FileService fileService;
+    private final ProductImageRestClient productImageRestClient;
     private final DataConverter dataConverter;
     private final PageProducer pageProducer;
 
@@ -68,13 +68,16 @@ public class ProductServiceImpl implements ProductService {
             Product newProduct = productRepository.save(product);
 
             final String productId = newProduct.getId().toString();
-            for (MultipartFile file : fileArray) {
-                fileService.saveFileToDir(file, productId);
+            final ResponseEntity<CommonResponseRecord> response = productImageRestClient.saveProductImages(productId, fileArray);
+            final String status = response.getBody().getStatus();
+            if (status.equals(COMMON_RESPONSE_STATUS_OK)) {
+                log.info("Product saved successfully!!!");
+                return new ResponseEntity<>(productId, HttpStatus.CREATED);
+            } else {
+                log.error("Product save failed!!!");
+                log.error("Error while saving product image... {}", response);
+                return new ResponseEntity<>(productId, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-
-            log.info("Product saved successfully!!!");
-
-            return new ResponseEntity<>(productId, HttpStatus.CREATED);
 
         } catch (Exception e) {
             log.error("Unable to save product: {}", e.getMessage());
@@ -130,7 +133,6 @@ public class ProductServiceImpl implements ProductService {
             final Page<Product> productPage = productRepository.findAllByStoreId(UUID.fromString(storeId), pageable);
             final Page<ProductDto> productDtoList = productPage.map(dataConverter::convertProductToDto);
             return new ResponseEntity<>(productDtoList, HttpStatus.OK);
-
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -163,8 +165,13 @@ public class ProductServiceImpl implements ProductService {
             } else {
                 productPage = productRepository.findAllByStoreIdAndKeyword(UUID.fromString(storeId), keyword, pageable);
             }
-            Page<ProductDto> productDtoList = productPage.map(dataConverter::convertProductToDto);
-            return new ResponseEntity<>(productDtoList, HttpStatus.OK);
+            if (productPage.getTotalElements() > 0) {
+                Page<ProductDto> productDtoList = productPage.map(dataConverter::convertProductToDto);
+                return new ResponseEntity<>(productDtoList, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
 
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -252,24 +259,13 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ResponseEntity<?> deleteProduct(String productId) {
         try {
-            boolean imageDirDeleted;
-            final String productImageDir = IMAGE_BASE_DIR + productId;
-
-            // Delete product's image directory
-            File imageDir = new File(productImageDir);
-            if (!imageDir.exists()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            } else {
-                imageDirDeleted = imageDir.delete();
-            }
-
-            if (imageDirDeleted) {
+            final ResponseEntity<CommonResponseRecord> imageResponse = productImageRestClient.deleteProductImages(productId);
+            if (imageResponse.getStatusCode() == HttpStatus.OK) {
                 productRepository.deleteById(UUID.fromString(productId));
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Image directory not removed", HttpStatus.NOT_FOUND);
             }
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

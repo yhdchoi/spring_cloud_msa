@@ -1,4 +1,4 @@
-package com.yhdc.image_server.type;
+package com.yhdc.file_server.type;
 
 import org.springframework.util.MimeType;
 

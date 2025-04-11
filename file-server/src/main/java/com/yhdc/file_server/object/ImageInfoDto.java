@@ -1,4 +1,4 @@
-package com.yhdc.image_server.object;
+package com.yhdc.file_server.object;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

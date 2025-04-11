@@ -1,4 +1,4 @@
-package com.yhdc.image_server.controller;
+package com.yhdc.file_server.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

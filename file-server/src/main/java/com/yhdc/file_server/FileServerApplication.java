@@ -1,4 +1,4 @@
-package com.yhdc.image_server;
+package com.yhdc.file_server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
