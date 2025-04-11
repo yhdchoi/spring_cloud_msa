@@ -48,14 +48,11 @@ dependencies {
 //    annotationProcessor 'jakarta.annotation:jakarta.annotation-api:3.0.0'
 //    annotationProcessor 'jakarta.persistence:jakarta.persistence-api:3.2.0'
 
-    // INFRA
-    annotationProcessor 'org.springframework.boot:spring-boot-docker-compose'
-
     // MONITOR
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    // DEV
+    // TOOL
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

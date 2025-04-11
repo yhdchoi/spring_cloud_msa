@@ -98,10 +98,10 @@ public class StoreServiceImpl implements StoreService {
         try {
             Pageable pageable = pageProducer.getPageable(pageNo, pageSize, sortBy, sortOrder);
             Page<Store> storePage = null;
-            if (keyword == null || keyword.isEmpty()) {
+            if (keyword.equals("*")) {
                 storePage = storeRepository.findAll(pageable);
             } else {
-                storePage = storeRepository.searchStore(keyword, pageable);
+                storePage = storeRepository.searchStoreByKeyword(keyword, pageable);
             }
 //            assert storePage != null;
             Page<StoreDto> userDtoPage = storePage.map(dataConverter::convertStoreToDto);

@@ -3,7 +3,6 @@ package com.yhdc.store_server.transaction;
 import com.yhdc.store_server.object.StoreCreateRecord;
 import com.yhdc.store_server.object.StorePatchRecord;
 import com.yhdc.store_server.object.StorePutRecord;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -50,11 +49,11 @@ public class StoreController {
      * @apiNote
      */
     @GetMapping("/search")
-    public ResponseEntity<?> searchStore(@RequestParam @NotBlank(message = "Keyword is mandatory field") String keyword,
-                                         @RequestParam(required = false, defaultValue = "0", value = "pageNo") String pageNo,
-                                         @RequestParam(required = false, defaultValue = "10", value = "pageSize") String pageSize,
-                                         @RequestParam(required = false, defaultValue = "DESC", value = "pageBy") String sortBy,
-                                         @RequestParam(required = false, defaultValue = "created_at", value = "pageOrder") String sortOrder) {
+    public ResponseEntity<?> searchStore(@RequestParam(required = false, defaultValue = "*", value = "keyword") String keyword,
+                                         @RequestParam(defaultValue = "0", value = "pageNo") String pageNo,
+                                         @RequestParam(defaultValue = "10", value = "pageSize") String pageSize,
+                                         @RequestParam(defaultValue = "DESC", value = "pageBy") String sortBy,
+                                         @RequestParam(defaultValue = "created_at", value = "pageOrder") String sortOrder) {
         return storeService.searchStorePage(keyword, pageNo, pageSize, sortBy, sortOrder);
     }
 

@@ -1,4 +1,4 @@
-package com.yhdc.store_server.object;
+package com.yhdc.product_server.object;
 
 import lombok.Data;
 

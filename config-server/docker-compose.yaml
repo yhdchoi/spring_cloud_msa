@@ -1,0 +1,63 @@
+services:
+  ### MAIN DB
+  mariadb-main:
+    image: mariadb:latest
+    container_name: ${MAIN_DATABASE_NAME}
+    ports:
+      - ${MAIN_CONTAINER_PORT}
+    environment:
+      MYSQL_DATABASE: ${MAIN_DATABASE_NAME}
+      MYSQL_ROOT_PASSWORD: ${MAIN_MARIADB_ROOT_PWD}
+      MYSQL_USER: ${MAIN_MARIADB_UN}
+      MYSQL_PASSWORD: ${MAIN_MARIADB_PWD}
+
+  ### FILE DB
+  mariadb-file:
+    image: mariadb:latest
+    container_name: ${FILE_DATABASE_NAME}
+    ports:
+      - ${FILE_CONTAINER_PORT}
+    environment:
+      MYSQL_DATABASE: ${FILE_DATABASE_NAME}
+      MYSQL_ROOT_PASSWORD: ${FILE_MARIADB_ROOT_PWD}
+      MYSQL_USER: ${FILE_MARIADB_UN}
+      MYSQL_PASSWORD: ${FILE_MARIADB_PWD}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    restart: unless-stopped
+
+  ### ELK Stack
+#  es:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VER}
+#    container_name: es
+#    environment:
+#      - node.name=es-node
+#      - cluster.name=search-cluster
+#      - discovery.type=single-node
+#      - xpack.security.enabled=false
+#      - xpack.security.http.ssl.enabled=false
+#      - xpack.security.transport.ssl.enabled=false
+#    ports:
+#      - "9200:9200" # https
+#      - "9300:9300" #tcp
+#    networks:
+#      - es-bridge
+#
+#  kibana:
+#    image: docker.elastic.co/kibana/kibana:${ELASTIC_VER}
+#    container_name: kibana
+#    environment:
+#      SERVER_NAME: kibana
+#      ELASTICSEARCH_HOSTS: http://es:9200
+#    ports:
+#      - "5601:5601"
+#    # Elasticsearch Start Dependency
+#    depends_on:
+#      - es
+#    networks:
+#      - es-bridge
+#
+#networks:
+#  es-bridge:
+#    driver: bridge
