@@ -1,9 +1,6 @@
 package com.yhdc.product_server.transaction;
 
-import com.yhdc.product_server.object.ImageInfoListDto;
-import com.yhdc.product_server.object.ProductCreateRecord;
-import com.yhdc.product_server.object.ProductImageDeleteRecord;
-import com.yhdc.product_server.object.ProductPutRecord;
+import com.yhdc.product_server.object.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -42,8 +39,8 @@ public class ProductRestController {
      * @apiNote
      */
     @PostMapping("/save/image")
-    public ResponseEntity<?> saveImage(@RequestPart(value = "productId") String productId,
-                                       @RequestPart(value = "fileArray") MultipartFile[] fileArray) {
+    public ResponseEntity<CommonResponseRecord> saveImage(@RequestPart(value = "productId") String productId,
+                                                          @RequestPart(value = "fileArray") MultipartFile[] fileArray) {
         return productImageRestClient.saveProductImages(productId, fileArray);
     }
 
@@ -61,6 +58,18 @@ public class ProductRestController {
 
 
     /**
+     * GET PRODUCT IMAGE INFORMATION
+     *
+     * @param productId
+     * @apiNote
+     */
+    @GetMapping("/get/image-info")
+    public ResponseEntity<ImageInfoListDto> downloadImageAll(@RequestParam String productId) {
+        return productImageRestClient.loadProductImagesInfo(productId);
+    }
+
+
+    /**
      * DOWNLOAD A PRODUCT IMAGE
      *
      * @param productId
@@ -73,17 +82,6 @@ public class ProductRestController {
         return productImageRestClient.downloadProductImage(productId, fileName);
     }
 
-    /**
-     * DOWNLOAD ALL IMAGES FOR A PRODUCT
-     *
-     * @param productId
-     * @apiNote
-     */
-    @GetMapping("/download/image/all")
-    public ResponseEntity<ImageInfoListDto> downloadImageAll(@RequestParam String productId) {
-        return productImageRestClient.loadProductImagesInfo(productId);
-    }
-
 
     /**
      * DOWNLOAD PRODUCT IMAGES ZIP
@@ -91,8 +89,8 @@ public class ProductRestController {
      * @param productId
      * @apiNote
      */
-    @GetMapping("/download/image/zip")
-    public ResponseEntity<Resource> downloadProductImage(@RequestParam String productId) {
+    @GetMapping("/download/image-zip")
+    public ResponseEntity<Resource> downloadProductImages(@RequestParam String productId) {
         return productImageRestClient.downloadProductImageZip(productId);
     }
 
@@ -107,12 +105,12 @@ public class ProductRestController {
      * @param sortOrder
      * @apiNote
      */
-//    @GetMapping("/list/str")
-    public ResponseEntity<?> listStoreProduct(@RequestParam String storeId,
-                                              @RequestParam String pageNo,
-                                              @RequestParam String pageSize,
-                                              @RequestParam String sortBy,
-                                              @RequestParam String sortOrder) {
+    @GetMapping("/list/str")
+    public ResponseEntity<?> listStoreProducts(@RequestParam String storeId,
+                                               @RequestParam String pageNo,
+                                               @RequestParam String pageSize,
+                                               @RequestParam String sortBy,
+                                               @RequestParam String sortOrder) {
         return productService.listStoreProducts(storeId, pageNo, pageSize, sortBy, sortOrder);
     }
 
@@ -128,12 +126,12 @@ public class ProductRestController {
      * @apiNote
      */
     @GetMapping("/search/str")
-    public ResponseEntity<?> searchStoreProduct(@RequestParam String storeId,
-                                                @RequestParam String keyword,
-                                                @RequestParam String pageNo,
-                                                @RequestParam String pageSize,
-                                                @RequestParam String sortBy,
-                                                @RequestParam String sortOrder) {
+    public ResponseEntity<?> searchStoreProducts(@RequestParam String storeId,
+                                                 @RequestParam String keyword,
+                                                 @RequestParam String pageNo,
+                                                 @RequestParam String pageSize,
+                                                 @RequestParam String sortBy,
+                                                 @RequestParam String sortOrder) {
         return productService.searchStoreProducts(storeId, keyword, pageNo, pageSize, sortBy, sortOrder);
     }
 
@@ -149,11 +147,11 @@ public class ProductRestController {
      * @apiNote Search all products in the
      */
     @GetMapping("/search")
-    public ResponseEntity<?> searchStoreProduct(@RequestParam String keyword,
-                                                @RequestParam String pageNo,
-                                                @RequestParam String pageSize,
-                                                @RequestParam String sortBy,
-                                                @RequestParam String sortOrder) {
+    public ResponseEntity<?> searchAllProducts(@RequestParam String keyword,
+                                               @RequestParam String pageNo,
+                                               @RequestParam String pageSize,
+                                               @RequestParam String sortBy,
+                                               @RequestParam String sortOrder) {
         return productService.searchProducts(keyword, pageNo, pageSize, sortBy, sortOrder);
     }
 

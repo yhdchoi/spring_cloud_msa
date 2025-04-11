@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.yhdc.file_server.type.Constants.IMAGE_BASE_DIR;
+import static com.yhdc.file_server.type.Constants.FILE_BASE_DIR;
 import static java.lang.System.out;
 
 @Slf4j
@@ -36,7 +36,7 @@ public class ImageService {
     private final FileService fileService;
 
     /**
-     * SAVE IMAGE TO A DIRECTORY
+     * SAVE IMAGE(S) TO A DIRECTORY
      *
      * @param dirId
      * @param fileArray
@@ -47,7 +47,7 @@ public class ImageService {
         // Save product images
         if (fileArray != null) {
             boolean directoryExists = false;
-            final String imageDirectory = IMAGE_BASE_DIR + dirId;
+            final String imageDirectory = FILE_BASE_DIR + dirId;
             if (new File(imageDirectory).exists()) {
                 directoryExists = true;
                 log.warn("Image directory already exists: {}", imageDirectory);
@@ -74,7 +74,7 @@ public class ImageService {
     }
 
     /**
-     * STREAM A PRODUCT IMAGE
+     * STREAM AN IMAGE
      *
      * @param dirId
      * @param imageName
@@ -84,7 +84,7 @@ public class ImageService {
     public StreamingResponseBody streamImage(String dirId, String imageName) {
 
         try {
-            final String imagePath = IMAGE_BASE_DIR + dirId + "/" + imageName;
+            final String imagePath = FILE_BASE_DIR + dirId + "/" + imageName;
 
             return outputStream -> {
                 try {
@@ -130,7 +130,7 @@ public class ImageService {
      */
     public ResponseEntity<List<ImageInfoDto>> loadAllImages(String dirId) {
         try {
-            final String imagePath = IMAGE_BASE_DIR + dirId;
+            final String imagePath = FILE_BASE_DIR + dirId;
             Path root = Paths.get(imagePath);
             Stream<Path> pathStream = Files.walk(root, 1).filter(path -> !path.equals(root)).map(root::relativize);
 
@@ -164,7 +164,7 @@ public class ImageService {
      */
     public ResponseEntity<Resource> loadImage(String dirId, String filename) {
         try {
-            final String imagePath = IMAGE_BASE_DIR + dirId;
+            final String imagePath = FILE_BASE_DIR + dirId;
             Path root = Paths.get(imagePath);
             Path file = root.resolve(filename);
             Resource resource = new UrlResource(file.toUri());
@@ -192,7 +192,7 @@ public class ImageService {
     public ResponseEntity<Resource> downloadImageDirZip(String dirId) {
 
         try {
-            final String productImageDir = IMAGE_BASE_DIR + dirId;
+            final String productImageDir = FILE_BASE_DIR + dirId;
             File imageDirectory = new File(productImageDir);
             if (!imageDirectory.exists() && imageDirectory.listFiles() != null) {
                 final String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -222,7 +222,7 @@ public class ImageService {
     public ResponseEntity<?> patchImage(String dirId,
                                         MultipartFile[] fileArray) {
 
-        final String productImageDir = IMAGE_BASE_DIR + dirId;
+        final String productImageDir = FILE_BASE_DIR + dirId;
         // Save new images
         if (fileArray != null) {
             for (MultipartFile file : fileArray) {
@@ -242,7 +242,7 @@ public class ImageService {
      */
     public ResponseEntity<?> deleteImagesFromDir(String dirId,
                                                  List<String> deletedFileNameList) {
-        final String productImageDir = IMAGE_BASE_DIR + dirId;
+        final String productImageDir = FILE_BASE_DIR + dirId;
         if (deletedFileNameList != null && !deletedFileNameList.isEmpty()) {
             for (String fileName : deletedFileNameList) {
                 fileService.deleteFileFromDir(productImageDir, fileName);
@@ -261,7 +261,7 @@ public class ImageService {
      */
     public ResponseEntity<?> deleteImageDir(String dirId) {
         boolean imageDirDeleted;
-        final String imageDirStr = IMAGE_BASE_DIR + dirId;
+        final String imageDirStr = FILE_BASE_DIR + dirId;
         // Delete image directory
         File imageDir = new File(imageDirStr);
         if (!imageDir.exists()) {
