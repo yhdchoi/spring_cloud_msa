@@ -34,8 +34,9 @@ dependencies {
     // CONFIG
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
-    // EUREKA
+    // MONITOR
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     // LOAD BALANCER
     implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'

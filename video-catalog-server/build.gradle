@@ -31,19 +31,19 @@ dependencies {
     // WEB
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    // CONFIG
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
     // DATA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
-    // CONFIG
-    implementation 'org.springframework.cloud:spring-cloud-starter-config'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
     // INFRA
     annotationProcessor 'org.springframework.boot:spring-boot-docker-compose'
 
-    // EUREKA
+    // MONITOR
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     // DEV
     compileOnly 'org.projectlombok:lombok'
