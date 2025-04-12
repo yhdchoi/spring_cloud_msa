@@ -1,6 +1,8 @@
 package com.yhdc.file_server.transaction;
 
+import com.yhdc.file_server.object.CommonResponseDto;
 import com.yhdc.file_server.object.ImageInfoDto;
+import com.yhdc.file_server.object.ImageInfoListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -25,7 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.yhdc.file_server.type.Constants.FILE_BASE_DIR;
+import static com.yhdc.file_server.type.Constants.*;
 import static java.lang.System.out;
 
 @Slf4j
@@ -43,7 +45,8 @@ public class ImageService {
      * @implNote
      * @implSpec
      */
-    public ResponseEntity<?> saveImages(String dirId, MultipartFile[] fileArray) {
+    public ResponseEntity<CommonResponseDto> saveImages(String dirId, MultipartFile[] fileArray) {
+        CommonResponseDto responseBody = new CommonResponseDto();
         // Save product images
         if (fileArray != null) {
             boolean directoryExists = false;
@@ -62,14 +65,20 @@ public class ImageService {
                     fileService.saveFileToDir(newFile, imageDirectory);
                 }
                 log.info("Image(s) saved to: {}", imageDirectory);
-                return new ResponseEntity<>(HttpStatus.OK);
+                responseBody.setMsg("Images saved successfully!!");
+                responseBody.setStatus(COMMON_RESPONSE_STATUS_OK);
+                return new ResponseEntity<>(responseBody, HttpStatus.OK);
 
             } else {
                 log.warn("Image directory does not exist: {}", imageDirectory);
-                return new ResponseEntity<>("Unable to create image directory.", HttpStatus.BAD_REQUEST);
+                responseBody.setMsg("Unable to create image directory!!!");
+                responseBody.setStatus(COMMON_RESPONSE_STATUS_ERROR);
+                return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
             }
         } else {
-            return new ResponseEntity<>("File array is empty!!!", HttpStatus.BAD_REQUEST);
+            responseBody.setMsg("File array is empty!!!");
+            responseBody.setStatus(COMMON_RESPONSE_STATUS_ERROR);
+            return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -128,7 +137,7 @@ public class ImageService {
      * @param dirId
      * @implNote Loads file name with url for download
      */
-    public ResponseEntity<List<ImageInfoDto>> loadAllImages(String dirId) {
+    public ResponseEntity<ImageInfoListDto> loadAllImages(String dirId) {
         try {
             final String imagePath = FILE_BASE_DIR + dirId;
             Path root = Paths.get(imagePath);
@@ -145,7 +154,11 @@ public class ImageService {
 
             }).collect(Collectors.toList());
 
-            return new ResponseEntity<>(fileInfos, HttpStatus.OK);
+            ImageInfoListDto responseBody = new ImageInfoListDto();
+            responseBody.setProductId(dirId);
+            responseBody.setImageInfoDtoList(fileInfos);
+
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
 
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
@@ -196,7 +209,7 @@ public class ImageService {
             File imageDirectory = new File(productImageDir);
             if (!imageDirectory.exists() && imageDirectory.listFiles() != null) {
                 final String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-                final String zippedFileDir = "/stackcore/tmp";
+                final String zippedFileDir = "/fiorano/tmp";
                 final String zipFileName = dirId + "_dirCompressed_" + dateTime + ".zip";
 
                 Resource resource = fileService.createZipFile(productImageDir, zippedFileDir, zipFileName);
@@ -219,18 +232,25 @@ public class ImageService {
      * @implNote Saves new image(s)
      * @implSpec
      */
-    public ResponseEntity<?> patchImage(String dirId,
-                                        MultipartFile[] fileArray) {
-
-        final String productImageDir = FILE_BASE_DIR + dirId;
+    public ResponseEntity<CommonResponseDto> patchImage(String dirId,
+                                                        MultipartFile[] fileArray) {
+        CommonResponseDto responseBody = new CommonResponseDto();
+        final String imageDirectory = FILE_BASE_DIR + dirId;
         // Save new images
         if (fileArray != null) {
             for (MultipartFile file : fileArray) {
-                fileService.saveFileToDir(file, productImageDir);
+                fileService.saveFileToDir(file, imageDirectory);
             }
+            log.info("Image(s) saved to: {}", imageDirectory);
+            responseBody.setMsg("Images patched successfully!");
+            responseBody.setStatus(COMMON_RESPONSE_STATUS_OK);
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        } else {
+            log.warn("Image directory does not exist: {}", imageDirectory);
+            responseBody.setMsg("Image file not found!");
+            responseBody.setStatus(COMMON_RESPONSE_STATUS_ERROR);
+            return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
@@ -240,16 +260,22 @@ public class ImageService {
      * @param dirId
      * @param deletedFileNameList
      */
-    public ResponseEntity<?> deleteImagesFromDir(String dirId,
-                                                 List<String> deletedFileNameList) {
-        final String productImageDir = FILE_BASE_DIR + dirId;
+    public ResponseEntity<CommonResponseDto> deleteImagesFromDir(String dirId,
+                                                                 List<String> deletedFileNameList) {
+        CommonResponseDto responseBody = new CommonResponseDto();
+        final String imageDirectory = FILE_BASE_DIR + dirId;
         if (deletedFileNameList != null && !deletedFileNameList.isEmpty()) {
             for (String fileName : deletedFileNameList) {
-                fileService.deleteFileFromDir(productImageDir, fileName);
+                fileService.deleteFileFromDir(imageDirectory, fileName);
             }
-            return new ResponseEntity<>(HttpStatus.OK);
+            responseBody.setMsg("Images deleted successfully!");
+            responseBody.setStatus(COMMON_RESPONSE_STATUS_OK);
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            log.warn("Image file list is empty: {}", deletedFileNameList);
+            responseBody.setMsg("Image file list is empty!");
+            responseBody.setStatus(COMMON_RESPONSE_STATUS_ERROR);
+            return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
         }
     }
 

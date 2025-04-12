@@ -3,16 +3,15 @@ package com.yhdc.product_server.transaction;
 import com.yhdc.product_server.object.ProductCreateRecord;
 import com.yhdc.product_server.object.ProductPutRecord;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface ProductService {
 
 
-    ResponseEntity<?> createProduct(ProductCreateRecord productCreateRecord, MultipartFile[] fileArray);
+    ResponseEntity<?> createProduct(ProductCreateRecord productCreateRecord);
 
     ResponseEntity<?> detailProduct(String productId);
 
-    ResponseEntity<?> listStoreProducts(String storeId,
+    ResponseEntity<?> pageStoreProducts(String storeId,
                                         String pageNo,
                                         String pageSize,
                                         String sortBy,
@@ -26,14 +25,13 @@ public interface ProductService {
                                           String sortOrder);
 
 
-    ResponseEntity<?> searchProducts(String keyword,
-                                     String pageNo,
-                                     String pageSize,
-                                     String sortBy,
-                                     String sortOrder);
+    ResponseEntity<?> searchAllProducts(String keyword,
+                                        String pageNo,
+                                        String pageSize,
+                                        String sortBy,
+                                        String sortOrder);
 
     ResponseEntity<?> updateProduct(ProductPutRecord productPutRecord);
-
 
 
     ResponseEntity<?> deleteProduct(String productId);

@@ -27,7 +27,7 @@ services:
       - --collation-server=utf8mb4_unicode_ci
     restart: unless-stopped
 
-  ### ELK Stack
+  ### ELK
 #  es:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VER}
 #    container_name: es

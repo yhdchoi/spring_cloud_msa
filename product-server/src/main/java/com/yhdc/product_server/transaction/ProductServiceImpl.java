@@ -16,12 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.yhdc.product_server.type.Constants.*;
+import static com.yhdc.product_server.type.Constants.PRODUCT_ACTIVE;
+import static com.yhdc.product_server.type.Constants.PRODUCT_INACTIVE;
 
 
 @Slf4j
@@ -39,12 +39,11 @@ public class ProductServiceImpl implements ProductService {
      * PRODUCT CREATION
      *
      * @param productCreateRecord
-     * @param fileArray
      * @implNote Saves a new product
      * @implSpec
      */
     @Transactional
-    public ResponseEntity<?> createProduct(ProductCreateRecord productCreateRecord, MultipartFile[] fileArray) {
+    public ResponseEntity<?> createProduct(ProductCreateRecord productCreateRecord) {
 
         try {
             Product product = new Product();
@@ -64,20 +63,12 @@ public class ProductServiceImpl implements ProductService {
                     product.setStatus(ProductStatus.SUSPENDED);
                     break;
             }
-            product.setStock(Long.parseLong(productCreateRecord.stock()));
+            product.setStock(productCreateRecord.stock());
             Product newProduct = productRepository.save(product);
 
             final String productId = newProduct.getId().toString();
-            final ResponseEntity<CommonResponseRecord> response = productImageRestClient.saveProductImages(productId, fileArray);
-            final String status = response.getBody().getStatus();
-            if (status.equals(COMMON_RESPONSE_STATUS_OK)) {
-                log.info("Product saved successfully!!!");
-                return new ResponseEntity<>(productId, HttpStatus.CREATED);
-            } else {
-                log.error("Product save failed!!!");
-                log.error("Error while saving product image... {}", response);
-                return new ResponseEntity<>(productId, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            log.info("Product saved successfully!!!");
+            return new ResponseEntity<>(productId, HttpStatus.CREATED);
 
         } catch (Exception e) {
             log.error("Unable to save product: {}", e.getMessage());
@@ -112,7 +103,34 @@ public class ProductServiceImpl implements ProductService {
 
 
     /**
-     * STORE PRODUCT LIST
+     * SELLER'S PRODUCT PAGE
+     *
+     * @param userId
+     * @param pageNo
+     * @param pageSize
+     * @param sortBy
+     * @param sortOrder
+     * @implNote For seller to browse products
+     */
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> pageSellerProducts(String userId,
+                                                String pageNo,
+                                                String pageSize,
+                                                String sortBy,
+                                                String sortOrder) {
+        try {
+            final Pageable pageable = pageProducer.getPageable(pageNo, pageSize, sortBy, sortOrder);
+            final Page<Product> productPage = productRepository.findAllByUserId(UUID.fromString(userId), pageable);
+            final Page<ProductDto> productDtoList = productPage.map(dataConverter::convertProductToDto);
+            return new ResponseEntity<>(productDtoList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    /**
+     * STORE PRODUCT PAGE
      *
      * @param storeId
      * @param pageNo
@@ -123,7 +141,7 @@ public class ProductServiceImpl implements ProductService {
      * @implSpec
      */
     @Transactional(readOnly = true)
-    public ResponseEntity<?> listStoreProducts(String storeId,
+    public ResponseEntity<?> pageStoreProducts(String storeId,
                                                String pageNo,
                                                String pageSize,
                                                String sortBy,
@@ -191,11 +209,11 @@ public class ProductServiceImpl implements ProductService {
      * @implSpec Pageable
      */
     @Transactional(readOnly = true)
-    public ResponseEntity<?> searchProducts(String keyword,
-                                            String pageNo,
-                                            String pageSize,
-                                            String sortBy,
-                                            String sortOrder) {
+    public ResponseEntity<?> searchAllProducts(String keyword,
+                                               String pageNo,
+                                               String pageSize,
+                                               String sortBy,
+                                               String sortOrder) {
         try {
             final Pageable pageable = pageProducer.getPageable(pageNo, pageSize, sortBy, sortOrder);
             Page<Product> productPage = null;
@@ -235,7 +253,7 @@ public class ProductServiceImpl implements ProductService {
                 product.setName(productPutRecord.name());
                 product.setDescription(productPutRecord.description());
                 product.setPrice(productPutRecord.price());
-                product.setStock(Long.parseLong(productPutRecord.stock()));
+                product.setStock(productPutRecord.stock());
                 productRepository.save(product);
                 return new ResponseEntity<>(HttpStatus.OK);
 

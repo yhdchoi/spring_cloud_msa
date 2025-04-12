@@ -32,7 +32,7 @@ public class DataInitializer {
             log.info("Default data found!!!");
         } else {
             log.warn("Default data not found...");
-            log.info("Starting default data processor...");
+            log.warn("Starting default data processor...");
 
             // Create role
             List<Role> initialRoles = new ArrayList<>();
@@ -59,6 +59,7 @@ public class DataInitializer {
             initialRoles.add(buyerRole);
 
             List<Role> roleList = roleRepository.saveAll(initialRoles);
+            log.info("Default roles saved!!!");
 
             // Set role for user
             Set<Role> roleAdminSet = roleList.stream().filter(role -> role.getRoleName().equals(RoleType.ROLE_ADMIN.name())).collect(Collectors.toSet());
@@ -94,6 +95,7 @@ public class DataInitializer {
             initalUserList.add(manager);
 
             userRepository.saveAll(initalUserList);
+            log.info("Default accounts saved!!!");
         }
         log.info("Exiting data initializer!!!");
     }

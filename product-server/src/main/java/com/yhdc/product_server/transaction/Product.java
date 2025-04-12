@@ -36,10 +36,6 @@ public class Product extends EntityDateAudit {
     @Column(name = "name", nullable = false)
     private String name;
 
-    // DIRECTORY
-    @Column(name = "file_dir", nullable = false)
-    private String imageDirectory;
-
     @Column(name = "description", columnDefinition = "text", nullable = false)
     private String description;
 
@@ -50,6 +46,6 @@ public class Product extends EntityDateAudit {
     private ProductStatus status;
 
     @Column(name = "stock", nullable = false)
-    private long stock;
+    private String stock;
 
 }

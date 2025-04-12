@@ -53,7 +53,7 @@ public class StoreController {
                                          @RequestParam(defaultValue = "0", value = "pageNo") String pageNo,
                                          @RequestParam(defaultValue = "10", value = "pageSize") String pageSize,
                                          @RequestParam(defaultValue = "DESC", value = "pageBy") String sortBy,
-                                         @RequestParam(defaultValue = "created_at", value = "pageOrder") String sortOrder) {
+                                         @RequestParam(defaultValue = "createdAt", value = "pageOrder") String sortOrder) {
         return storeService.searchStorePage(keyword, pageNo, pageSize, sortBy, sortOrder);
     }
 

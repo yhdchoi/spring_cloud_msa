@@ -5,7 +5,7 @@ import org.springframework.util.MimeType;
 public class Constants {
 
     // FILE
-    public static final String FILE_BASE_DIR = "/stackcore/etc/file/images/";
+    public static final String FILE_BASE_DIR = "/fiorano/etc/file/images/";
     public static final String COMMON_RESPONSE_STATUS_OK = "OK";
     public static final String COMMON_RESPONSE_STATUS_ERROR = "ERROR";
 

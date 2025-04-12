@@ -13,11 +13,11 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     /**
-     * SEARCH ALL PRODUCTS
+     * PAGE SELLER'S PRODUCTS
      *
-     * @param pageable
+     * @param userId
      */
-    Page<Product> findAll(Pageable pageable);
+    Page<Product> findAllByUserId(UUID userId, Pageable pageable);
 
     /**
      * PAGE ALL PRODUCTS IN A STORE
@@ -34,12 +34,11 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
      * @param keyword
      * @param pageable
      */
-    @Query(value = "FROM Product WHERE storeId == ?1 " +
-            "AND UPPER(name) LIKE CONCAT('%', UPPER(?1), '%') " +
-            "OR UPPER(description) LIKE CONCAT('%', UPPER(?1), '%')" +
-            "OR UPPER(price) LIKE CONCAT('%', UPPER(?1), '%') " +
-            "OR UPPER(status) LIKE CONCAT('%', UPPER(?1), '%')" +
-            "OR UPPER(stock) LIKE CONCAT('%', UPPER(?1), '%')")
+    @Query(value = "FROM Product WHERE storeId = ?1 " +
+            "AND (UPPER(name) LIKE CONCAT('%', UPPER(?2), '%') " +
+            "OR UPPER(description) LIKE CONCAT('%', UPPER(?2), '%')" +
+            "OR UPPER(price) LIKE CONCAT('%', UPPER(?2), '%') " +
+            "OR UPPER(stock) LIKE CONCAT('%', UPPER(?2), '%'))")
     Page<Product> findAllByStoreIdAndKeyword(UUID storeId, String keyword, Pageable pageable);
 
     /**
@@ -51,7 +50,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Query(value = "FROM Product WHERE UPPER(name) LIKE CONCAT('%', UPPER(?1), '%') " +
             "OR UPPER(description) LIKE CONCAT('%', UPPER(?1), '%')" +
             "OR UPPER(price) LIKE CONCAT('%', UPPER(?1), '%') " +
-            "OR UPPER(status) LIKE CONCAT('%', UPPER(?1), '%')" +
             "OR UPPER(stock) LIKE CONCAT('%', UPPER(?1), '%')")
     Page<Product> findAllByKeyword(String keyword, Pageable pageable);
 

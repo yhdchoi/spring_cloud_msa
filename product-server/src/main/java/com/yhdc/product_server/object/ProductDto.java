@@ -10,7 +10,6 @@ public class ProductDto {
     private String storeId;
     private String name;
     private String description;
-    private String imageDirectory;
     private String price;
     private String status;
     private String stock;

@@ -35,7 +35,6 @@ public class DataConverter {
             productDto.setUserId(product.getUserId().toString());
             productDto.setStoreId(product.getStoreId().toString());
             productDto.setName(product.getName());
-            productDto.setImageDirectory(product.getImageDirectory());
             productDto.setDescription(product.getDescription());
             productDto.setPrice(product.getPrice());
             productDto.setStatus(product.getStatus() != null ? product.getStatus().selection() : ProductStatus.SUSPENDED.selection());
