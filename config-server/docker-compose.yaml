@@ -6,10 +6,14 @@ services:
     ports:
       - "3307:3306"
     environment:
-      MYSQL_DATABASE: main_db
-      MYSQL_ROOT_PASSWORD: fiorano1q2w
-      MYSQL_USER: fiorano
-      MYSQL_PASSWORD: fiorano
+      MARIADB_DATABASE: account_db
+      MARIADB_ROOT_PASSWORD: fiorano1q2w
+      MARIADB_USER: fiorano
+      MARIADB_PASSWORD: fiorano
+    volumes:
+      - ./container/account-db/conf.d:/etc/mysql/conf.d
+      - ./container/account-db/data:/var/lib/mysql
+    restart: unless-stopped
 
   ### STORE DB
   postgres-store:
@@ -22,7 +26,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: fiorano1q2we
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./container/store-db:/var/lib/postgresql/data
 
   ### PRODUCT DB
   mongodb-product:
@@ -35,7 +39,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: fiorano1q2w
     volumes:
-      - ./data:/data/db
+      - ./container/product-db:/data/db
 
   ### ORDER DB
   mongodb-order:
@@ -48,7 +52,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: fiorano1q2w
     volumes:
-      - ./data:/data/db
+      - ./container/order-db:/data/db
 
   ### FILE DB
   mariadb-file:
@@ -57,14 +61,31 @@ services:
     ports:
       - "3308:3306"
     environment:
-      MYSQL_DATABASE: file_db
-      MYSQL_ROOT_PASSWORD: fiorano1q2w
-      MYSQL_USER: fiorano
-      MYSQL_PASSWORD: fiorano
+      MARIADB_DATABASE: file_db
+      MARIADB_ROOT_PASSWORD: fiorano1q2w
+      MARIADB_USER: fiorano
+      MARIADB_PASSWORD: fiorano
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./container/file-db/conf.d:/etc/mysql/conf.d
+      - ./container/file-db/data:/var/lib/mysql
     restart: unless-stopped
+
+
+  ### AI VECTOR DB
+#  pgvector:
+#    image: pgvector/pgvector:pg16
+#    ports:
+#      - '5440:5432'
+#    environment:
+#      POSTGRES_DB: ai_vector
+#      POSTGRES_USER: fiorano
+#      POSTGRES_PASSWORD: fiorano1q2w
+#    labels:
+#      - "org.springframework.boot.service-connection=postgres"
+
 
   ### LOG DB
 #  es:
