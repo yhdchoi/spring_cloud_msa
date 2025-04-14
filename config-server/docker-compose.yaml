@@ -50,7 +50,6 @@ services:
     volumes:
       - ./data:/data/db
 
-
   ### FILE DB
   mariadb-file:
     image: mariadb:latest
@@ -58,10 +57,10 @@ services:
     ports:
       - "3308:3306"
     environment:
-      MYSQL_DATABASE: file-db
-      MYSQL_ROOT_PASSWORD: ${FILE_MARIADB_ROOT_PWD}
-      MYSQL_USER: ${FILE_MARIADB_UN}
-      MYSQL_PASSWORD: ${FILE_MARIADB_PWD}
+      MYSQL_DATABASE: file_db
+      MYSQL_ROOT_PASSWORD: fiorano1q2w
+      MYSQL_USER: fiorano
+      MYSQL_PASSWORD: fiorano
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
