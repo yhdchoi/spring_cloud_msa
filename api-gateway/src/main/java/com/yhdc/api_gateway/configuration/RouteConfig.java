@@ -11,81 +11,76 @@ public class RouteConfig {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route(userRoute -> userRoute.path("/usr/**")
-                                .filters(f -> f
-//                                .prefixPath("/api")
-                                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
-                                )
-                                .uri("http://localhost:8081")
+                .route(userRoute -> userRoute.path("/user/**")
+                        .filters(f -> f
+                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                        )
+                        .uri("http://localhost:8081")
 
                 )
-                .route(storeRoute -> storeRoute.path("/str/**")
-                                .filters(f -> f
-//                                .prefixPath("/api")
-                                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
-                                )
-                                .uri("http://localhost:8082")
+                .route(storeRoute -> storeRoute.path("/store/**")
+                        .filters(f -> f
+                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                        )
+                        .uri("http://localhost:8082")
 
                 )
-                .route(storeRoute -> storeRoute.path("/prd/**")
-//                        .filters(f -> f
-//                                .prefixPath("/api")
-//                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
-//                        )
-                                .uri("http://localhost:8083")
+                .route(storeRoute -> storeRoute.path("/product/**")
+                        .filters(f -> f
+                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                        )
+                        .uri("http://localhost:8083")
 
                 )
-                .route(auctionRoute -> auctionRoute.path("/act/**")
-//                        .filters(f -> f
-//                                .prefixPath("/api")
-//                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
-//                        )
+                .route(auctionRoute -> auctionRoute.path("/order/**")
+                        .filters(f -> f
+                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                        )
                                 .uri("http://localhost:8084")
 
                 )
-                .route(invoiceRoute -> invoiceRoute.path("/inv/**")
-//                        .filters(f -> f
-//                                .prefixPath("/api")
-//                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
-//                        )
+                .route(invoiceRoute -> invoiceRoute.path("/inventory/**")
+                        .filters(f -> f
+                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                        )
                                 .uri("http://localhost:8085")
 
                 )
-                .route(deliveryRoute -> deliveryRoute.path("/dlv/**")
-//                        .filters(f -> f
-//                                .prefixPath("/api")
-//                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
-//                        )
+                .route(deliveryRoute -> deliveryRoute.path("/notification/**")
+                        .filters(f -> f
+                                .prefixPath("/event")
+                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                        )
                                 .uri("http://localhost:8086")
 
                 )
-                .route(videoCatalogRoute -> videoCatalogRoute.path("/file/**")
-//                        .filters(f -> f
-//                                .prefixPath("/api")
-//                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
-//                        )
-                                .uri("http://localhost:8090")
-                )
-                .route(videoCatalogRoute -> videoCatalogRoute.path("/vcs/**")
-//                        .filters(f -> f
-//                                .prefixPath("/api")
-//                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
-//                        )
-                                .uri("http://localhost:8091")
-                )
-                .route(videoStreamRoute -> videoStreamRoute.path("/vss/**")
-//                        .filters(f -> f
-//                                .prefixPath("/api")
-//                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
-//                        )
-                                .uri("http://localhost:8092")
-                )
-                .route(aiRoute -> aiRoute.path("/ai/**")
-//                        .filters(f -> f
-//                                .prefixPath("/api")
-//                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
-//                        )
+                .route(videoCatalogRoute -> videoCatalogRoute.path("/image/**")
+                        .filters(f -> f
+                                .prefixPath("/file")
+                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                        )
                                 .uri("http://localhost:8100")
+                )
+                .route(videoCatalogRoute -> videoCatalogRoute.path("/video-catalog/**")
+                        .filters(f -> f
+                                .prefixPath("/file")
+                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                        )
+                                .uri("http://localhost:8101")
+                )
+                .route(videoStreamRoute -> videoStreamRoute.path("/video-stream/**")
+                        .filters(f -> f
+                                .prefixPath("/file")
+                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                        )
+                                .uri("http://localhost:8102")
+                )
+                .route(aiRoute -> aiRoute.path("/chat-client/**")
+                        .filters(f -> f
+                                .prefixPath("/ai")
+                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                        )
+                                .uri("http://localhost:8200")
                 )
                 .build();
     }
