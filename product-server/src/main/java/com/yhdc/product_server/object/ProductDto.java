@@ -12,7 +12,7 @@ public class ProductDto {
     private String description;
     private String price;
     private String status;
-    private String stock;
+    private String inventory;
 
     private String error;
 }

@@ -3,21 +3,19 @@ package com.yhdc.product_server.transaction;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface ProductRepository extends JpaRepository<Product, UUID> {
+public interface ProductRepository extends MongoRepository<Product, String> {
 
     /**
      * PAGE SELLER'S PRODUCTS
      *
      * @param userId
      */
-    Page<Product> findAllByUserId(UUID userId, Pageable pageable);
+    Page<Product> findAllByUserId(String userId, Pageable pageable);
 
     /**
      * PAGE ALL PRODUCTS IN A STORE
@@ -25,7 +23,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
      * @param storeId
      * @param pageable
      */
-    Page<Product> findAllByStoreId(UUID storeId, Pageable pageable);
+    Page<Product> findAllByStoreId(String storeId, Pageable pageable);
 
     /**
      * SEARCH A STORE PRODUCTS BY KEYWORD
@@ -34,12 +32,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
      * @param keyword
      * @param pageable
      */
-    @Query(value = "FROM Product WHERE storeId = ?1 " +
-            "AND (UPPER(name) LIKE CONCAT('%', UPPER(?2), '%') " +
-            "OR UPPER(description) LIKE CONCAT('%', UPPER(?2), '%')" +
-            "OR UPPER(price) LIKE CONCAT('%', UPPER(?2), '%') " +
-            "OR UPPER(stock) LIKE CONCAT('%', UPPER(?2), '%'))")
-    Page<Product> findAllByStoreIdAndKeyword(UUID storeId, String keyword, Pageable pageable);
+//    @Query("{ 'storeId' :  ?0, 'name': ?1 }")
+    Page<Product> findAllByStoreIdAndNameContainingIgnoreCase(String storeId, String keyword, Pageable pageable);
 
     /**
      * SEARCH ALL PRODUCTS BY KEYWORD ONLY
@@ -47,10 +41,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
      * @param keyword
      * @param pageable
      */
-    @Query(value = "FROM Product WHERE UPPER(name) LIKE CONCAT('%', UPPER(?1), '%') " +
-            "OR UPPER(description) LIKE CONCAT('%', UPPER(?1), '%')" +
-            "OR UPPER(price) LIKE CONCAT('%', UPPER(?1), '%') " +
-            "OR UPPER(stock) LIKE CONCAT('%', UPPER(?1), '%')")
-    Page<Product> findAllByKeyword(String keyword, Pageable pageable);
+//    @Query("{ 'name' :  ?0 }")
+    Page<Product> findAllByNameContainingIgnoreCase(String keyword, Pageable pageable);
 
 }

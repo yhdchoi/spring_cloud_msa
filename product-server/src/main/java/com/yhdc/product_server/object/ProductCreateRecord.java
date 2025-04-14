@@ -8,7 +8,7 @@ public record ProductCreateRecord(String userId,
                                   String description,
                                   String price,
                                   String status,
-                                  String stock) {
+                                  String inventory) {
 
     public ProductCreateRecord {
         Objects.requireNonNull(userId, "User ID must not be null");
@@ -17,7 +17,7 @@ public record ProductCreateRecord(String userId,
         Objects.requireNonNull(description, "Description must not be null");
         Objects.requireNonNull(price, "Price must not be null");
         Objects.requireNonNull(status, "Status must not be null");
-        Objects.requireNonNull(stock, "Stock must not be null");
+        Objects.requireNonNull(inventory, "Stock must not be null");
     }
 
 }

@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.yhdc.product_server.type.Constants.PRODUCT_ACTIVE;
 import static com.yhdc.product_server.type.Constants.PRODUCT_INACTIVE;
@@ -47,11 +46,12 @@ public class ProductServiceImpl implements ProductService {
 
         try {
             Product product = new Product();
-            product.setUserId(UUID.fromString(productCreateRecord.userId()));
-            product.setStoreId(UUID.fromString(productCreateRecord.storeId()));
+            product.setUserId(productCreateRecord.userId());
+            product.setStoreId(productCreateRecord.storeId());
             product.setName(productCreateRecord.name());
             product.setDescription(productCreateRecord.description());
             product.setPrice(productCreateRecord.price());
+            product.setInventory(productCreateRecord.inventory());
             switch (productCreateRecord.status()) {
                 case PRODUCT_ACTIVE:
                     product.setStatus(ProductStatus.ACTIVE);
@@ -63,10 +63,9 @@ public class ProductServiceImpl implements ProductService {
                     product.setStatus(ProductStatus.SUSPENDED);
                     break;
             }
-            product.setStock(productCreateRecord.stock());
             Product newProduct = productRepository.save(product);
 
-            final String productId = newProduct.getId().toString();
+            final String productId = newProduct.getId();
             log.info("Product saved successfully!!!");
             return new ResponseEntity<>(productId, HttpStatus.CREATED);
 
@@ -87,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> detailProduct(String productId) {
         try {
-            Optional<Product> productOptional = productRepository.findById(UUID.fromString(productId));
+            Optional<Product> productOptional = productRepository.findById(productId);
             if (productOptional.isPresent()) {
                 Product product = productOptional.get();
                 ProductDto productDto = dataConverter.convertProductToDto(product);
@@ -120,7 +119,7 @@ public class ProductServiceImpl implements ProductService {
                                                 String sortOrder) {
         try {
             final Pageable pageable = pageProducer.getPageable(pageNo, pageSize, sortBy, sortOrder);
-            final Page<Product> productPage = productRepository.findAllByUserId(UUID.fromString(userId), pageable);
+            final Page<Product> productPage = productRepository.findAllByUserId(userId, pageable);
             final Page<ProductDto> productDtoList = productPage.map(dataConverter::convertProductToDto);
             return new ResponseEntity<>(productDtoList, HttpStatus.OK);
         } catch (Exception e) {
@@ -148,7 +147,7 @@ public class ProductServiceImpl implements ProductService {
                                                String sortOrder) {
         try {
             final Pageable pageable = pageProducer.getPageable(pageNo, pageSize, sortBy, sortOrder);
-            final Page<Product> productPage = productRepository.findAllByStoreId(UUID.fromString(storeId), pageable);
+            final Page<Product> productPage = productRepository.findAllByStoreId(storeId, pageable);
             final Page<ProductDto> productDtoList = productPage.map(dataConverter::convertProductToDto);
             return new ResponseEntity<>(productDtoList, HttpStatus.OK);
         } catch (Exception e) {
@@ -179,9 +178,9 @@ public class ProductServiceImpl implements ProductService {
             final Pageable pageable = pageProducer.getPageable(pageNo, pageSize, sortBy, sortOrder);
             Page<Product> productPage = null;
             if (keyword.equals("*")) {
-                productPage = productRepository.findAllByStoreId(UUID.fromString(storeId), pageable);
+                productPage = productRepository.findAllByStoreId(storeId, pageable);
             } else {
-                productPage = productRepository.findAllByStoreIdAndKeyword(UUID.fromString(storeId), keyword, pageable);
+                productPage = productRepository.findAllByStoreIdAndNameContainingIgnoreCase(storeId, keyword, pageable);
             }
             if (productPage.getTotalElements() > 0) {
                 Page<ProductDto> productDtoList = productPage.map(dataConverter::convertProductToDto);
@@ -220,7 +219,7 @@ public class ProductServiceImpl implements ProductService {
             if (keyword.equals("*")) {
                 productPage = productRepository.findAll(pageable);
             } else {
-                productPage = productRepository.findAllByKeyword(keyword, pageable);
+                productPage = productRepository.findAllByNameContainingIgnoreCase(keyword, pageable);
             }
 
             if (productPage.getTotalElements() > 0) {
@@ -247,13 +246,13 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<?> updateProduct(ProductPutRecord productPutRecord) {
 
         try {
-            Optional<Product> productOptional = productRepository.findById(UUID.fromString(productPutRecord.productId()));
+            Optional<Product> productOptional = productRepository.findById(productPutRecord.productId());
             if (productOptional.isPresent()) {
                 Product product = productOptional.get();
                 product.setName(productPutRecord.name());
                 product.setDescription(productPutRecord.description());
                 product.setPrice(productPutRecord.price());
-                product.setStock(productPutRecord.stock());
+                product.setInventory(productPutRecord.inventory());
                 productRepository.save(product);
                 return new ResponseEntity<>(HttpStatus.OK);
 
@@ -279,7 +278,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             final ResponseEntity<CommonResponseRecord> imageResponse = productImageRestClient.deleteProductImages(productId);
             if (imageResponse.getStatusCode() == HttpStatus.OK) {
-                productRepository.deleteById(UUID.fromString(productId));
+                productRepository.deleteById(productId);
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Image directory not removed", HttpStatus.NOT_FOUND);
