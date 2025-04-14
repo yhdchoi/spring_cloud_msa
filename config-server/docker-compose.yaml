@@ -1,5 +1,5 @@
 services:
-  ### MAIN DB
+  ### ACCOUNT DB
   mariadb-account:
     image: mariadb:latest
     container_name: account-db
