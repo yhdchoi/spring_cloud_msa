@@ -14,5 +14,8 @@ public class ProductDto {
     private String status;
     private String inventory;
 
+    private String createdAt;
+    private String modifiedAt;
+
     private String error;
 }
