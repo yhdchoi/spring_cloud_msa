@@ -12,18 +12,18 @@ public class RouteConfig {
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route(userRoute -> userRoute.path("/usr/**")
-//                        .filters(f -> f
+                                .filters(f -> f
 //                                .prefixPath("/api")
-//                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
-//                        )
+                                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                                )
                                 .uri("http://localhost:8081")
 
                 )
                 .route(storeRoute -> storeRoute.path("/str/**")
-//                        .filters(f -> f
+                                .filters(f -> f
 //                                .prefixPath("/api")
-//                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
-//                        )
+                                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                                )
                                 .uri("http://localhost:8082")
 
                 )
