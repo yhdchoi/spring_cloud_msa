@@ -1,24 +1,64 @@
 services:
   ### MAIN DB
-  mariadb-main:
+  mariadb-account:
     image: mariadb:latest
-    container_name: ${MAIN_DATABASE_NAME}
+    container_name: account-db
     ports:
-      - ${MAIN_CONTAINER_PORT}
+      - "3307:3306"
     environment:
-      MYSQL_DATABASE: ${MAIN_DATABASE_NAME}
-      MYSQL_ROOT_PASSWORD: ${MAIN_MARIADB_ROOT_PWD}
-      MYSQL_USER: ${MAIN_MARIADB_UN}
-      MYSQL_PASSWORD: ${MAIN_MARIADB_PWD}
+      MYSQL_DATABASE: main_db
+      MYSQL_ROOT_PASSWORD: fiorano1q2w
+      MYSQL_USER: fiorano
+      MYSQL_PASSWORD: fiorano
+
+  ### STORE DB
+  postgres-store:
+    image: postgres:15
+    container_name: store-db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: fiorano1q2we
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  ### PRODUCT DB
+  mongodb-product:
+    image: mongo:latest
+    container_name: product-db
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_DATABASE: product_db
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: fiorano1q2w
+    volumes:
+      - ./data:/data/db
+
+  ### ORDER DB
+  mongodb-order:
+    image: mongo:latest
+    container_name: order-db
+    ports:
+      - "27019:27017"
+    environment:
+      MONGO_INITDB_DATABASE: order_db
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: fiorano1q2w
+    volumes:
+      - ./data:/data/db
+
 
   ### FILE DB
   mariadb-file:
     image: mariadb:latest
-    container_name: ${FILE_DATABASE_NAME}
+    container_name: file-db
     ports:
-      - ${FILE_CONTAINER_PORT}
+      - "3308:3306"
     environment:
-      MYSQL_DATABASE: ${FILE_DATABASE_NAME}
+      MYSQL_DATABASE: file-db
       MYSQL_ROOT_PASSWORD: ${FILE_MARIADB_ROOT_PWD}
       MYSQL_USER: ${FILE_MARIADB_UN}
       MYSQL_PASSWORD: ${FILE_MARIADB_PWD}
@@ -27,7 +67,7 @@ services:
       - --collation-server=utf8mb4_unicode_ci
     restart: unless-stopped
 
-  ### ELK
+  ### LOG DB
 #  es:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VER}
 #    container_name: es
