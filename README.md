@@ -2,14 +2,17 @@
 I have created a project to 
 <br/>
 ## Introduction
+<img src="./readme/image/architecture-diagram.png" width="500" height="500" />
 
 <br/>
 I have designed an event-driven microservice 
 
 
-<br/>
+
 ## Config Server
+<br/>
 Spring Cloud Config provides server and client-side support for externalized configuration in a distributed system. With the Config Server you have a central place to manage external properties for applications across all environments.
+<br/>
 
 ```properties
 spring.application.name=config-server
@@ -20,7 +23,7 @@ The configurations can be pulled from Backend File System or Git repo. For this 
 <br/>
 <img src="./readme/image/config-file-list.png" width="200" height="200"/>
 
-<br/>
+
 ## Circuit Breaker - Resilience4j
 
 
