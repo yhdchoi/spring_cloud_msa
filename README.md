@@ -6,11 +6,9 @@ I have created a project to
 <br/>
 I have designed an event-driven microservice 
 
-<br/>
-# Spring Cloud
 
 <br/>
-## 1. Config Server
+# Config Server
 Spring Cloud Config provides server and client-side support for externalized configuration in a distributed system. With the Config Server you have a central place to manage external properties for applications across all environments.
 
 ```properties
@@ -23,14 +21,14 @@ The configurations can be pulled from Backend File System or Git repo. For this 
 <img src="./readme/image/config-file-list.png" width="200" height="200"/>
 
 <br/>
-## 2. Circuit Breaker - Resilience4j
+# Circuit Breaker - Resilience4j
 
 
 
 <br/>
-## 3. Gateway Reactive
+# Gateway Reactive
 I have used the Fluent Java Routes APi since I am using Reactive for my gateway. In this way I can easily manage and update routes.
-### Fluent Java Routes API
+## Fluent Java Routes API
 ```java
 @Bean
 public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
@@ -57,14 +55,14 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 
 
 <br/>
-## 4. Netflix Eureka Service Registry
+# Netflix Eureka Service Registry
 
 
 
 
 
 <br/>
-## 5. Security
+# Security
 
 
 
