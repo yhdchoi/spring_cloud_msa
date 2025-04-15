@@ -1,10 +1,14 @@
 # Project Fiorano
 
 # Architecture
+![image](./readme/img/diagram.png)
 
 # Spring Cloud
 
 ## Config
+```java
+public
+```
 
 ## Circuit Breaker - Resilience4j
 
