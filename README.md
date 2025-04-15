@@ -47,7 +47,7 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 
 # Spring Boot Actuator
 ## Configuration
-```text
+```properties
 management.endpoints.web.exposure.include=*
 management.endpoint.health.show-details=always
 management.info.env.enabled=true
