@@ -1,7 +1,7 @@
-# Project Fiorano
+# Spring Cloud 'Event-Driven' Microservice
 
 # Architecture
-![image](./readme/img/diagram.png)
+![image](./readme/image/architecture-diagram.png)
 
 # Spring Cloud
 
