@@ -16,6 +16,7 @@ server.port=8888
 spring.profiles.active=native
 ```
 The configurations can be pulled from Backend File System or Git repo. For this project I have located the congiuration files under config server's resources directory.
+<br/>
 ![image](./readme/image/config-file-list.png)
 
 
