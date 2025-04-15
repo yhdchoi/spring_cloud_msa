@@ -8,11 +8,21 @@
 # Spring Cloud
 
 ## Config Server
-```java
-public
+Spring Cloud Config provides server and client-side support for externalized configuration in a distributed system. With the Config Server you have a central place to manage external properties for applications across all environments.
+
+```properties
+spring.application.name=config-server
+server.port=8888
+spring.profiles.active=native
 ```
+The configurations can be pulled from Backend File System or Git repo. For this project I have located the congiuration files under config server's resources directory.
+![image](./readme/image/config-file-list.png)
+
 
 ## Circuit Breaker - Resilience4j
+
+
+
 
 ## Gateway Reactive
 ### Fluent Java Routes API
@@ -46,7 +56,9 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 ## Security
 
 # Spring Boot Actuator
-## Configuration
+Actuator endpoints let you monitor and interact with your application.
+
+Configuration
 ```properties
 management.endpoints.web.exposure.include=*
 management.endpoint.health.show-details=always
@@ -64,10 +76,21 @@ info.app.author=Daniel Choi
 ## Rest Template
 
 # Databases
+## MariaDB
+
+## MongoDB
+
+
+## PostgreSQL
+
 
 
 # Deployment
+## Docker
 
+
+
+## Kubernetes
 
 
 
