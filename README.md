@@ -7,7 +7,6 @@ I have created a project to
 I have designed an event-driven microservice 
 
 <br/>
-<br/>
 # Spring Cloud
 
 <br/>
@@ -74,7 +73,6 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 
 
 <br/>
-<br/>
 # Spring Boot Actuator
 Actuator endpoints let you monitor and interact with your application.
 
@@ -99,7 +97,6 @@ I have integrated Kafaka for ordering service since Kafka is designed for handli
 I have implemented RabbitMQ for Notification service since RabbitMQ is versatile and flexible, supporting muti-protocols.
 
 
-<br/>
 <br/>
 # Microservices
 <br/>
@@ -128,7 +125,6 @@ public class RestConfig {
 }
 ```
 
-<br/>
 <br/>
 # Databases
 ## MariaDB
