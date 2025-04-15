@@ -1,12 +1,16 @@
 # Spring Cloud 'Event-Driven' Microservice
-
+I have created a project to 
+<br/>
 # Introduction
 ![image](./readme/image/architecture-diagram.png)
+<br/>
+I have designed an event-driven microservice 
 
-
-
+<br/>
+<br/>
 # Spring Cloud
 
+<br/>
 ## 1. Config Server
 Spring Cloud Config provides server and client-side support for externalized configuration in a distributed system. With the Config Server you have a central place to manage external properties for applications across all environments.
 
@@ -19,11 +23,12 @@ The configurations can be pulled from Backend File System or Git repo. For this 
 <br/>
 <img src="./readme/image/config-file-list.png" width="200" height="200"/>
 
+<br/>
 ## 2. Circuit Breaker - Resilience4j
 
 
 
-
+<br/>
 ## 3. Gateway Reactive
 I have used the Fluent Java Routes APi since I am using Reactive for my gateway. In this way I can easily manage and update routes.
 ### Fluent Java Routes API
@@ -49,13 +54,27 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
             << ... skip ... >>
             
         .build();
-
 ```
 
+
+<br/>
 ## 4. Netflix Eureka Service Registry
 
+
+
+
+
+<br/>
 ## 5. Security
 
+
+
+
+
+
+
+<br/>
+<br/>
 # Spring Boot Actuator
 Actuator endpoints let you monitor and interact with your application.
 
@@ -72,12 +91,50 @@ info.app.version=1.0.0
 info.app.author=Daniel Choi
 ```
 
-# Microservices
-## Load Balancer
-## Rest Template
+# Server Side Event - SSE
+## Kafka
+I have integrated Kafaka for ordering service since Kafka is designed for handling large volumes of data with minimal latency.
 
+## RabbitMQ
+I have implemented RabbitMQ for Notification service since RabbitMQ is versatile and flexible, supporting muti-protocols.
+
+
+<br/>
+<br/>
+# Microservices
+<br/>
+
+<br/>
+## Load Balancer
+<br/>
+Dependency
+<br/>
+```groovy
+implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+```
+
+
+
+<br/>
+## Rest Template
+I have implemented Rest Template to accomplish communication between the services.
+```java
+@Configuration
+public class RestConfig {
+
+    @LoadBalanced
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+}
+```
+
+<br/>
+<br/>
 # Databases
 ## MariaDB
+
 
 ## MongoDB
 
@@ -86,7 +143,7 @@ info.app.author=Daniel Choi
 
 
 
-# Deployment
+# Build & Deploy
 ## Docker
 
 
