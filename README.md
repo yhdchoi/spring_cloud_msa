@@ -7,7 +7,7 @@
 
 # Spring Cloud
 
-## Config Server
+## 1. Config Server
 Spring Cloud Config provides server and client-side support for externalized configuration in a distributed system. With the Config Server you have a central place to manage external properties for applications across all environments.
 
 ```properties
@@ -19,12 +19,13 @@ The configurations can be pulled from Backend File System or Git repo. For this 
 <br/>
 <img src="./readme/image/config-file-list.png" width="200" height="200"/>
 
-## Circuit Breaker - Resilience4j
+## 2. Circuit Breaker - Resilience4j
 
 
 
 
-## Gateway Reactive
+## 3. Gateway Reactive
+I have used the Fluent Java Routes APi since I am using Reactive for my gateway. In this way I can easily manage and update routes.
 ### Fluent Java Routes API
 ```java
 @Bean
@@ -51,9 +52,9 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 
 ```
 
-## Netflix Eureka Service Registry
+## 4. Netflix Eureka Service Registry
 
-## Security
+## 5. Security
 
 # Spring Boot Actuator
 Actuator endpoints let you monitor and interact with your application.
