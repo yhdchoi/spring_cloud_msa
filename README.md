@@ -109,9 +109,7 @@ I have implemented RabbitMQ for Notification service since RabbitMQ is versatile
 <br/>
 Dependency
 <br/>
-```groovy
-implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
-```
+
 
 
 
