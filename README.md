@@ -2,7 +2,8 @@
 I have created a project to 
 <br/>
 ## Introduction
-![image](./readme/image/architecture-diagram.png)
+<img src="./readme/image/architecture-diagram.png" width="500" height="500"/>
+
 <br/>
 I have designed an event-driven microservice 
 
