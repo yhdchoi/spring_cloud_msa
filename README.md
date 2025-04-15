@@ -17,8 +17,7 @@ spring.profiles.active=native
 ```
 The configurations can be pulled from Backend File System or Git repo. For this project I have located the congiuration files under config server's resources directory.
 <br/>
-![image](./readme/image/config-file-list.png)
-<img src="./readme/image/config-file-list.png" width="200" height="300"/>
+<img src="./readme/image/config-file-list.png" width="200" height="200"/>
 
 ## Circuit Breaker - Resilience4j
 
