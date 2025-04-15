@@ -1,32 +1,42 @@
 # Project Fiorano
-This project investigates microservice
+
 # Architecture
 
+# Spring Cloud
 
-# Gateway
+## Config
 
-## Route
+## Circuit Breaker - Resilience4j
+
+## Gateway Reactive
+
+## Netflix
+### Eureka Service Registry
 
 ## Security
 
-# Eureka Server
+# Spring Boot Actuator
 
-# Config Server
+# Services
 
-# Ai Server
+## Account Server
 
+## Store Server
 
-# Account Server
-
-
-# Video Catalog Server
-
-## Load Balancing
+## Product Server
 
 
-# Video Stream Server
+## Order Server
+
+## Image Server
 
 
-## Rest Client
+## Video Catalog Server
+
+
+## Video Stream Server
+
+
+
 
 
