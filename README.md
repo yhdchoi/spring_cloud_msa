@@ -1,7 +1,7 @@
 # Spring Cloud 'Event-Driven' Microservice
 
 ![yes](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
-![yes](https://img.shields.io/github/last-commit/yhdchoi/msa-cloud.svg)
+![commit](https://img.shields.io/github/commits-since/yhdchoi/fiorano/1.0.svg)
 
 ![java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![spring](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
@@ -24,6 +24,8 @@
 ![architecture](./readme/image/architecture-diagram.png)
 
 [//]: # (<img src="./readme/image/architecture-diagram.png" width="800" height="800" />)
+
+>For this project, I am demonstrating a Microservice with an Event-Driven Architecture.  
 
 ## Getting Started
 
@@ -154,6 +156,7 @@ bot attacks by requiring users to solve a puzzle or answer a question before log
 #### 1. Up and running the Keycloak
 
 For this project you need to deploy a keycloak container with its own database for metadata.
+
 ```shell
   docker compose up -d
 ```
@@ -203,9 +206,12 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 Above configuration will redirect all requests to the Keycloak authentication server.
 The Keycloak authentication server then will handle issuing and validating JWT.
 
-## Spring Boot Actuator
+## Actuator
 
-Actuator endpoints let you monitor and interact with your application.
+Spring Boot Actuator is a sub-project of Spring Boot that provides a set of built-in production-ready features to help
+you monitor and manage your application.
+Actuator includes several endpoints that allow you to interact with the application, gather metrics, check the health,
+and perform various management tasks.
 
 #### Configuration
 
@@ -220,16 +226,14 @@ info.app.version=1.0.0
 info.app.author=Daniel Choi
 ```
 
-## Server Side Event - SSE
+## Kafka
 
-### Kafka
-
-I have integrated Kafaka for ordering service since Kafka is designed for handling large volumes of data with minimal
+Kafaka has been implemented for ordering service since Kafka is designed for handling large volumes of data with minimal
 latency.
 
-### RabbitMQ
+## RabbitMQ
 
-I have implemented RabbitMQ for Notification service since RabbitMQ is versatile and flexible, supporting
+RabbitMQ has been implemented for Notification service since RabbitMQ is versatile and flexible, supporting
 multi-protocols.
 
 ## Load Balancer
@@ -253,8 +257,14 @@ public class RestConfig {
 }
 ```
 
+## Swagger
+
 ## Testcontainers
 
-## Springdoc-openapi (Documentation)
+```shell
+   ./gradlew test
+```
+
+## Docker & Kubernetes
 
 
