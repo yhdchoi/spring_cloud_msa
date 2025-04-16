@@ -1,4 +1,42 @@
 services:
+  ### KEYCLOAK DB
+  mariadb-keycloak:
+    image: mariadb:latest
+    container_name: keycloak-db
+    ports:
+      - "3399:3306"
+    environment:
+      MARIADB_DATABASE: keycloak
+      MARIADB_ROOT_PASSWORD: fiorano1q2w
+      MARIADB_USER: fiorano
+      MARIADB_PASSWORD: fiorano
+    volumes:
+      - ./container/keycloak-db/conf.d:/etc/mysql/conf.d
+      - ./container/keycloak-db/data:/var/lib/mysql
+    restart: unless-stopped
+
+  ### KEYCLOAK
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:26.2.0
+    command: ["start-dev", "--import-realm"]
+    environment:
+      DB_VENDOR: MARIADB
+      DB_ADDR: mariadb
+      DB_DATABASE: keycloak
+      DB_USER: root
+      DB_PASSWORD: fiorano1q2w
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8181:8080"
+    volumes:
+      - ./container/keycloak/realms/:/opt/keycloak/data/import
+    depends_on:
+      - mariadb-keycloak
+
+
+
   ### ACCOUNT DB
   mariadb-account:
     image: mariadb:latest
