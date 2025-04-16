@@ -3,7 +3,6 @@
 ![yes](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
 ![yes](https://img.shields.io/github/last-commit/yhdchoi/msa-cloud.svg)
 
-
 ![java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![spring](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
 ![springsecurity](https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=Spring-Security&logoColor=white)
@@ -20,12 +19,11 @@
 ![figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 ![intellij](https://img.shields.io/badge/IntelliJ_IDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)
 
-
 ## Architecture
 
-[//]: # (<img src="./readme/image/architecture-diagram.png" width="800" height="800" />)
+![architecture](./readme/image/architecture-diagram.png)
 
-<br/>
+[//]: # (<img src="./readme/image/architecture-diagram.png" width="800" height="800" />)
 
 ## Getting Started
 
@@ -33,9 +31,7 @@ To run the project you will need Docker. You need to run the docker compose file
 starting the project for the first time since the docker-compose.yml contains all the necessary containers to run the
 application.
 
-```text
-❗️IMPORTANT: This project is set up so that you can run on local environment as a demonstrations ONLY.
-```
+> ❗️IMPORTANT: This project is set up so that you can run on local environment as a demonstrations ONLY.
 
 ## Config Server
 
@@ -62,20 +58,21 @@ chain of service dependencies.
 Suppose service A calls service B, which calls service C, but C does not respond. Service C may be down, or overloaded,
 and take a long time to respond, causing errors that may cascade and cause the system to fail.
 
-According to Chris Richardson's "Microservice Patterns":
+**According to Chris Richardson's *"Microservice Patterns"*:**
 
-```text
-    A service client should invoke a remote service via a proxy that functions in a similar fashion to an electrical circuit breaker. 
-    When the number of consecutive failures crosses a threshold, the circuit breaker trips, and for the duration of a timeout period all attempts to invoke the remote service will fail immediately.
-    After the timeout expires the circuit breaker allows a limited number of test requests to pass through. 
-    If those requests succeed the circuit breaker resumes normal operation. Otherwise, if there is a failure the timeout period begins again.
-```
+***A service client should invoke a remote service via a proxy that functions in a similar fashion to an electrical
+circuit breaker.
+When the number of consecutive failures crosses a threshold, the circuit breaker trips, and for the duration of a
+timeout period all attempts to invoke the remote service will fail immediately.
+After the timeout expires the circuit breaker allows a limited number of test requests to pass through.
+If those requests succeed the circuit breaker resumes normal operation. Otherwise, if there is a failure the timeout
+period begins again.***
 
-If the Store service fails due a sudden surge in traffic, the circuit breaker will cut off to the service. After a certain amount of time breaker will let part of the traffic in to check if the service operates as normal.
+If the Store service fails due a sudden surge in traffic, the circuit breaker will cut off to the service. After a
+certain amount of time breaker will let part of the traffic in to check if the service operates as normal.
 If it checks out to be ok, then breaker will let the service back to the original state.
 
 [//]: # (<img src="./readme/image/architecture-diagram.png" width="500" height="500" />)
-
 
 #### Configurations:
 
@@ -145,9 +142,7 @@ public class EurekaServerApplication {
 
 The @EnableEurekaServer annotation is added to run the server as a service registry server.
 
-## Security
-
-### KeyCloak
+## Security - Keycloak
 
 When it comes to hacking prevention, Keycloak offers a more comprehensive set of features than Spring Security. Keycloak
 provides advanced features like multi-factor authentication (MFA), brute force protection, and CAPTCHA support. MFA adds
@@ -158,27 +153,12 @@ bot attacks by requiring users to solve a puzzle or answer a question before log
 
 #### 1. Up and running the Keycloak
 
-For this project I have deployed a keycloak container with its database for metadata.
+For this project you need to deploy a keycloak container with its own database for metadata.
+```shell
+  docker compose up -d
+```
 
 ```yaml
-services:
-  ### KEYCLOAK DB
-  mariadb-keycloak:
-    image: mariadb:latest
-    container_name: keycloak-db
-    ports:
-      - "3399:3306"
-    environment:
-      MARIADB_DATABASE: keycloak
-      MARIADB_ROOT_PASSWORD: fiorano1q2w
-      MARIADB_USER: fiorano
-      MARIADB_PASSWORD: fiorano
-    volumes:
-      - ./container/keycloak-db/conf.d:/etc/mysql/conf.d
-      - ./container/keycloak-db/data:/var/lib/mysql
-    restart: unless-stopped
-
-  ### KEYCLOAK
   keycloak:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:26.2.0
@@ -252,9 +232,6 @@ latency.
 I have implemented RabbitMQ for Notification service since RabbitMQ is versatile and flexible, supporting
 multi-protocols.
 
-
-<br/>
-
 ## Load Balancer
 
 For communicating between each services
@@ -276,19 +253,8 @@ public class RestConfig {
 }
 ```
 
-<br/>
-
-## Databases
-
 ## Testcontainers
 
-## Documentation (springdoc-openapi)
-
-
-
-
-
-
-
+## Springdoc-openapi (Documentation)
 
 
