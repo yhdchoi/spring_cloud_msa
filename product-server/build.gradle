@@ -43,6 +43,10 @@ dependencies {
     // LOAD BALANCER
     implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
 
+    // SWAGGER
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.8.6'
+
     // MONITOR
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
