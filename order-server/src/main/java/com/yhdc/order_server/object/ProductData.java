@@ -1,7 +1,11 @@
 package com.yhdc.order_server.object;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class ProductData {
 
@@ -9,6 +13,7 @@ public class ProductData {
     private String name;
     private String price;
 
-    private String count;
+    private String quantity;
+    private boolean isStock;
 
 }

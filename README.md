@@ -25,16 +25,18 @@
 
 [//]: # (<img src="./readme/image/architecture-diagram.png" width="800" height="800" />)
 
-> For this project, I am demonstrating a [Microservice Architecture](https://yhdchoi.notion.site/Microservice-Architecture-1d40b6ddbce580cdb8cfe3bcc877912b?pvs=4)
-collaborating with an [Event-Driven Architecture](https://yhdchoi.notion.site/Event-Driven-Architecture-1d40b6ddbce580f1a39fe756daf040d2?pvs=4)
-. The reason why I've started this project was to 
+> For this project, I am demonstrating
+> a [Microservice Architecture](https://yhdchoi.notion.site/Microservice-Architecture-1d40b6ddbce580cdb8cfe3bcc877912b?pvs=4)
+> collaborating with
+> an [Event-Driven Architecture](https://yhdchoi.notion.site/Event-Driven-Architecture-1d40b6ddbce580f1a39fe756daf040d2?pvs=4)
+> . The reason why I've started this project was to
 
 ## Getting Started
 
 To run the project you will need Docker. You need to run the docker compose file within the Config Server first when
 starting the project for the first time since the docker-compose.yml contains all the necessary containers to run the
 application.
-Please follow the rest of the documentation to run the project and 
+Please follow the rest of the documentation to run the project and
 
 > ❗️IMPORTANT: This project is set up so that you can run on local environment as a demonstrations ONLY.
 
@@ -73,7 +75,8 @@ After the timeout expires the circuit breaker allows a limited number of test re
 If those requests succeed the circuit breaker resumes normal operation. Otherwise, if there is a failure the timeout
 period begins again.***
 
-For example, if the Store service fails due a sudden surge in traffic, the circuit breaker will cut off to the service. After a
+For example, if the Store service fails due a sudden surge in traffic, the circuit breaker will cut off to the service.
+After a
 certain amount of time breaker will let part of the traffic in to check if the service operates as normal.
 If it checks out to be ok, then breaker will let the service back to the original state.
 
@@ -229,22 +232,14 @@ info.app.version=1.0.0
 info.app.author=Daniel Choi
 ```
 
-## Kafka
-
-Kafaka has been implemented for ordering service since Kafka is designed for handling large volumes of data with minimal
-latency.
-
-## RabbitMQ
-
-RabbitMQ has been implemented for Notification service since RabbitMQ is versatile and flexible, supporting
-multi-protocols.
-
 ## Load Balancer
 
 For communicating between each services
 
 ## Rest Template
-For the synchronous communication between Video-Catalog service and Video-Stream service, I have implemented Rest Template.
+
+For the synchronous communication between Video-Catalog service and Video-Stream service, I have implemented Rest
+Template.
 
 ```java
 
@@ -260,8 +255,18 @@ public class RestConfig {
 ```
 
 ## OpenFeign
+
 Between the Order and Inventory services, I have establish synchronous communication using Spring Could OpenFeign.
 
+## Kafka
+
+Kafaka has been implemented for ordering service since Kafka is designed for handling large volumes of data with minimal
+latency.
+
+## RabbitMQ
+
+RabbitMQ has been implemented for Notification service since RabbitMQ is versatile and flexible, supporting
+multi-protocols.
 
 ## Swagger
 

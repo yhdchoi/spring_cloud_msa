@@ -26,7 +26,7 @@ public class Order {
     private String userId;
     private List<StoreData> storeList;
 
-    private String price;
+    private String total;
     private String status;
 
     @CreatedDate
