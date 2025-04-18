@@ -1,6 +1,5 @@
-package com.yhdc.order_server.transaction;
+package com.yhdc.inventory_server.transaction;
 
-import com.yhdc.order_server.object.StoreData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,25 +11,23 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Document("order")
-public class Order {
+@Document("inventory")
+public class Inventory {
 
     @Id
     private String id;
 
-    // Seller
-    private String userId;
+    @Field(name = "product_id")
+    private String productId;
 
-    @Field(name = "store_list")
-    private List<StoreData> storeList;
+    @Field(name = "sku_code")
+    private String skuCode;
 
-    private String total;
-    private String status;
+    private Long quantity;
 
     @Field(name = "created_at")
     @CreatedDate

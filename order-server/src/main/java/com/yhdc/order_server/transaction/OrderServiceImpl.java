@@ -31,7 +31,7 @@ public class OrderServiceImpl {
         for (StoreData storeData : orderCreateRecord.storeDataList()) {
             List<ProductData> productDataList = storeData.getProductDataList();
             for (ProductData productData : productDataList) {
-                boolean isStock = inventoryFeignClient.isInStock(productData.getProductId(), Integer.parseInt(productData.getQuantity()));
+                boolean isStock = inventoryFeignClient.isInStock(productData.getProductId(), productData.getQuantity());
                 if (!isStock) {
                     productData.setStock(false);
                     checkStock = false;
@@ -69,6 +69,8 @@ public class OrderServiceImpl {
         order.setStatus("PROCESSING");
         return order;
     }
+
+
 
 
 }

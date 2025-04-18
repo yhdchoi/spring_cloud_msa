@@ -1,0 +1,13 @@
+package com.yhdc.inventory_server.transaction;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface InventoryRepository extends MongoRepository<Inventory, String> {
+    Optional<Inventory> findByProductIdAndSkuCode(String productId, String skuCode);
+
+    void deleteByProductIdAndSkuCode(String productId, String skuCode);
+}
