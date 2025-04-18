@@ -258,6 +258,7 @@ public class RestConfig {
 
 Between the Order and Inventory services, I have establish synchronous communication using Spring Could OpenFeign.
 
+
 ## Kafka
 
 Kafaka has been implemented for ordering service since Kafka is designed for handling large volumes of data with minimal
