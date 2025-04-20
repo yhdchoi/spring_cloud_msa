@@ -1,7 +1,7 @@
 package com.yhdc.product_server.transaction;
 
-import com.yhdc.product_server.object.ProductCreateRecord;
-import com.yhdc.product_server.object.ProductPutRecord;
+import com.yhdc.product_server.transaction.object.ProductCreateRecord;
+import com.yhdc.product_server.transaction.object.ProductPutRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

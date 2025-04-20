@@ -1,14 +1,13 @@
 package com.yhdc.product_server.transaction;
 
-import com.yhdc.product_server.type.ProductStatus;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
+import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.OffsetDateTime;
 
@@ -18,22 +17,42 @@ import java.time.OffsetDateTime;
 @Document("product")
 public class Product {
 
+    @Transient
+    public static final String SEQUENCE_NAME = "product_sequence";
+
     @Id
-    private String id;
+    private Long id;
 
     // Seller
+    @NotBlank
+    @Field(name = "user_id")
     private String userId;
+
+    @NotBlank
+    @Field(name = "store_id")
     private String storeId;
 
+    @NotBlank
     private String name;
-    private String description;
-    private String price;
-    private String inventory;
-    private ProductStatus status;
 
+    @NotBlank
+    @Field(name = "sku_code")
+    private String skuCode;
+
+    private String description;
+
+    @NotBlank
+    private String price;
+
+    @NotBlank
+    @Size(min = 1, max = 10)
+    private String status;
+
+    @Field(name = "created_at")
     @CreatedDate
     private OffsetDateTime createdAt;
 
+    @Field(name = "modified_at")
     @LastModifiedDate
     private OffsetDateTime modifiedAt;
 

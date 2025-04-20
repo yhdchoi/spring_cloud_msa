@@ -6,7 +6,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface InventoryRepository extends MongoRepository<Inventory, String> {
+public interface InventoryRepository extends MongoRepository<Inventory, Long> {
+
     Optional<Inventory> findByProductIdAndSkuCode(String productId, String skuCode);
 
     void deleteByProductIdAndSkuCode(String productId, String skuCode);

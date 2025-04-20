@@ -1,7 +1,7 @@
 package com.yhdc.product_server.transaction;
 
-import com.yhdc.product_server.object.CommonResponseRecord;
-import com.yhdc.product_server.object.ImageInfoListDto;
+import com.yhdc.product_server.transaction.object.CommonResponseRecord;
+import com.yhdc.product_server.transaction.object.ImageInfoListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
@@ -12,7 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-import static com.yhdc.product_server.type.Constants.FILE_SERVER_URI;
+import static com.yhdc.product_server.transaction.type.Constants.FILE_SERVER_URI;
 
 @Slf4j
 @RequiredArgsConstructor

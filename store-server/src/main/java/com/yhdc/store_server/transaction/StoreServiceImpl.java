@@ -1,12 +1,12 @@
 package com.yhdc.store_server.transaction;
 
-import com.yhdc.store_server.object.StoreCreateRecord;
-import com.yhdc.store_server.object.StoreDto;
-import com.yhdc.store_server.object.StorePatchRecord;
-import com.yhdc.store_server.object.StorePutRecord;
-import com.yhdc.store_server.type.StoreStatus;
-import com.yhdc.store_server.util.DataConverter;
-import com.yhdc.store_server.util.PageProducer;
+import com.yhdc.store_server.transaction.object.StoreCreateRecord;
+import com.yhdc.store_server.transaction.object.StoreDto;
+import com.yhdc.store_server.transaction.object.StorePatchRecord;
+import com.yhdc.store_server.transaction.object.StorePutRecord;
+import com.yhdc.store_server.transaction.type.StoreStatus;
+import com.yhdc.store_server.transaction.util.DataConverter;
+import com.yhdc.store_server.transaction.util.PageProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,9 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
 
-import static com.yhdc.store_server.type.Constants.*;
+import static com.yhdc.store_server.transaction.type.Constants.*;
 
 
 @Slf4j
@@ -28,6 +27,7 @@ import static com.yhdc.store_server.type.Constants.*;
 public class StoreServiceImpl implements StoreService {
 
     private final StoreRepository storeRepository;
+    private final DatabaseSequenceGeneratorService databaseSequenceGeneratorService;
     private final DataConverter dataConverter;
     private final PageProducer pageProducer;
 
@@ -37,21 +37,22 @@ public class StoreServiceImpl implements StoreService {
      * @param storeCreateRecord
      * @implNote Create new store
      */
+    @Override
     @Transactional
     public ResponseEntity<?> createStore(StoreCreateRecord storeCreateRecord) {
 
         try {
             Store store = new Store();
-            store.setUserId(storeCreateRecord.userId());
+            store.setId(databaseSequenceGeneratorService.generateSequence(Store.SEQUENCE_NAME));
+            store.setSellerId(storeCreateRecord.userId());
             store.setName(storeCreateRecord.name());
             store.setDescription(storeCreateRecord.description());
-            store.setStatus(StoreStatus.ACTIVE);
+            store.setStatus(StoreStatus.ACTIVE.selection());
             Store newStore = storeRepository.save(store);
-
-            newStore.setImagePath(IMAGE_BASE_DIR + "/" + newStore.getId());
-            return new ResponseEntity<>(newStore.getId().toString(), HttpStatus.CREATED);
+            return new ResponseEntity<>(newStore.getId(), HttpStatus.CREATED);
 
         } catch (Exception e) {
+            log.error("Unable to create store!!!", e);
             return new ResponseEntity<>("Unable to create store",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -65,10 +66,11 @@ public class StoreServiceImpl implements StoreService {
      * @implNote
      * @implSpec
      */
+    @Override
     @Transactional(readOnly = true)
     public ResponseEntity<StoreDto> detailStore(String storeId) {
         try {
-            Optional<Store> store = storeRepository.findById(UUID.fromString(storeId));
+            Optional<Store> store = storeRepository.findById(Long.valueOf(storeId));
             if (store.isPresent()) {
                 Store storeData = store.get();
                 StoreDto storeDto = dataConverter.convertStoreToDto(storeData);
@@ -93,6 +95,7 @@ public class StoreServiceImpl implements StoreService {
      * @param sortOrder
      * @implNote
      */
+    @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> searchStorePage(String keyword, String pageNo, String pageSize, String sortBy, String sortOrder) {
         try {
@@ -101,7 +104,7 @@ public class StoreServiceImpl implements StoreService {
             if (keyword.equals("*")) {
                 storePage = storeRepository.findAll(pageable);
             } else {
-                storePage = storeRepository.searchStoreByKeyword(keyword, pageable);
+                storePage = storeRepository.findAllByNameContainingIgnoreCase(keyword, pageable);
             }
 //            assert storePage != null;
             Page<StoreDto> userDtoPage = storePage.map(dataConverter::convertStoreToDto);
@@ -117,13 +120,13 @@ public class StoreServiceImpl implements StoreService {
      * UPDATE STORE STATUS
      *
      * @param storePutRecord
-     * @return
      */
+    @Override
     @Transactional
     public ResponseEntity<?> updateStore(StorePutRecord storePutRecord) {
 
         try {
-            Optional<Store> storeOptional = storeRepository.findById(UUID.fromString(storePutRecord.id()));
+            Optional<Store> storeOptional = storeRepository.findById(Long.valueOf(storePutRecord.id()));
             if (storeOptional.isPresent()) {
                 Store store = storeOptional.get();
                 store.setName(storePutRecord.name());
@@ -144,23 +147,24 @@ public class StoreServiceImpl implements StoreService {
      * @param storePatchRecord
      * @implNote Admin ONLY
      */
+    @Override
     @Transactional
     public ResponseEntity<?> patchStoreStatus(StorePatchRecord storePatchRecord) {
 
         try {
-            Optional<Store> storeOptional = storeRepository.findById(UUID.fromString(storePatchRecord.storeId()));
+            Optional<Store> storeOptional = storeRepository.findById(Long.valueOf(storePatchRecord.storeId()));
             if (storeOptional.isPresent()) {
                 Store store = storeOptional.get();
 
                 switch (storePatchRecord.status()) {
                     case STORE_ACTIVE:
-                        store.setStatus(StoreStatus.ACTIVE);
+                        store.setStatus(StoreStatus.ACTIVE.selection());
                         break;
                     case STORE_INACTIVE:
-                        store.setStatus(StoreStatus.INACTIVE);
+                        store.setStatus(StoreStatus.INACTIVE.selection());
                         break;
                     default:
-                        store.setStatus(StoreStatus.SUSPENDED);
+                        store.setStatus(StoreStatus.SUSPENDED.selection());
                         break;
                 }
 
@@ -183,10 +187,11 @@ public class StoreServiceImpl implements StoreService {
      * @param storeId
      * @implNote Deletes store
      */
+    @Override
     @Transactional
     public ResponseEntity<?> deleteStore(String storeId) {
         try {
-            storeRepository.deleteById(UUID.fromString(storeId));
+            storeRepository.deleteById(Long.valueOf(storeId));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Unable to delete store", HttpStatus.INTERNAL_SERVER_ERROR);

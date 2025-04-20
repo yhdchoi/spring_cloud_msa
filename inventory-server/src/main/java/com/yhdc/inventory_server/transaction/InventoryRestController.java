@@ -1,5 +1,7 @@
 package com.yhdc.inventory_server.transaction;
 
+import com.yhdc.inventory_server.transaction.object.InventoryCommonRecord;
+import com.yhdc.inventory_server.transaction.object.InventoryCreateRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,44 +12,46 @@ public class InventoryRestController {
 
     private final InventoryServiceImpl inventoryService;
 
-    @GetMapping("/detail")
-    public ResponseEntity<?> getInventoryDetail(@RequestParam(value = "inventoryId") String inventoryId) {
-        return inventoryService.detailInventory(inventoryId);
-    }
-
-    @PostMapping("/increase")
-    public ResponseEntity<?> increaseQuantity(@RequestBody InventoryCommonRecord inventoryCommonRecord) {
-        return inventoryService.increaseQuantity(inventoryCommonRecord);
-    }
-
-    @PatchMapping("/patch/sku")
-    public ResponseEntity<?> patchSku(@RequestParam String productId,
-                                      @RequestParam String skuCode,
-                                      @RequestParam String newSkuCode) {
-        return inventoryService.updateSku(productId, skuCode, newSkuCode);
-    }
 
     @GetMapping("/stock")
     public boolean getInventoryDetail(@RequestParam String productId,
                                       @RequestParam String skuCode,
                                       @RequestParam String quantity) {
-        return inventoryService.checkStock(productId, skuCode, quantity);
+        return inventoryService.checkInventoryStock(productId, skuCode, quantity);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createInventory(InventoryCreateRecord inventoryCreateRecord) {
-        return inventoryService.createNewInventory(inventoryCreateRecord);
+    public ResponseEntity<?> createInventory(@RequestBody InventoryCreateRecord inventoryCreateRecord) {
+        return inventoryService.createInventory(inventoryCreateRecord);
+    }
+
+    @GetMapping("/stock")
+    public String getInventoryStock(@RequestParam(value = "productId") String productId,
+                                     @RequestParam(value = "skuCode") String skuCode) {
+        return inventoryService.getInventoryStock(productId, skuCode);
+    }
+
+    @PatchMapping("/increase")
+    public ResponseEntity<?> increaseQuantity(@RequestBody InventoryCommonRecord inventoryCommonRecord) {
+        return inventoryService.increaseInventoryStock(inventoryCommonRecord);
     }
 
     @PatchMapping("/decrease")
-    public ResponseEntity<?> decreaseInventory(InventoryCommonRecord inventoryCommonRecord) {
-        return inventoryService.decreaseQuantity(inventoryCommonRecord);
+    public ResponseEntity<?> decreaseInventory(@RequestBody InventoryCommonRecord inventoryCommonRecord) {
+        return inventoryService.decreaseInventoryStock(inventoryCommonRecord);
+    }
+
+    @PatchMapping("/patch/sku")
+    public ResponseEntity<?> patchSku(@RequestParam(value = "productId") String productId,
+                                      @RequestParam(value = "skuCode") String skuCode,
+                                      @RequestParam(value = "newSkuCode") String newSkuCode) {
+        return inventoryService.updateSku(productId, skuCode, newSkuCode);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteInventory(String productId, String skuCode) {
+    public ResponseEntity<?> deleteInventory(@RequestParam(value = "productId") String productId,
+                                             @RequestParam(value = "skuCode") String skuCode) {
         return inventoryService.deleteInventory(productId, skuCode);
     }
-
 
 }

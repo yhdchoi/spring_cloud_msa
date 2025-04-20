@@ -1,35 +1,21 @@
 package com.yhdc.inventory_server.transaction;
 
+import com.yhdc.inventory_server.transaction.object.InventoryCommonRecord;
+import com.yhdc.inventory_server.transaction.object.InventoryCreateRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class InventoryServiceImpl {
+public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryRepository inventoryRepository;
-
-
-    /**
-     * CREATE A NEW INVENTORY
-     *
-     * @param inventoryCreateRecord
-     */
-    public ResponseEntity<?> createNewInventory(InventoryCreateRecord inventoryCreateRecord) {
-
-        Inventory inventory = new Inventory();
-        inventory.setProductId(inventoryCreateRecord.productId());
-        inventory.setSkuCode(inventoryCreateRecord.skuCode());
-        inventory.setQuantity(Long.valueOf(inventoryCreateRecord.quantity()));
-
-        Inventory savedInventory = inventoryRepository.save(inventory);
-
-        return new ResponseEntity<>(savedInventory.getId(), HttpStatus.CREATED);
-    }
+    private final DatabaseSequenceGeneratorService databaseSequenceGeneratorService;
 
 
     /**
@@ -38,24 +24,61 @@ public class InventoryServiceImpl {
      * @param productId
      * @param skuCode
      */
-    private Inventory getInventory(String productId, String skuCode) {
+    @Transactional
+    protected Inventory getInventory(String productId, String skuCode) {
         Optional<Inventory> inventory = inventoryRepository.findByProductIdAndSkuCode(productId, skuCode);
         return inventory.orElse(null);
     }
 
 
     /**
-     * DETAIL INVENTORY
+     * CREATE A NEW INVENTORY
      *
-     * @param inventoryId
+     * @param inventoryCreateRecord
      */
-    public ResponseEntity<?> detailInventory(String inventoryId) {
-        Optional<Inventory> inventory = inventoryRepository.findById(inventoryId);
-        if (inventory.isPresent()) {
-            return new ResponseEntity<>(inventory.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @Override
+    @Transactional
+    public ResponseEntity<?> createInventory(InventoryCreateRecord inventoryCreateRecord) {
+        try {
+            Inventory inventory = new Inventory();
+            inventory.setId(databaseSequenceGeneratorService.generateSequence(Inventory.SEQUENCE_NAME));
+            inventory.setProductId(inventoryCreateRecord.productId());
+            inventory.setSkuCode(inventoryCreateRecord.skuCode());
+            inventory.setQuantity(Long.valueOf(inventoryCreateRecord.quantity()));
+
+            final Inventory savedInventory = inventoryRepository.save(inventory);
+            return new ResponseEntity<>(savedInventory.getId(), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    /**
+     * CHECK INVENTORY STOCK
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public boolean checkInventoryStock(String productId, String skuCode, String quantity) {
+        Inventory inventory = getInventory(productId, skuCode);
+        if (inventory != null) {
+            return inventory.getQuantity().compareTo(Long.valueOf(quantity)) < 0;
+        } else {
+            return false;
+        }
+    }
+
+
+    /**
+     * GET INVENTORY STOCK
+     *
+     * @param productId
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public String getInventoryStock(String productId, String skuCode) {
+        Inventory inventory = getInventory(productId, skuCode);
+        return inventory.getQuantity().toString();
     }
 
 
@@ -64,7 +87,9 @@ public class InventoryServiceImpl {
      *
      * @param inventoryCommonRecord
      */
-    public ResponseEntity<?> increaseQuantity(InventoryCommonRecord inventoryCommonRecord) {
+    @Override
+    @Transactional
+    public ResponseEntity<?> increaseInventoryStock(InventoryCommonRecord inventoryCommonRecord) {
         Inventory inventory = getInventory(inventoryCommonRecord.productId(), inventoryCommonRecord.skuCode());
         if (inventory != null) {
             if (inventory.getQuantity().compareTo(Long.valueOf(inventoryCommonRecord.quantity())) < 0) {
@@ -84,7 +109,9 @@ public class InventoryServiceImpl {
      *
      * @param inventoryCommonRecord
      */
-    public ResponseEntity<?> decreaseQuantity(InventoryCommonRecord inventoryCommonRecord) {
+    @Override
+    @Transactional
+    public ResponseEntity<?> decreaseInventoryStock(InventoryCommonRecord inventoryCommonRecord) {
         Inventory inventory = getInventory(inventoryCommonRecord.productId(), inventoryCommonRecord.skuCode());
         if (inventory != null) {
             inventory.setQuantity(inventory.getQuantity() + Long.parseLong(inventoryCommonRecord.quantity()));
@@ -102,6 +129,8 @@ public class InventoryServiceImpl {
      * @param productId
      * @param skuCode
      */
+    @Override
+    @Transactional
     public ResponseEntity<?> updateSku(String productId, String skuCode, String newSkuCode) {
         Inventory inventory = getInventory(productId, skuCode);
         if (inventory != null) {
@@ -121,6 +150,8 @@ public class InventoryServiceImpl {
      * @param skuCode
      * @implNote When product is deleted
      */
+    @Override
+    @Transactional
     public ResponseEntity<?> deleteInventory(String productId, String skuCode) {
         try {
             inventoryRepository.deleteByProductIdAndSkuCode(productId, skuCode);
@@ -131,15 +162,4 @@ public class InventoryServiceImpl {
     }
 
 
-    /**
-     * CHECK INVENTORY
-     */
-    public boolean checkStock(String productId, String skuCode, String quantity) {
-        Inventory inventory = getInventory(productId, skuCode);
-        if (inventory != null) {
-            return inventory.getQuantity().compareTo(Long.valueOf(quantity)) < 0;
-        } else {
-            return false;
-        }
-    }
 }

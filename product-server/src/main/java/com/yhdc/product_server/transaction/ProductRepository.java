@@ -4,18 +4,10 @@ package com.yhdc.product_server.transaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductRepository extends MongoRepository<Product, String> {
-
-    /**
-     * PAGE SELLER'S PRODUCTS
-     *
-     * @param userId
-     */
-    Page<Product> findAllByUserId(String userId, Pageable pageable);
+public interface ProductRepository extends MongoRepository<Product, Long> {
 
     /**
      * PAGE ALL PRODUCTS IN A STORE

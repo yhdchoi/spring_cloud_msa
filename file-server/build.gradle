@@ -38,7 +38,7 @@ dependencies {
 
     // DATA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    runtimeOnly 'org.postgresql:postgresql'
 
     // CONFIG
     implementation 'org.springframework.cloud:spring-cloud-starter-config'

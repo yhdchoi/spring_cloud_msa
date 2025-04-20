@@ -1,13 +1,12 @@
 package com.yhdc.order_server.transaction;
 
-import com.yhdc.order_server.object.StoreData;
+import com.yhdc.order_server.transaction.object.StoreData;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
+import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -20,17 +19,30 @@ import java.util.List;
 @Document("order")
 public class Order {
 
-    @Id
-    private String id;
+    @Transient
+    public static final String SEQUENCE_NAME = "order_sequence";
 
-    // Seller
-    private String userId;
+    @Id
+    private Long id;
+
+    // Buyer
+    @NotBlank
+    @Field(name = "buyer_id")
+    private String buyerId;
+
+    private String description;
 
     @Field(name = "store_list")
     private List<StoreData> storeList;
 
-    private String total;
+    @NotBlank
+    @Field(name = "total_price")
+    private String totalPrice;
+
+    @NotBlank
+    @Size(min = 1, max = 10)
     private String status;
+
 
     @Field(name = "created_at")
     @CreatedDate

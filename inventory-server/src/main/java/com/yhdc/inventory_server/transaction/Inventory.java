@@ -3,10 +3,7 @@ package com.yhdc.inventory_server.transaction;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
+import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -18,8 +15,11 @@ import java.time.OffsetDateTime;
 @Document("inventory")
 public class Inventory {
 
+    @Transient
+    public static final String SEQUENCE_NAME = "inventory_sequence";
+
     @Id
-    private String id;
+    private Long id;
 
     @Field(name = "product_id")
     private String productId;

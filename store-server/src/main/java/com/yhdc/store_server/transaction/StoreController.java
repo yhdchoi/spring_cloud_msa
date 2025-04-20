@@ -1,8 +1,8 @@
 package com.yhdc.store_server.transaction;
 
-import com.yhdc.store_server.object.StoreCreateRecord;
-import com.yhdc.store_server.object.StorePatchRecord;
-import com.yhdc.store_server.object.StorePutRecord;
+import com.yhdc.store_server.transaction.object.StoreCreateRecord;
+import com.yhdc.store_server.transaction.object.StorePatchRecord;
+import com.yhdc.store_server.transaction.object.StorePutRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

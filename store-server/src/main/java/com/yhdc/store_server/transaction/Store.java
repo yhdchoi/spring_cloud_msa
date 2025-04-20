@@ -1,14 +1,13 @@
 package com.yhdc.store_server.transaction;
 
-import com.yhdc.store_server.type.StoreStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.UUID;
+import java.time.OffsetDateTime;
 
 @Builder
 @AllArgsConstructor
@@ -16,29 +15,45 @@ import java.util.UUID;
 @ToString
 @Getter
 @Setter
-@Table(name = "store")
-@Entity
-public class Store extends EntityDateAudit {
+@Document("store")
+public class Store {
+
+    @Transient
+    public static final String SEQUENCE_NAME = "store_sequence";
 
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.AUTO)
-    @Column(name = "id", columnDefinition = "BINARY(16)", updatable = false, nullable = false, unique = true)
-    private UUID id;
+    private long id;
 
     // Seller(Owner)
-    @Column(name = "user_id", nullable = false)
-    private String userId;
+    @NotBlank
+    @Field(name = "seller_id")
+    private String sellerId;
 
-    @Column(name = "name", nullable = false)
+    @NotBlank
     private String name;
 
-    @Column(name = "description", columnDefinition = "text", nullable = false)
     private String description;
 
-    @Column(name = "image_path", nullable = false)
-    private String imagePath;
+    @NotBlank
+    @Size(min = 1, max = 10)
+    private String status;
 
-    @Column(name = "status", nullable = false)
-    private StoreStatus status;
+
+    @Field(name = "created_at")
+    @CreatedDate
+    private OffsetDateTime createdAt;
+
+    @Field(name = "modified_at")
+    @LastModifiedDate
+    private OffsetDateTime modifiedAt;
+
+    /**
+     * We also need a @Version field in our documents, otherwise there will be problems in combination
+     * with the Id field. If the id is pre-filled by our application, auditing assumes that the document
+     * already existed in the database and @CreatedDate is not set. With the version field however, the
+     * life cycle of our entity is correctly captured.
+     */
+    @Version
+    private Integer version;
 
 }

@@ -19,7 +19,7 @@ services:
   keycloak:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:26.2.0
-    command: ["start-dev", "--import-realm"]
+    command: [ "start-dev", "--import-realm" ]
     environment:
       DB_VENDOR: MARIADB
       DB_ADDR: mariadb
@@ -54,24 +54,37 @@ services:
     restart: unless-stopped
 
   ### STORE DB
-  postgres-store:
-    image: postgres:15
+  #  postgres-store:
+  #    image: postgres:15
+  #    container_name: store-db
+  #    ports:
+  #      - "5433:5432"
+  #    environment:
+  #      POSTGRES_DB: order_db
+  #      POSTGRES_USER: postgres
+  #      POSTGRES_PASSWORD: fiorano1q2we
+  #    volumes:
+  #      - ./container/store-db:/var/lib/postgresql/data
+
+  ### STORE DB
+  mongodb-store:
+    image: mongo:latest
     container_name: store-db
     ports:
-      - "5433:5432"
+      - "27018:27017"
     environment:
-      POSTGRES_DB: order_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: fiorano1q2we
+      MONGO_INITDB_DATABASE: store_db
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: fiorano1q2w
     volumes:
-      - ./container/store-db:/var/lib/postgresql/data
+      - ./container/store-db:/data/db
 
   ### PRODUCT DB
   mongodb-product:
     image: mongo:latest
     container_name: product-db
     ports:
-      - "27018:27017"
+      - "27019:27017"
     environment:
       MONGO_INITDB_DATABASE: product_db
       MONGO_INITDB_ROOT_USERNAME: root
@@ -84,7 +97,7 @@ services:
     image: mongo:latest
     container_name: order-db
     ports:
-      - "27019:27017"
+      - "27020:27017"
     environment:
       MONGO_INITDB_DATABASE: order_db
       MONGO_INITDB_ROOT_USERNAME: root
@@ -93,36 +106,49 @@ services:
       - ./container/order-db:/data/db
 
   ### FILE DB
-  mariadb-file:
-    image: mariadb:latest
+  postgres-file:
+    image: postgres:15
     container_name: file-db
     ports:
-      - "3308:3306"
+      - "5433:5432"
     environment:
-      MARIADB_DATABASE: file_db
-      MARIADB_ROOT_PASSWORD: fiorano1q2w
-      MARIADB_USER: fiorano
-      MARIADB_PASSWORD: fiorano
-    command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
+      POSTGRES_DB: file_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: fiorano1q2we
     volumes:
-      - ./container/file-db/conf.d:/etc/mysql/conf.d
-      - ./container/file-db/data:/var/lib/mysql
-    restart: unless-stopped
+      - ./container/file-db:/var/lib/postgresql/data
+
+
+  #  mariadb-file:
+  #    image: mariadb:latest
+  #    container_name: file-db
+  #    ports:
+  #      - "3308:3306"
+  #    environment:
+  #      MARIADB_DATABASE: file_db
+  #      MARIADB_ROOT_PASSWORD: fiorano1q2w
+  #      MARIADB_USER: fiorano
+  #      MARIADB_PASSWORD: fiorano
+  #    command:
+  #      - --character-set-server=utf8mb4
+  #      - --collation-server=utf8mb4_unicode_ci
+  #    volumes:
+  #      - ./container/file-db/conf.d:/etc/mysql/conf.d
+  #      - ./container/file-db/data:/var/lib/mysql
+  #    restart: unless-stopped
 
 
   ### AI VECTOR DB
-#  pgvector:
-#    image: pgvector/pgvector:pg16
-#    ports:
-#      - '5440:5432'
-#    environment:
-#      POSTGRES_DB: ai_vector
-#      POSTGRES_USER: fiorano
-#      POSTGRES_PASSWORD: fiorano1q2w
-#    labels:
-#      - "org.springframework.boot.service-connection=postgres"
+  #  pgvector:
+  #    image: pgvector/pgvector:pg16
+  #    ports:
+  #      - '5440:5432'
+  #    environment:
+  #      POSTGRES_DB: ai_vector
+  #      POSTGRES_USER: fiorano
+  #      POSTGRES_PASSWORD: fiorano1q2w
+  #    labels:
+  #      - "org.springframework.boot.service-connection=postgres"
 
 
   ### LOG DB

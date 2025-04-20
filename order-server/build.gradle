@@ -30,6 +30,9 @@ ext {
 dependencies {
 	// WEB
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// CLOUD
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 	// DATA
@@ -55,6 +58,7 @@ dependencies {
 	// TEST
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation 'org.testcontainers:mongodb'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

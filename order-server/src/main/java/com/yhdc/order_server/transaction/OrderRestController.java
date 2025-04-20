@@ -1,12 +1,10 @@
 package com.yhdc.order_server.transaction;
 
-import com.yhdc.order_server.object.OrderCreateRecord;
+import com.yhdc.order_server.transaction.object.OrderCreateRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,6 +22,13 @@ public class OrderRestController {
     @PostMapping("/process")
     public ResponseEntity<?> processOrder(@RequestBody OrderCreateRecord order) {
         return orderService.processOrder(order);
+    }
+
+
+    @PatchMapping("/cancel")
+    public ResponseEntity<?> cancelOrder(@RequestParam String orderId,
+                                         @RequestParam String userId) {
+        return orderService.cancelOrder(orderId, userId);
     }
 
 }
