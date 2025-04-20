@@ -1,4 +1,4 @@
-package com.yhdc.video_catalog_server.object;
+package com.yhdc.video_catalog_server.transaction.object;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

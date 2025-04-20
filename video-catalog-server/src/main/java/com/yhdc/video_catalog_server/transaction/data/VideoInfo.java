@@ -1,4 +1,4 @@
-package com.yhdc.video_catalog_server.data;
+package com.yhdc.video_catalog_server.transaction.data;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

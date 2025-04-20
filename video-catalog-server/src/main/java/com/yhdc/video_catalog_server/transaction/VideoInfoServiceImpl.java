@@ -1,10 +1,10 @@
 package com.yhdc.video_catalog_server.transaction;
 
-import com.yhdc.video_catalog_server.data.VideoInfo;
-import com.yhdc.video_catalog_server.data.VideoInfoRepository;
-import com.yhdc.video_catalog_server.object.VideoInfoDto;
-import com.yhdc.video_catalog_server.object.VideoInfoSaveRecord;
-import com.yhdc.video_catalog_server.object.VideoInfoUpdateRecord;
+import com.yhdc.video_catalog_server.transaction.data.VideoInfo;
+import com.yhdc.video_catalog_server.transaction.data.VideoInfoRepository;
+import com.yhdc.video_catalog_server.transaction.object.VideoInfoDto;
+import com.yhdc.video_catalog_server.transaction.object.VideoInfoSaveRecord;
+import com.yhdc.video_catalog_server.transaction.object.VideoInfoUpdateRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

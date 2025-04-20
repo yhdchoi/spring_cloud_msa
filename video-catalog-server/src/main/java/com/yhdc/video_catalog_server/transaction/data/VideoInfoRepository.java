@@ -1,4 +1,4 @@
-package com.yhdc.video_catalog_server.data;
+package com.yhdc.video_catalog_server.transaction.data;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

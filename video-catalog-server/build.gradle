@@ -31,12 +31,17 @@ dependencies {
     // WEB
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    // DATA
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'org.postgresql:postgresql'
+
     // CONFIG
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
-    // DATA
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'org.postgresql:postgresql'
+    // SWAGGER
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.8.6'
 
     // MONITOR
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
@@ -50,6 +55,10 @@ dependencies {
 
     // TEST
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:mongodb'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'io.rest-assured:rest-assured'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -60,5 +69,6 @@ dependencyManagement {
 }
 
 tasks.named('test') {
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
     useJUnitPlatform()
 }
