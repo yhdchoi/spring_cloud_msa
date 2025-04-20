@@ -2,7 +2,7 @@ package com.yhdc.store_server.transaction.object;
 
 import java.util.Objects;
 
-public record StoreCreateRecord(String userId,String name,  String description, String status) {
+public record StoreCreateRecord(String userId, String name, String description, String status) {
 
     public StoreCreateRecord {
         Objects.requireNonNull(userId, "User ID must not be null");

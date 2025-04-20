@@ -18,7 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.yhdc.store_server.transaction.type.Constants.*;
+import static com.yhdc.store_server.transaction.type.Constants.STORE_ACTIVE;
+import static com.yhdc.store_server.transaction.type.Constants.STORE_INACTIVE;
 
 
 @Slf4j
@@ -48,8 +49,8 @@ public class StoreServiceImpl implements StoreService {
             store.setName(storeCreateRecord.name());
             store.setDescription(storeCreateRecord.description());
             store.setStatus(StoreStatus.ACTIVE.selection());
-            Store newStore = storeRepository.save(store);
-            return new ResponseEntity<>(newStore.getId(), HttpStatus.CREATED);
+            final Store newStore = storeRepository.save(store);
+            return new ResponseEntity<>(newStore, HttpStatus.CREATED);
 
         } catch (Exception e) {
             log.error("Unable to create store!!!", e);

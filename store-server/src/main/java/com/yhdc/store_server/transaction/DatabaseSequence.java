@@ -9,12 +9,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Document(collation = "database_sequence")
+@Document(collection = "database_sequence")
 public class DatabaseSequence {
 
     @Id
     private String id;
 
-    private long seq;
+    private Long seq;
 
 }

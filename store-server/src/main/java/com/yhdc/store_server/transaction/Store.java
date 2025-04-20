@@ -7,6 +7,7 @@ import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Builder
@@ -22,7 +23,7 @@ public class Store {
     public static final String SEQUENCE_NAME = "store_sequence";
 
     @Id
-    private long id;
+    private Long id;
 
     // Seller(Owner)
     @NotBlank
@@ -41,11 +42,11 @@ public class Store {
 
     @Field(name = "created_at")
     @CreatedDate
-    private OffsetDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @Field(name = "modified_at")
     @LastModifiedDate
-    private OffsetDateTime modifiedAt;
+    private LocalDateTime modifiedAt;
 
     /**
      * We also need a @Version field in our documents, otherwise there will be problems in combination

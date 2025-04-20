@@ -1,7 +1,7 @@
 package com.yhdc.store_server.transaction.util;
 
-import com.yhdc.store_server.transaction.object.StoreDto;
 import com.yhdc.store_server.transaction.Store;
+import com.yhdc.store_server.transaction.object.StoreDto;
 import com.yhdc.store_server.transaction.type.StoreStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,16 +14,6 @@ import java.time.LocalDateTime;
 public class DataConverter {
 
     /**
-     * FORMAT DATE TO FORMATTED STRING
-     *
-     * @param localDateTime
-     */
-    public String dateConverter(LocalDateTime localDateTime) {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(localDateTime);
-    }
-
-
-    /**
      * CONVERT STORE OBJECT TO DTO
      *
      * @param store
@@ -34,7 +24,7 @@ public class DataConverter {
             storeDto.setStoreId(String.valueOf(store.getId()));
             storeDto.setName(store.getName());
             storeDto.setDescription(store.getDescription());
-            storeDto.setStatus(store.getStatus() != null ? store.getStatus().selection() : StoreStatus.SUSPENDED.selection());
+            storeDto.setStatus(store.getStatus() != null ? store.getStatus() : StoreStatus.SUSPENDED.selection());
             return storeDto;
 
         } catch (Exception e) {

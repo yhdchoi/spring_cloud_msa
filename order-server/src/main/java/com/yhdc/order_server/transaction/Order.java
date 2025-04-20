@@ -10,7 +10,7 @@ import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -46,11 +46,11 @@ public class Order {
 
     @Field(name = "created_at")
     @CreatedDate
-    private OffsetDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @Field(name = "modified_at")
     @LastModifiedDate
-    private OffsetDateTime modifiedAt;
+    private LocalDateTime modifiedAt;
 
     /**
      * We also need a @Version field in our documents, otherwise there will be problems in combination
