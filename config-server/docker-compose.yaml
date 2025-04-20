@@ -35,8 +35,6 @@ services:
     depends_on:
       - mariadb-keycloak
 
-
-
   ### ACCOUNT DB
   mariadb-account:
     image: mariadb:latest
@@ -52,19 +50,6 @@ services:
       - ./container/account-db/conf.d:/etc/mysql/conf.d
       - ./container/account-db/data:/var/lib/mysql
     restart: unless-stopped
-
-  ### STORE DB
-  #  postgres-store:
-  #    image: postgres:15
-  #    container_name: store-db
-  #    ports:
-  #      - "5433:5432"
-  #    environment:
-  #      POSTGRES_DB: order_db
-  #      POSTGRES_USER: postgres
-  #      POSTGRES_PASSWORD: fiorano1q2we
-  #    volumes:
-  #      - ./container/store-db:/var/lib/postgresql/data
 
   ### STORE DB
   mongodb-store:
