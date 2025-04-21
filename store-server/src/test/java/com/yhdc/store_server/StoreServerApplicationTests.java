@@ -70,4 +70,18 @@ class StoreServerApplicationTests {
                 .body("status", Matchers.equalTo(testStatus));
     }
 
+    @Test
+    void shouldSearchStore() {
+
+    }
+
+    @Test
+    void shouldUpdateStore() {
+
+    }
+
+    @Test
+    void shouldDeleteStore() {
+
+    }
 }

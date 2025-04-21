@@ -1,10 +1,12 @@
 package com.yhdc.product_server.transaction;
 
 
+import com.yhdc.product_server.transaction.data.DatabaseSequenceGeneratorService;
+import com.yhdc.product_server.transaction.data.Product;
+import com.yhdc.product_server.transaction.data.ProductRepository;
 import com.yhdc.product_server.transaction.object.ProductCreateRecord;
 import com.yhdc.product_server.transaction.object.ProductDto;
 import com.yhdc.product_server.transaction.object.ProductPutRecord;
-import com.yhdc.product_server.transaction.rest_client.FileRestClientService;
 import com.yhdc.product_server.transaction.type.ProductStatus;
 import com.yhdc.product_server.transaction.util.DataProcessor;
 import com.yhdc.product_server.transaction.util.PageProducer;
@@ -31,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final DatabaseSequenceGeneratorService databaseSequenceGeneratorService;
-    private final FileRestClientService fileRestClientService;
+    private final ImageRestClientService imageRestClientService;
     private final DataProcessor dataProcessor;
     private final PageProducer pageProducer;
 
@@ -41,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
      *
      * @param productCreateRecord
      * @implNote Saves a new product
-     * @implSpec
+     * @implSpec Create a new product with an inventory. Inventory is created through the rest client.
      */
     @Override
     @Transactional
@@ -264,7 +266,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ResponseEntity<?> deleteProduct(String productId) {
         try {
-            final ResponseEntity<?> clientResponse = fileRestClientService.deleteProductImages(productId);
+            final ResponseEntity<?> clientResponse = imageRestClientService.deleteProductImages(productId);
             if (clientResponse.getStatusCode() == HttpStatus.OK) {
                 productRepository.deleteById(Long.valueOf(productId));
             }

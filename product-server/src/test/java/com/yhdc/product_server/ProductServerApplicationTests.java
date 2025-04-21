@@ -1,6 +1,6 @@
 package com.yhdc.product_server;
 
-import com.yhdc.product_server.transaction.ProductRepository;
+import com.yhdc.product_server.transaction.data.ProductRepository;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,9 +33,6 @@ class ProductServerApplicationTests {
         mongoDBContainer.stop();
     }
 
-    @Autowired
-    ProductRepository productRepository;
-
     @BeforeEach
     void setUp() {
         RestAssured.baseURI = "http://localhost:" + port;
@@ -43,6 +40,37 @@ class ProductServerApplicationTests {
 
     @Test
     void shouldCreateProduct() {
+
+
+    }
+
+    @Test
+    void shouldDetailProduct() {
+
+
+    }
+
+    @Test
+    void shouldSearchStoreProduct() {
+
+
+    }
+
+    @Test
+    void shouldSearchAllProduct() {
+
+
+    }
+
+    @Test
+    void shouldUpdateProduct() {
+
+
+    }
+
+
+    @Test
+    void shouldDeleteProduct() {
 
 
     }

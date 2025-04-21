@@ -8,28 +8,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import java.io.IOException;
-
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class VideoStreamController {
 
     private final VideoStreamServiceImpl videoStreamService;
-    private final VideoCatalogRestClient videoCatalogRestClient;
-
-
-    /**
-     * STREAM VIDEO BY PATH
-     *
-     * @param videoPath
-     * @throws IOException
-     */
-    @GetMapping("/video-stream/video")
-    public ResponseEntity<StreamingResponseBody> streamVideoRsp(@RequestParam String videoPath) {
-        return videoStreamService.getVideoStream(videoPath);
-    }
-
+    private final VideoCatalogRestClientService videoCatalogRestClientService;
 
     /**
      * STREAM VIDEO BY VIDEO INFO ID
@@ -37,9 +22,9 @@ public class VideoStreamController {
      * @param videoInfoId
      * @apiNote Rest client request
      */
-    @GetMapping("/video-stream/videoInfoId")
+    @GetMapping("/video-stream/stream")
     public ResponseEntity<StreamingResponseBody> streamVideoInfo(@RequestParam String videoInfoId) {
-        final String videoPath = videoCatalogRestClient.loadVideoPath(videoInfoId);
+        final String videoPath = videoCatalogRestClientService.loadVideoPath(videoInfoId);
         return videoStreamService.getVideoStream(videoPath);
     }
 

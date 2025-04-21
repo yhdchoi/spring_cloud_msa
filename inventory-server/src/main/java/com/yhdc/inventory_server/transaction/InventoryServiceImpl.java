@@ -1,5 +1,8 @@
 package com.yhdc.inventory_server.transaction;
 
+import com.yhdc.inventory_server.transaction.data.DatabaseSequenceGeneratorService;
+import com.yhdc.inventory_server.transaction.data.Inventory;
+import com.yhdc.inventory_server.transaction.data.InventoryRepository;
 import com.yhdc.inventory_server.transaction.object.InventoryCommonRecord;
 import com.yhdc.inventory_server.transaction.object.InventoryCreateRecord;
 import lombok.RequiredArgsConstructor;

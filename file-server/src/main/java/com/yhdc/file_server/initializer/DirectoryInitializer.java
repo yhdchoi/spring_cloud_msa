@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 
-import static com.yhdc.file_server.type.Constants.FILE_BASE_DIR;
+import static com.yhdc.file_server.transaction.type.Constants.FILE_BASE_DIR;
 
 @Slf4j
 @Component

@@ -27,6 +27,9 @@ public class VideoInfo extends EntityDateAudit {
     @Column(name = "user_id", nullable = false)
     private String userId;
 
+    @Column(name = "product_id", nullable = false)
+    private String productId;
+
     @Column(name = "title", nullable = false)
     private String title;
 

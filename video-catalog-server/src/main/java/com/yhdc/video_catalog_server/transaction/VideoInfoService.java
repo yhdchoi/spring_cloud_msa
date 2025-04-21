@@ -16,4 +16,6 @@ public interface VideoInfoService {
     String getVideoPathByVideoInfoId(String videoInfoId);
 
     ResponseEntity<?> updateVideoInfo(VideoInfoUpdateRecord videoInfoUpdateRecord);
+
+    ResponseEntity<?> deleteVideoInfo(String videoInfoId);
 }

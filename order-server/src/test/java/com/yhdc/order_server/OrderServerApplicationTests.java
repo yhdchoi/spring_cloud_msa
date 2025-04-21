@@ -40,4 +40,8 @@ class OrderServerApplicationTests {
     void shouldProcessOrder() {
     }
 
+    
+    @Test
+    void shouldCancelOrder() {
+    }
 }

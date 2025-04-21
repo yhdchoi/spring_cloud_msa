@@ -1,8 +1,8 @@
 package com.yhdc.file_server.transaction;
 
-import com.yhdc.file_server.object.CommonResponseDto;
-import com.yhdc.file_server.object.ImageInfoDto;
-import com.yhdc.file_server.object.ImageInfoListDto;
+import com.yhdc.file_server.transaction.object.CommonResponseDto;
+import com.yhdc.file_server.transaction.object.ImageInfoDto;
+import com.yhdc.file_server.transaction.object.ImageInfoListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.yhdc.file_server.type.Constants.*;
+import static com.yhdc.file_server.transaction.type.Constants.*;
 import static java.lang.System.out;
 
 @Slf4j

@@ -1,9 +1,9 @@
 package com.yhdc.product_server.transaction.util;
 
-import com.yhdc.product_server.transaction.Product;
+import com.yhdc.product_server.transaction.data.Product;
 import com.yhdc.product_server.transaction.object.InventoryCommonRecord;
 import com.yhdc.product_server.transaction.object.ProductDto;
-import com.yhdc.product_server.transaction.rest_client.InventoryRestClientService;
+import com.yhdc.product_server.transaction.InventoryRestClientService;
 import com.yhdc.product_server.transaction.type.ProductStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

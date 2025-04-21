@@ -1,5 +1,8 @@
 package com.yhdc.store_server.transaction;
 
+import com.yhdc.store_server.transaction.data.DatabaseSequenceGeneratorService;
+import com.yhdc.store_server.transaction.data.Store;
+import com.yhdc.store_server.transaction.data.StoreRepository;
 import com.yhdc.store_server.transaction.object.StoreCreateRecord;
 import com.yhdc.store_server.transaction.object.StoreDto;
 import com.yhdc.store_server.transaction.object.StorePatchRecord;

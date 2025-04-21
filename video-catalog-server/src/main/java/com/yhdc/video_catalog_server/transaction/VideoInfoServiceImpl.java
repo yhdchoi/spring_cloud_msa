@@ -5,6 +5,7 @@ import com.yhdc.video_catalog_server.transaction.data.VideoInfoRepository;
 import com.yhdc.video_catalog_server.transaction.object.VideoInfoDto;
 import com.yhdc.video_catalog_server.transaction.object.VideoInfoSaveRecord;
 import com.yhdc.video_catalog_server.transaction.object.VideoInfoUpdateRecord;
+import com.yhdc.video_catalog_server.transaction.util.DataConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.yhdc.video_catalog_server.transaction.Constants.VIDEO_BASE_DIR;
+import static com.yhdc.video_catalog_server.transaction.type.Constants.VIDEO_BASE_DIR;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,8 +25,20 @@ import static com.yhdc.video_catalog_server.transaction.Constants.VIDEO_BASE_DIR
 public class VideoInfoServiceImpl implements VideoInfoService {
 
     private final VideoInfoRepository videoInfoRepository;
+    private final VideoFileRestClientService videoFileRestClientService;
     private final DataConverter dataConverter;
 
+    /**
+     * FIND VIDEO-INFO FROM DB
+     *
+     * @param videoInfoId
+     * @implNote
+     * @implSpec
+     */
+    protected VideoInfo findVideoInfo(String videoInfoId) {
+        Optional<VideoInfo> videoInfoOptional = videoInfoRepository.findById(UUID.fromString(videoInfoId));
+        return videoInfoOptional.orElse(null);
+    }
 
     /**
      * SAVE VIDEO INFO
@@ -62,15 +75,9 @@ public class VideoInfoServiceImpl implements VideoInfoService {
     @Override
     @Transactional(readOnly = true)
     public String getVideoPathByVideoInfoId(String videoInfoId) {
-        Optional<VideoInfo> videoInfoOptional = videoInfoRepository.findById(UUID.fromString(videoInfoId));
-        if (videoInfoOptional.isPresent()) {
-            VideoInfo videoInfo = videoInfoOptional.get();
-
-            log.info("videoInfo: {}", videoInfo);
-            return videoInfo.getVideoPath();
-        } else {
-            throw new NullPointerException("videoInfo not found");
-        }
+        VideoInfo videoInfo = findVideoInfo(videoInfoId);
+        log.info("videoInfo: {}", videoInfo);
+        return videoInfo.getVideoPath();
     }
 
 
@@ -91,12 +98,40 @@ public class VideoInfoServiceImpl implements VideoInfoService {
             videoInfo.setVideoPath(VIDEO_BASE_DIR + videoInfoUpdateRecord.videoPath());
 
             VideoInfoDto response = dataConverter.convertVideoInfoToVideoInfoDto(videoInfo);
-            log.info("videoInfo: {}", videoInfo);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("VideoInfo not found!!!", HttpStatus.NOT_FOUND);
         }
     }
 
+
+    /**
+     * DELETE VIDEO INFORMATION AND VIDEO FILE
+     *
+     * @param videoInfoId
+     * @implNote
+     * @implSpec
+     */
+    @Override
+    @Transactional
+    public ResponseEntity<?> deleteVideoInfo(String videoInfoId) {
+        try {
+            VideoInfo videoInfo = findVideoInfo(videoInfoId);
+            if (videoInfo != null) {
+                ResponseEntity<?> clientResponse
+                        = videoFileRestClientService.deleteVideoFiles(videoInfo.getVideoPath());
+                if (clientResponse.getStatusCode() == HttpStatus.OK) {
+                    videoInfoRepository.delete(videoInfo);
+                    return new ResponseEntity<>(HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(clientResponse, HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                return new ResponseEntity<>("VideoInfo not found!!!", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+    }
 
 }

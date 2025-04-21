@@ -1,13 +1,10 @@
 package com.yhdc.store_server.transaction.util;
 
-import com.yhdc.store_server.transaction.Store;
+import com.yhdc.store_server.transaction.data.Store;
 import com.yhdc.store_server.transaction.object.StoreDto;
 import com.yhdc.store_server.transaction.type.StoreStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 
 @Slf4j
 @Service
