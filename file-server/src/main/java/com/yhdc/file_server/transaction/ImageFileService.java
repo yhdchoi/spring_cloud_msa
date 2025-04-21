@@ -14,7 +14,7 @@ import java.util.zip.ZipOutputStream;
 
 @Slf4j
 @Service
-public class FileService {
+public class ImageFileService {
 
 
     /**

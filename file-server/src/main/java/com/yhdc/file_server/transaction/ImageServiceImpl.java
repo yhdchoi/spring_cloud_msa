@@ -33,9 +33,9 @@ import static java.lang.System.out;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ImageService {
+public class ImageServiceImpl {
 
-    private final FileService fileService;
+    private final ImageFileService imageFileService;
 
     /**
      * SAVE IMAGE(S) TO A DIRECTORY
@@ -62,7 +62,7 @@ public class ImageService {
 
             if (directoryExists) {
                 for (MultipartFile newFile : fileArray) {
-                    fileService.saveFileToDir(newFile, imageDirectory);
+                    imageFileService.saveFileToDir(newFile, imageDirectory);
                 }
                 log.info("Image(s) saved to: {}", imageDirectory);
                 responseBody.setMsg("Images saved successfully!!");
@@ -148,7 +148,7 @@ public class ImageService {
                 String filename = path.getFileName().toString();
                 // Extract URL from response
                 String url = MvcUriComponentsBuilder
-                        .fromMethodName(ImageService.class, "loadImage",
+                        .fromMethodName(ImageServiceImpl.class, "loadImage",
                                 dirId, filename).build().toString();
                 return new ImageInfoDto(filename, url);
 
@@ -212,7 +212,7 @@ public class ImageService {
                 final String zippedFileDir = "/fiorano/tmp";
                 final String zipFileName = dirId + "_dirCompressed_" + dateTime + ".zip";
 
-                Resource resource = fileService.createZipFile(productImageDir, zippedFileDir, zipFileName);
+                Resource resource = imageFileService.createZipFile(productImageDir, zippedFileDir, zipFileName);
                 return new ResponseEntity<>(resource, HttpStatus.OK);
 
             } else {
@@ -239,7 +239,7 @@ public class ImageService {
         // Save new images
         if (fileArray != null) {
             for (MultipartFile file : fileArray) {
-                fileService.saveFileToDir(file, imageDirectory);
+                imageFileService.saveFileToDir(file, imageDirectory);
             }
             log.info("Image(s) saved to: {}", imageDirectory);
             responseBody.setMsg("Images patched successfully!");
@@ -266,7 +266,7 @@ public class ImageService {
         final String imageDirectory = FILE_BASE_DIR + dirId;
         if (deletedFileNameList != null && !deletedFileNameList.isEmpty()) {
             for (String fileName : deletedFileNameList) {
-                fileService.deleteFileFromDir(imageDirectory, fileName);
+                imageFileService.deleteFileFromDir(imageDirectory, fileName);
             }
             responseBody.setMsg("Images deleted successfully!");
             responseBody.setStatus(COMMON_RESPONSE_STATUS_OK);

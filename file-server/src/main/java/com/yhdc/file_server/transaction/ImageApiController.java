@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class ImageApiController {
 
-    private final ImageService imageService;
+    private final ImageServiceImpl imageServiceImpl;
 
 
     /**
@@ -27,7 +27,7 @@ public class ImageApiController {
     @PostMapping("/save/image")
     public ResponseEntity<CommonResponseDto> saveImage(@RequestPart(value = "dirId") String dirId,
                                                        @RequestPart(value = "fileArray") MultipartFile[] fileArray) {
-        return imageService.saveImages(dirId, fileArray);
+        return imageServiceImpl.saveImages(dirId, fileArray);
     }
 
     /**
@@ -38,7 +38,7 @@ public class ImageApiController {
     @PatchMapping("/patch/image")
     public ResponseEntity<CommonResponseDto> patchImage(@RequestPart(value = "dirId") String dirId,
                                                         @RequestPart(value = "fileArray") MultipartFile[] fileArray) {
-        return imageService.patchImage(dirId, fileArray);
+        return imageServiceImpl.patchImage(dirId, fileArray);
     }
 
 
@@ -49,7 +49,7 @@ public class ImageApiController {
      */
     @GetMapping("/load/image-info")
     public ResponseEntity<ImageInfoListDto> loadAllImageInfo(@RequestParam String dirId) {
-        return imageService.loadAllImages(dirId);
+        return imageServiceImpl.loadAllImages(dirId);
     }
 
     /**
@@ -62,7 +62,7 @@ public class ImageApiController {
     @GetMapping("/download/image")
     public ResponseEntity<Resource> downloadImage(@RequestParam String dirId,
                                                   @RequestParam String fileName) {
-        return imageService.loadImage(dirId, fileName);
+        return imageServiceImpl.loadImage(dirId, fileName);
     }
 
     /**
@@ -73,7 +73,7 @@ public class ImageApiController {
      */
     @GetMapping("/download/image-zip")
     public ResponseEntity<Resource> downloadImageZip(@RequestParam String dirId) {
-        return imageService.downloadImageDirZip(dirId);
+        return imageServiceImpl.downloadImageDirZip(dirId);
     }
 
 
@@ -84,7 +84,7 @@ public class ImageApiController {
      */
     @DeleteMapping("/delete/image-selected")
     public ResponseEntity<CommonResponseDto> deleteImageSelected(@RequestBody DeleteImageDto deleteImageDto) {
-        return imageService.deleteImagesFromDir(deleteImageDto.getDirId(), deleteImageDto.getImageFileNameList());
+        return imageServiceImpl.deleteImagesFromDir(deleteImageDto.getDirId(), deleteImageDto.getImageFileNameList());
     }
 
     /**
@@ -95,7 +95,7 @@ public class ImageApiController {
      */
     @DeleteMapping("/delete/image-dir")
     public ResponseEntity<?> deleteImage(@RequestParam String dirId) {
-        return imageService.deleteImageDir(dirId);
+        return imageServiceImpl.deleteImageDir(dirId);
     }
 
 }
