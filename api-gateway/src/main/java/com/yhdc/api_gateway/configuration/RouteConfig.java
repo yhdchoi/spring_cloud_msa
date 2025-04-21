@@ -11,76 +11,84 @@ public class RouteConfig {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route(userRoute -> userRoute.path("/user/**")
+                // Account Route
+                .route(userRoute -> userRoute.path("/account/**")
                         .filters(f -> f
-                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
                         .uri("http://localhost:8081")
 
                 )
+                .route(accountSwaggerRoute -> accountSwaggerRoute.path("/aggregate/account-service/v3/api-docs")
+                        .filters(f -> f
+                                .setPath("/api-docs")
+                        )
+                        .uri("http://localhost:8081")
+                )
+
+                // Store Route
                 .route(storeRoute -> storeRoute.path("/store/**")
                         .filters(f -> f
-                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
                         .uri("http://localhost:8082")
 
                 )
-                .route(storeRoute -> storeRoute.path("/product/**")
+
+                .route(productRoute -> productRoute.path("/product/**")
                         .filters(f -> f
-                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
                         .uri("http://localhost:8083")
 
                 )
-                .route(auctionRoute -> auctionRoute.path("/order/**")
+                .route(orderRoute -> orderRoute.path("/order/**")
                         .filters(f -> f
-                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                                .uri("http://localhost:8084")
+                        .uri("http://localhost:8084")
 
                 )
-                .route(invoiceRoute -> invoiceRoute.path("/inventory/**")
+                .route(inventoryRoute -> inventoryRoute.path("/inventory/**")
                         .filters(f -> f
-                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                                .uri("http://localhost:8085")
+                        .uri("http://localhost:8085")
 
                 )
-                .route(deliveryRoute -> deliveryRoute.path("/notification/**")
+                .route(notificationRoute -> notificationRoute.path("/notification/**")
                         .filters(f -> f
                                 .prefixPath("/event")
-                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                                .uri("http://localhost:8086")
+                        .uri("http://localhost:8086")
 
                 )
-                .route(videoCatalogRoute -> videoCatalogRoute.path("/image/**")
+                .route(videoCatalogRoute -> videoCatalogRoute.path("/file/**")
                         .filters(f -> f
-                                .prefixPath("/file")
-                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                                .uri("http://localhost:8100")
+                        .uri("http://localhost:8100")
                 )
+
                 .route(videoCatalogRoute -> videoCatalogRoute.path("/video-catalog/**")
                         .filters(f -> f
-                                .prefixPath("/file")
-                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                                .uri("http://localhost:8101")
+                        .uri("http://localhost:8101")
                 )
                 .route(videoStreamRoute -> videoStreamRoute.path("/video-stream/**")
                         .filters(f -> f
-                                .prefixPath("/file")
-                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                                .uri("http://localhost:8102")
+                        .uri("http://localhost:8102")
                 )
                 .route(aiRoute -> aiRoute.path("/chat-client/**")
                         .filters(f -> f
                                 .prefixPath("/ai")
-                                .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
+                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                                .uri("http://localhost:8200")
+                        .uri("http://localhost:8200")
                 )
                 .build();
     }

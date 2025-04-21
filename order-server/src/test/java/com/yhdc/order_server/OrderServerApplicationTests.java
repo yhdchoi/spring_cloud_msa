@@ -37,7 +37,7 @@ class OrderServerApplicationTests {
     }
 
     @Test
-    void shouldCreateOrder() {
+    void shouldProcessOrder() {
     }
 
 }

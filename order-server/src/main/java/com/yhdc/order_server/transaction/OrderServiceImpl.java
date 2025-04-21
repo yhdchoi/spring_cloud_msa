@@ -20,7 +20,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final DatabaseSequenceGeneratorService databaseSequenceGeneratorService;
-    private final InventoryFeignClient inventoryFeignClient;
+    private final InventoryRestClient inventoryRestClient;
 
 
     /**
@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
         for (StoreData storeData : orderCreateRecord.storeDataList()) {
             List<ProductData> productDataList = storeData.getProductDataList();
             for (ProductData productData : productDataList) {
-                boolean isStock = inventoryFeignClient.isInStock(productData.getProductId(), productData.getQuantity());
+                boolean isStock = inventoryRestClient.isInStock(productData.getProductId(), productData.getQuantity());
                 if (!isStock) {
                     productData.setStock(false);
                     checkStock = false;
@@ -84,6 +84,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
+    /**
+     * CANCEL ORDER
+     *
+     * @param orderId
+     * @param userId
+     */
     @Override
     @Transactional
     public ResponseEntity<?> cancelOrder(String orderId, String userId) {
