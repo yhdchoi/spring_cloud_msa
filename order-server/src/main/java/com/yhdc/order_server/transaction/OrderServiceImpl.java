@@ -36,7 +36,13 @@ public class OrderServiceImpl implements OrderService {
         for (StoreData storeData : orderCreateRecord.storeDataList()) {
             List<ProductData> productDataList = storeData.getProductDataList();
             for (ProductData productData : productDataList) {
-                boolean isStock = inventoryRestClient.isInStock(productData.getProductId(), productData.getQuantity());
+
+                final String response = inventoryRestClient.isInStock(
+                        productData.getProductId(),
+                        productData.getSkuCode(),
+                        productData.getQuantity());
+
+                final boolean isStock = Boolean.parseBoolean(response);
                 if (!isStock) {
                     productData.setStock(false);
                     checkStock = false;

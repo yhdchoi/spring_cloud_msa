@@ -59,12 +59,13 @@ public class InventoryServiceImpl implements InventoryService {
      */
     @Override
     @Transactional(readOnly = true)
-    public boolean checkInventoryStock(String productId, String skuCode, String quantity) {
-        Inventory inventory = getInventory(productId, skuCode);
+    public String checkInventoryStock(String productId, String skuCode, String quantity) {
+        final Inventory inventory = getInventory(productId, skuCode);
         if (inventory != null) {
-            return inventory.getQuantity().compareTo(Long.valueOf(quantity)) < 0;
+            boolean isStock = inventory.getQuantity().compareTo(Long.valueOf(quantity)) < 0;
+            return isStock ? "true" : "false";
         } else {
-            return false;
+            return "false";
         }
     }
 
@@ -77,7 +78,7 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     @Transactional(readOnly = true)
     public String getInventoryStock(String productId, String skuCode) {
-        Inventory inventory = getInventory(productId, skuCode);
+        final Inventory inventory = getInventory(productId, skuCode);
         return inventory.getQuantity().toString();
     }
 

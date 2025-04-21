@@ -32,9 +32,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    // CLOUD
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-
     // DATA
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 

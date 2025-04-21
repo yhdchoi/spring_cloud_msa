@@ -43,6 +43,8 @@ class ProductServerApplicationTests {
 
     @Test
     void shouldCreateProduct() {
+
+
     }
 
 }

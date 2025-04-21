@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class ProductRestController {
 
     private final ProductServiceImpl productService;
-    private final ProductImageRestClient productImageRestClient;
 
 
     /**

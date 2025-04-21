@@ -1,10 +1,10 @@
 package com.yhdc.product_server.transaction;
 
 
-import com.yhdc.product_server.transaction.object.CommonResponseRecord;
 import com.yhdc.product_server.transaction.object.ProductCreateRecord;
 import com.yhdc.product_server.transaction.object.ProductDto;
 import com.yhdc.product_server.transaction.object.ProductPutRecord;
+import com.yhdc.product_server.transaction.rest_client.FileRestClientService;
 import com.yhdc.product_server.transaction.type.ProductStatus;
 import com.yhdc.product_server.transaction.util.DataProcessor;
 import com.yhdc.product_server.transaction.util.PageProducer;
@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final DatabaseSequenceGeneratorService databaseSequenceGeneratorService;
-    private final ProductImageRestClient productImageRestClient;
+    private final FileRestClientService fileRestClientService;
     private final DataProcessor dataProcessor;
     private final PageProducer pageProducer;
 
@@ -264,13 +264,11 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ResponseEntity<?> deleteProduct(String productId) {
         try {
-            final ResponseEntity<CommonResponseRecord> imageResponse = productImageRestClient.deleteProductImages(productId);
-            if (imageResponse.getStatusCode() == HttpStatus.OK) {
+            final ResponseEntity<?> clientResponse = fileRestClientService.deleteProductImages(productId);
+            if (clientResponse.getStatusCode() == HttpStatus.OK) {
                 productRepository.deleteById(Long.valueOf(productId));
-                return new ResponseEntity<>(HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Image directory not removed", HttpStatus.NOT_FOUND);
             }
+            return clientResponse;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

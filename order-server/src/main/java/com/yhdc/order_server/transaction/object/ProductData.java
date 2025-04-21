@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 public class ProductData {
 
     private String productId;
+    private String skuCode;
     private String name;
     private String price;
-
     private String quantity;
     private boolean isStock;
 

@@ -9,7 +9,18 @@ import org.springframework.web.service.annotation.HttpExchange;
 @Component
 public interface InventoryRestClient {
 
+    /**
+     * CHECK STOCK FOR ORDER QUANTITY
+     *
+     * @param productId
+     * @param skuCode
+     * @param quantity
+     * @implNote For checking product stock if it is ok to process with the order
+     * @implSpec RestClient is configured in RestClientConfig
+     */
     @GetExchange("/stock")
-    boolean isInStock(@RequestParam String productId, @RequestParam String quantity);
+    String isInStock(@RequestParam String productId,
+                      @RequestParam String skuCode,
+                      @RequestParam String quantity);
 
 }

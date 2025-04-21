@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-public class InventoryRestController {
+public class InventoryApiController {
 
     private final InventoryServiceImpl inventoryService;
 
 
-    @GetMapping("/stock")
-    public boolean getInventoryDetail(@RequestParam String productId,
+    @GetMapping("/stock-check")
+    public String getInventoryDetail(@RequestParam String productId,
                                       @RequestParam String skuCode,
                                       @RequestParam String quantity) {
         return inventoryService.checkInventoryStock(productId, skuCode, quantity);

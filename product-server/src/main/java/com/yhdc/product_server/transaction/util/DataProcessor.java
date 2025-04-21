@@ -1,9 +1,9 @@
 package com.yhdc.product_server.transaction.util;
 
-import com.yhdc.product_server.transaction.InventoryFeignClient;
 import com.yhdc.product_server.transaction.Product;
 import com.yhdc.product_server.transaction.object.InventoryCommonRecord;
 import com.yhdc.product_server.transaction.object.ProductDto;
+import com.yhdc.product_server.transaction.rest_client.InventoryRestClientService;
 import com.yhdc.product_server.transaction.type.ProductStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Slf4j
@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class DataProcessor {
 
-    private final InventoryFeignClient inventoryFeignClient;
+    private final InventoryRestClientService inventoryRestClientService;
 
 
     /**
@@ -62,7 +62,7 @@ public class DataProcessor {
         // Create new inventory through Feign Client
         InventoryCommonRecord inventoryCommonRecord
                 = new InventoryCommonRecord(productId, skuCode, quantity);
-        ResponseEntity<?> response = inventoryFeignClient.createStock(inventoryCommonRecord);
+        ResponseEntity<?> response = inventoryRestClientService.createStock(inventoryCommonRecord);
 
         if (response.getStatusCode() == HttpStatus.OK) {
             log.info("Product saved successfully!!!");
@@ -80,7 +80,7 @@ public class DataProcessor {
      * @param skuCode
      */
     private String getInventoryDetail(String productId, String skuCode) {
-        String response = inventoryFeignClient.getInventoryStock(productId, skuCode);
+        String response = inventoryRestClientService.getInventoryStock(productId, skuCode);
         if (response.matches("^\\d+$")) {
             return response;
         } else {
@@ -94,7 +94,7 @@ public class DataProcessor {
      *
      * @param dateTime
      */
-    private String dateTimeConverter(OffsetDateTime dateTime) {
+    private String dateTimeConverter(LocalDateTime dateTime) {
         final String pattern = "yyyy-MM-dd HH:mm:ss";
         return dateTime.format(DateTimeFormatter.ofPattern(pattern));
     }

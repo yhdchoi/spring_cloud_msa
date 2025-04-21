@@ -8,7 +8,7 @@ public interface InventoryService {
 
     ResponseEntity<?> createInventory(InventoryCreateRecord inventoryCreateRecord);
 
-    boolean checkInventoryStock(String productId, String skuCode, String quantity);
+    String checkInventoryStock(String productId, String skuCode, String quantity);
 
     String getInventoryStock(String productId, String skuCode);
 
