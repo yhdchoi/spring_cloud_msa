@@ -42,18 +42,20 @@ public class RouteConfig {
                         .uri("http://localhost:8083")
 
                 )
-                .route(orderRoute -> orderRoute.path("/order/**")
-                        .filters(f -> f
-                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
-                        )
-                        .uri("http://localhost:8084")
-
-                )
                 .route(inventoryRoute -> inventoryRoute.path("/inventory/**")
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
                         .uri("http://localhost:8085")
+
+                )
+
+                // Order Route
+                .route(orderRoute -> orderRoute.path("/order/**")
+                        .filters(f -> f
+                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
+                        )
+                        .uri("http://localhost:8084")
 
                 )
                 .route(notificationRoute -> notificationRoute.path("/notification/**")
@@ -64,13 +66,16 @@ public class RouteConfig {
                         .uri("http://localhost:8086")
 
                 )
-                .route(videoCatalogRoute -> videoCatalogRoute.path("/file/**")
+
+                // Image Route
+                .route(videoCatalogRoute -> videoCatalogRoute.path("/image/**")
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
                         .uri("http://localhost:8100")
                 )
 
+                // Video Route
                 .route(videoCatalogRoute -> videoCatalogRoute.path("/video-catalog/**")
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
@@ -83,6 +88,8 @@ public class RouteConfig {
                         )
                         .uri("http://localhost:8102")
                 )
+
+                // Ai Route
                 .route(aiRoute -> aiRoute.path("/chat-client/**")
                         .filters(f -> f
                                 .prefixPath("/ai")
