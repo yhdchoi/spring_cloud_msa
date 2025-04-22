@@ -15,17 +15,6 @@ public class VideoInfoApiController {
 
     private final VideoInfoServiceImpl videoInfoService;
 
-    /**
-     * CREATE VIDEO INFORMATION
-     *
-     * @param videoInfoSaveRecordList
-     * @apiNote Create a new video information for a video file
-     */
-    @PostMapping("/save")
-    public List<VideoInfo> saveVideoInfo(@RequestBody List<VideoInfoSaveRecord> videoInfoSaveRecordList) {
-        return videoInfoService.createVideoInfo(videoInfoSaveRecordList);
-    }
-
 
     /**
      * LIST ALL VIDEO INFORMATION

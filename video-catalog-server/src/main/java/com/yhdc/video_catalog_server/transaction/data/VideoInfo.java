@@ -30,8 +30,8 @@ public class VideoInfo extends EntityDateAudit {
     @Column(name = "product_id", nullable = false)
     private String productId;
 
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "file_name", nullable = false)
+    private String fileName;
 
     @Column(name = "description")
     private String description;

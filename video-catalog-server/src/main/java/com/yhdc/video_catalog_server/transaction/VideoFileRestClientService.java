@@ -8,24 +8,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class VideoFileRestClientService {
 
-    private static final String fileServerUrl = "http://localhost:8100/file";
+    private static final String VideoServerUrl = "http://localhost:8102/video-file";
 
     private final RestClient restClient;
 
 
     /**
-     * DELETE VIDEO FILE
+     * DELETE SELECTED VIDEOS
      *
-     * @param filePath
+     * @param videoPathList
      */
-    public ResponseEntity<?> deleteVideoFiles(String filePath) {
+    public ResponseEntity<?> deleteSelectedVideoFiles(List<String> videoPathList) {
         return restClient.delete()
-                .uri(fileServerUrl + "/video/delete/{path}", filePath)
+                .uri(VideoServerUrl + "/delete/selected-video/{videoPathList}", videoPathList)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange((request, response) -> {
                     if (response.getStatusCode().is4xxClientError()) {
@@ -39,5 +43,34 @@ public class VideoFileRestClientService {
                     }
                 });
     }
+
+
+    /**
+     * DELETE ALL PRODUCT VIDEOS
+     *
+     * @param userId
+     * @param productId
+     */
+    public ResponseEntity<?> deleteAllProductVideoFiles(String userId, String productId) {
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("productId", productId);
+
+        return restClient.delete()
+                .uri(VideoServerUrl + "/delete/product-video", params)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange((request, response) -> {
+                    if (response.getStatusCode().is4xxClientError()) {
+                        // TODO: exception handling
+                        return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+                    } else if (response.getStatusCode().is5xxServerError()) {
+                        // TODO: exception handling
+                        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                    } else {
+                        return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+                    }
+                });
+    }
+
 
 }

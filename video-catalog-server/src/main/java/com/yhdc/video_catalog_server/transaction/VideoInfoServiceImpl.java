@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,14 +44,15 @@ public class VideoInfoServiceImpl implements VideoInfoService {
     /**
      * SAVE VIDEO INFO
      *
-     * @param videoInfoSaveRecordList
+     * @param videoInfoSaveRecord
      * @implNote
      */
     @Override
     @Transactional
-    public List<VideoInfo> createVideoInfo(List<VideoInfoSaveRecord> videoInfoSaveRecordList) {
-        List<VideoInfo> videoInfoList = videoInfoSaveRecordList.stream().map(dataConverter::convertVideoInfoDtoToVideoInfo).toList();
-        return videoInfoRepository.saveAll(videoInfoList);
+    public ResponseEntity<?> createVideoInfo(VideoInfoSaveRecord videoInfoSaveRecord) {
+        VideoInfo videoInfo = dataConverter.convertVideoInfoDtoToVideoInfo(videoInfoSaveRecord);
+        VideoInfo body = videoInfoRepository.save(videoInfo);
+        return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
 
@@ -93,7 +95,7 @@ public class VideoInfoServiceImpl implements VideoInfoService {
         Optional<VideoInfo> videoInfoOptional = videoInfoRepository.findById(UUID.fromString(videoInfoUpdateRecord.videoInfoId()));
         if (videoInfoOptional.isPresent()) {
             VideoInfo videoInfo = videoInfoOptional.get();
-            videoInfo.setTitle(videoInfoUpdateRecord.title());
+            videoInfo.setFileName(videoInfoUpdateRecord.title());
             videoInfo.setDescription(videoInfoUpdateRecord.description());
             videoInfo.setVideoPath(VIDEO_BASE_DIR + videoInfoUpdateRecord.videoPath());
 
@@ -106,29 +108,64 @@ public class VideoInfoServiceImpl implements VideoInfoService {
 
 
     /**
-     * DELETE VIDEO INFORMATION AND VIDEO FILE
+     * DELETE SELECTED VIDEO CATALOG AND VIDEOS
      *
-     * @param videoInfoId
+     * @param userId
+     * @param videoInfoIdList
      * @implNote
      * @implSpec
      */
     @Override
     @Transactional
-    public ResponseEntity<?> deleteVideoInfo(String videoInfoId) {
+    public ResponseEntity<?> deleteSelectedVideoInfo(String userId, List<String> videoInfoIdList) {
         try {
-            VideoInfo videoInfo = findVideoInfo(videoInfoId);
-            if (videoInfo != null) {
-                ResponseEntity<?> clientResponse
-                        = videoFileRestClientService.deleteVideoFiles(videoInfo.getVideoPath());
-                if (clientResponse.getStatusCode() == HttpStatus.OK) {
-                    videoInfoRepository.delete(videoInfo);
-                    return new ResponseEntity<>(HttpStatus.OK);
+            List<VideoInfo> videoInfoList = new ArrayList<>();
+            List<String> videoPathList = new ArrayList<>();
+
+            for (String videoInfoId : videoInfoIdList) {
+                VideoInfo videoInfo = findVideoInfo(videoInfoId);
+                if (videoInfo != null) {
+                    videoInfoList.add(videoInfo);
+                    videoPathList.add(videoInfo.getVideoPath());
                 } else {
-                    return new ResponseEntity<>(clientResponse, HttpStatus.BAD_REQUEST);
+                    log.error("Video catalog not found!!! [ {} ]", videoInfoId);
                 }
-            } else {
-                return new ResponseEntity<>("VideoInfo not found!!!", HttpStatus.NOT_FOUND);
             }
+            ResponseEntity<?> clientResponse
+                    = videoFileRestClientService.deleteSelectedVideoFiles(videoPathList);
+            if (clientResponse.getStatusCode() == HttpStatus.OK) {
+                videoInfoRepository.deleteAll(videoInfoList);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(clientResponse, HttpStatus.BAD_REQUEST);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+    }
+
+
+    /**
+     * DELETE ALL VIDEO CATALOG AND VIDEOS
+     *
+     * @param userId
+     * @param productId
+     */
+    @Override
+    @Transactional
+    public ResponseEntity<?> deleteProductVideoInfo(String userId, String productId) {
+        try {
+            ResponseEntity<?> clientResponse
+                    = videoFileRestClientService.deleteAllProductVideoFiles(userId, productId);
+            if (clientResponse.getStatusCode() == HttpStatus.OK) {
+                List<VideoInfo> videoInfoList = videoInfoRepository.findAllByUserIdAndProductId(userId, productId);
+                videoInfoRepository.deleteAll(videoInfoList);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(clientResponse.getBody(), HttpStatus.BAD_REQUEST);
+            }
+
         } catch (Exception e) {
             throw new RuntimeException();
         }

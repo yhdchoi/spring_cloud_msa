@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class VideoInfoDto {
 
-    private String title;
+    private String userId;
+    private String productId;
+    private String fileName;
     private String description;
     private String videoPath;
 

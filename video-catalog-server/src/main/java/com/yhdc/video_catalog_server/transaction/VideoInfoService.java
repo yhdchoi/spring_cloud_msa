@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface VideoInfoService {
 
-    List<VideoInfo> createVideoInfo(List<VideoInfoSaveRecord> videoInfoSaveRecordList);
+    ResponseEntity<?> createVideoInfo(VideoInfoSaveRecord videoInfoSaveRecord);
 
     List<VideoInfo> getVideoInfoList();
 
@@ -17,5 +17,8 @@ public interface VideoInfoService {
 
     ResponseEntity<?> updateVideoInfo(VideoInfoUpdateRecord videoInfoUpdateRecord);
 
-    ResponseEntity<?> deleteVideoInfo(String videoInfoId);
+    ResponseEntity<?> deleteSelectedVideoInfo(String userId, List<String> videoInfoIdList);
+
+    ResponseEntity<?> deleteProductVideoInfo(String userId, String productId);
+
 }
