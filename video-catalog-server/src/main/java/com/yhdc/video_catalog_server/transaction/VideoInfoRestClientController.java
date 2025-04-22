@@ -1,10 +1,11 @@
 package com.yhdc.video_catalog_server.transaction;
 
-import com.yhdc.video_catalog_server.transaction.data.VideoInfo;
 import com.yhdc.video_catalog_server.transaction.object.VideoInfoSaveRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,12 +27,12 @@ public class VideoInfoRestClientController {
     /**
      * DELETE VIDEO INFO
      *
-     * @param videoInfoId
+     * @param videoInfoIdList
      * @apiNote Delete video information with video file
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteVideoInfo(@RequestParam(name = "videoInfoId") String videoInfoId) {
-        return videoInfoService.deleteVideoInfo(videoInfoId);
+    public ResponseEntity<?> deleteVideoInfo(@RequestParam(name = "videoInfoIdList") List<String> videoInfoIdList) {
+        return videoInfoService.deleteSelectedVideoInfo(videoInfoIdList);
     }
 
 }

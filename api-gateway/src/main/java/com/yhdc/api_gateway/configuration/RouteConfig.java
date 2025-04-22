@@ -12,22 +12,31 @@ public class RouteConfig {
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 // Account Route
-                .route(userRoute -> userRoute.path("/account/**")
+                .route("account_route", accoutnRoute -> accoutnRoute
+                        .path("/account/**")
                         .filters(f -> f
+                                .circuitBreaker(breaker -> breaker
+                                        .setName("account_breaker")
+                                        .setFallbackUri("forward:/fallback"))
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
                         .uri("http://localhost:8081")
 
                 )
-                .route(accountSwaggerRoute -> accountSwaggerRoute.path("/aggregate/account-service/v3/api-docs")
+                .route("account_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
+                        .path("/aggregate/account-service/v3/api-docs")
                         .filters(f -> f
+                                .circuitBreaker(breaker -> breaker
+                                        .setName("account_swagger_breaker")
+                                        .setFallbackUri("forward:/fallback"))
                                 .setPath("/api-docs")
                         )
                         .uri("http://localhost:8081")
                 )
 
                 // Store Route
-                .route(storeRoute -> storeRoute.path("/store/**")
+                .route("store_route", storeRoute -> storeRoute
+                        .path("/store/**")
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
@@ -35,14 +44,18 @@ public class RouteConfig {
 
                 )
 
-                .route(productRoute -> productRoute.path("/product/**")
+                // Product Route
+                .route("product_route", productRoute -> productRoute
+                        .path("/product/**")
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
                         .uri("http://localhost:8083")
 
                 )
-                .route(inventoryRoute -> inventoryRoute.path("/inventory/**")
+
+                .route("inventory_route", inventoryRoute -> inventoryRoute
+                        .path("/inventory/**")
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
@@ -51,14 +64,17 @@ public class RouteConfig {
                 )
 
                 // Order Route
-                .route(orderRoute -> orderRoute.path("/order/**")
+                .route("order_route", orderRoute -> orderRoute
+                        .path("/order/**")
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
                         .uri("http://localhost:8084")
 
                 )
-                .route(notificationRoute -> notificationRoute.path("/notification/**")
+
+                .route("notification_route", notificationRoute -> notificationRoute
+                        .path("/notification/**")
                         .filters(f -> f
                                 .prefixPath("/event")
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
@@ -68,7 +84,8 @@ public class RouteConfig {
                 )
 
                 // Image Route
-                .route(videoCatalogRoute -> videoCatalogRoute.path("/image/**")
+                .route("image_route", imageRoute -> imageRoute
+                        .path("/image/**")
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
@@ -76,13 +93,15 @@ public class RouteConfig {
                 )
 
                 // Video Route
-                .route(videoCatalogRoute -> videoCatalogRoute.path("/video-catalog/**")
+                .route("video_catalog_route", videoCatalogRoute -> videoCatalogRoute
+                        .path("/video-catalog/**")
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
                         .uri("http://localhost:8101")
                 )
-                .route(videoStreamRoute -> videoStreamRoute.path("/video-stream/**")
+                .route("video_streaming_route", videoStreamRoute -> videoStreamRoute
+                        .path("/video-stream/**")
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
@@ -90,12 +109,19 @@ public class RouteConfig {
                 )
 
                 // Ai Route
-                .route(aiRoute -> aiRoute.path("/chat-client/**")
+                .route("ai_route", aiRoute -> aiRoute
+                        .path("/chat-client/**")
                         .filters(f -> f
                                 .prefixPath("/ai")
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
                         .uri("http://localhost:8200")
+                )
+
+                // Fallback Route
+                .route("fallback_route", fallbackRoute -> fallbackRoute
+                        .path("/fallback")
+                        .uri("http://localhost:8080")
                 )
                 .build();
     }

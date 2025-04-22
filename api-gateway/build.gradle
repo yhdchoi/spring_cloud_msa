@@ -28,6 +28,9 @@ dependencies {
     // SECURITY
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
+    // LOAD BALANCING
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+
     // SWAGGER
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.6'
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.8.6'

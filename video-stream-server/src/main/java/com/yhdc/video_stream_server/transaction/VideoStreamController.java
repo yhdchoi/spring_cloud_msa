@@ -21,7 +21,7 @@ public class VideoStreamController {
      * STREAM VIDEO BY VIDEO INFO ID
      *
      * @param videoInfoId
-     * @apiNote Rest client request
+     * @apiNote Stream video. RestClient request for video path.
      */
     @GetMapping("/stream/id")
     public ResponseEntity<StreamingResponseBody> streamVideoInfo(@RequestParam String videoInfoId) {
@@ -41,7 +41,7 @@ public class VideoStreamController {
      *
      * @param productId
      * @param fileArray
-     * @apiNote Save video(s) for a product
+     * @apiNote Save video(s) for a product. RestClient request for catalog.
      */
     @PostMapping("/save")
     public ResponseEntity<?> saveVideo(@RequestParam String userId, @RequestParam String productId, @RequestPart MultipartFile[] fileArray) {
