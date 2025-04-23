@@ -17,7 +17,8 @@ public class RouteConfig {
                         .filters(f -> f
                                 .circuitBreaker(breaker -> breaker
                                         .setName("account_breaker")
-                                        .setFallbackUri("forward:/fallback"))
+                                        .setFallbackUri("forward:/fallback")
+                                )
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
                         .uri("http://localhost:8081")
@@ -28,8 +29,8 @@ public class RouteConfig {
                         .filters(f -> f
                                 .circuitBreaker(breaker -> breaker
                                         .setName("account_swagger_breaker")
-                                        .setFallbackUri("forward:/fallback"))
-                                .setPath("/api-docs")
+                                        .setFallbackUri("forward:/fallback")
+                                )
                         )
                         .uri("http://localhost:8081")
                 )
@@ -38,10 +39,24 @@ public class RouteConfig {
                 .route("store_route", storeRoute -> storeRoute
                         .path("/store/**")
                         .filters(f -> f
+                                .circuitBreaker(breaker -> breaker
+                                        .setName("account_breaker")
+                                        .setFallbackUri("forward:/fallback")
+                                )
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
                         .uri("http://localhost:8082")
 
+                )
+                .route("store_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
+                        .path("/aggregate/store-service/v3/api-docs")
+                        .filters(f -> f
+                                .circuitBreaker(breaker -> breaker
+                                        .setName("store_swagger_breaker")
+                                        .setFallbackUri("forward:/fallback")
+                                )
+                        )
+                        .uri("http://localhost:8082")
                 )
 
                 // Product Route
@@ -54,6 +69,7 @@ public class RouteConfig {
 
                 )
 
+                // Inventory Route
                 .route("inventory_route", inventoryRoute -> inventoryRoute
                         .path("/inventory/**")
                         .filters(f -> f
@@ -73,6 +89,7 @@ public class RouteConfig {
 
                 )
 
+                // Notification Route
                 .route("notification_route", notificationRoute -> notificationRoute
                         .path("/notification/**")
                         .filters(f -> f
