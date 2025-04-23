@@ -1,12 +1,14 @@
 package com.yhdc.order_server.transaction;
 
-import com.yhdc.order_server.transaction.object.OrderCreateRecord;
+import com.yhdc.order_server.transaction.event.OrderProcessEvent;
+import com.yhdc.order_server.transaction.object.OrderRequestRecord;
 import com.yhdc.order_server.transaction.object.ProductData;
 import com.yhdc.order_server.transaction.object.StoreData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,19 +23,20 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final DatabaseSequenceGeneratorService databaseSequenceGeneratorService;
     private final InventoryRestClient inventoryRestClient;
+    private KafkaTemplate<String, OrderProcessEvent> kafkaTemplate;
 
 
     /**
      * PROCESS ORDER
      *
-     * @param orderCreateRecord
+     * @param orderRequestRecord
      */
     @Override
     @Transactional
-    public ResponseEntity<?> processOrder(OrderCreateRecord orderCreateRecord) {
+    public ResponseEntity<?> processOrder(OrderRequestRecord orderRequestRecord) {
         boolean checkStock = true;
         int totalPrice = 0;
-        for (StoreData storeData : orderCreateRecord.storeDataList()) {
+        for (StoreData storeData : orderRequestRecord.storeDataList()) {
             List<ProductData> productDataList = storeData.getProductDataList();
             for (ProductData productData : productDataList) {
 
@@ -59,10 +62,17 @@ public class OrderServiceImpl implements OrderService {
 
         if (checkStock) {
             // Save order and process
-            Order order = orderRepository.save(createOrder(orderCreateRecord, totalPrice));
+            final Order order = orderRepository.save(createOrder(orderRequestRecord, totalPrice));
+
+            // Send message to Kafka topic
+            OrderProcessEvent orderProcessEvent
+                    = new OrderProcessEvent(order.getId().toString(), orderRequestRecord.userDetail().userEmail());
+            log.info("Order process event sent to kafka topic: {}", orderProcessEvent);
+            kafkaTemplate.send("order-process", orderProcessEvent);
+
             return new ResponseEntity<>(order.getId(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(orderCreateRecord, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(orderRequestRecord, HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
@@ -70,15 +80,14 @@ public class OrderServiceImpl implements OrderService {
     /**
      * CREATE ORDER OBJECT
      *
-     * @param orderCreateRecord
+     * @param orderRequestRecord
      */
-    @Transactional
-    protected Order createOrder(OrderCreateRecord orderCreateRecord, int totalPrice) {
+    protected Order createOrder(OrderRequestRecord orderRequestRecord, int totalPrice) {
         try {
             Order order = new Order();
             order.setId(databaseSequenceGeneratorService.generateSequence(Order.SEQUENCE_NAME));
-            order.setBuyerId(orderCreateRecord.userId());
-            order.setStoreList(orderCreateRecord.storeDataList());
+            order.setBuyerId(orderRequestRecord.userId());
+            order.setStoreList(orderRequestRecord.storeDataList());
             order.setTotalPrice(String.valueOf(totalPrice));
             order.setStatus("PROCESSING");
             return order;

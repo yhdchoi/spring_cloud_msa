@@ -1,6 +1,6 @@
 package com.yhdc.order_server.transaction;
 
-import com.yhdc.order_server.transaction.object.OrderCreateRecord;
+import com.yhdc.order_server.transaction.object.OrderRequestRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class OrderRestController {
      * @apiNote Processing order by checking inventory
      */
     @PostMapping("/process")
-    public ResponseEntity<?> processOrder(@RequestBody OrderCreateRecord order) {
+    public ResponseEntity<?> processOrder(@RequestBody OrderRequestRecord order) {
         return orderService.processOrder(order);
     }
 
