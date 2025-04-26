@@ -13,7 +13,7 @@ import org.testcontainers.containers.MongoDBContainer;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class OrderServerApplicationTests {
+class OrderServiceApplicationTests {
 
     @LocalServerPort
     private int port;
