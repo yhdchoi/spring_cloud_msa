@@ -1,6 +1,6 @@
-package com.yhdc.order_server.configuration;
+package com.yhdc.order_service.configuration;
 
-import com.yhdc.order_server.transaction.InventoryRestClient;
+import com.yhdc.order_service.transaction.InventoryRestClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;

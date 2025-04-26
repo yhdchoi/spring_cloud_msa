@@ -1,6 +1,6 @@
-package com.yhdc.order_server.transaction;
+package com.yhdc.order_service.transaction;
 
-import com.yhdc.order_server.transaction.object.StoreData;
+import com.yhdc.order_service.transaction.object.StoreData;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;

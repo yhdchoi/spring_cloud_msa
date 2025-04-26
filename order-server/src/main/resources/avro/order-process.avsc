@@ -1,7 +1,7 @@
 {
     "type": "record",
     "name": "OrderProcessEvent",
-    "namespace": "com.yhdc.order_server.transaction.event",
+    "namespace": "com.yhdc.order_service.transaction.event",
     "fields": [
                 {"name": "orderId", "type": "string"},
                 {"name": "username", "type": "string"},

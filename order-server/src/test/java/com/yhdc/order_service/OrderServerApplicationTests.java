@@ -1,4 +1,4 @@
-package com.yhdc.order_server;
+package com.yhdc.order_service;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterAll;
@@ -40,7 +40,7 @@ class OrderServerApplicationTests {
     void shouldProcessOrder() {
     }
 
-    
+
     @Test
     void shouldCancelOrder() {
     }

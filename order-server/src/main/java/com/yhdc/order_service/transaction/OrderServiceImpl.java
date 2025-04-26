@@ -1,9 +1,9 @@
-package com.yhdc.order_server.transaction;
+package com.yhdc.order_service.transaction;
 
-import com.yhdc.order_server.transaction.event.OrderProcessEvent;
-import com.yhdc.order_server.transaction.object.OrderRequestRecord;
-import com.yhdc.order_server.transaction.object.ProductData;
-import com.yhdc.order_server.transaction.object.StoreData;
+import com.yhdc.order_service.transaction.event.OrderProcessEvent;
+import com.yhdc.order_service.transaction.object.OrderRequestRecord;
+import com.yhdc.order_service.transaction.object.ProductData;
+import com.yhdc.order_service.transaction.object.StoreData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

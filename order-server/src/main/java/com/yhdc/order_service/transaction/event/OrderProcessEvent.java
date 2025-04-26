@@ -1,4 +1,4 @@
-package com.yhdc.order_server.transaction.event;
+package com.yhdc.order_service.transaction.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

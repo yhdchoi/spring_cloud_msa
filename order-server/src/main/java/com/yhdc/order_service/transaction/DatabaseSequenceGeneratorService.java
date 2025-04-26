@@ -1,4 +1,4 @@
-package com.yhdc.order_server.transaction;
+package com.yhdc.order_service.transaction;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoOperations;

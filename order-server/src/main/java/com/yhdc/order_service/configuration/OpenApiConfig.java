@@ -1,4 +1,4 @@
-package com.yhdc.order_server.configuration;
+package com.yhdc.order_service.configuration;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;

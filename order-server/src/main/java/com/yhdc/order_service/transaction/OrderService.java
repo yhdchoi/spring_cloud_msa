@@ -1,6 +1,6 @@
-package com.yhdc.order_server.transaction;
+package com.yhdc.order_service.transaction;
 
-import com.yhdc.order_server.transaction.object.OrderRequestRecord;
+import com.yhdc.order_service.transaction.object.OrderRequestRecord;
 import org.springframework.http.ResponseEntity;
 
 public interface OrderService {
