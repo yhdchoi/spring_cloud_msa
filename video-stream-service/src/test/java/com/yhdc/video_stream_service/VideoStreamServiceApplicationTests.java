@@ -1,10 +1,10 @@
-package com.yhdc.video_stream_server;
+package com.yhdc.video_stream_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class VideoStreamServerApplicationTests {
+class VideoStreamServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

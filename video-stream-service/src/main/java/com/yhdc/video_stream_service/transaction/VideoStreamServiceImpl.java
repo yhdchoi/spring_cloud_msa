@@ -1,6 +1,6 @@
-package com.yhdc.video_stream_server.transaction;
+package com.yhdc.video_stream_service.transaction;
 
-import com.yhdc.video_stream_server.transaction.object.CommonErrorBody;
+import com.yhdc.video_stream_service.transaction.object.CommonErrorBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -16,7 +16,7 @@ import java.io.*;
 import java.util.List;
 import java.util.UUID;
 
-import static com.yhdc.video_stream_server.transaction.type.Constants.VIDEO_BASE_DIR;
+import static com.yhdc.video_stream_service.transaction.type.Constants.VIDEO_BASE_DIR;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package com.yhdc.video_stream_server.transaction.type;
+package com.yhdc.video_stream_service.transaction.type;
 
 public class Constants {
 

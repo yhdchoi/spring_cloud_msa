@@ -1,4 +1,4 @@
-package com.yhdc.video_stream_server.transaction;
+package com.yhdc.video_stream_service.transaction;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;

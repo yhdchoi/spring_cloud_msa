@@ -1,4 +1,4 @@
-package com.yhdc.video_stream_server;
+package com.yhdc.video_stream_service;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
