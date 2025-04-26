@@ -1,0 +1,12 @@
+{
+    "type": "record",
+    "name": "OrderProcessEvent",
+    "namespace": "com.yhdc.order_server.transaction.event",
+    "fields": [
+                {"name": "orderId", "type": "string"},
+                {"name": "username", "type": "string"},
+                {"name": "firstName", "type": "string"},
+                {"name": "lastName", "type": "string"},
+                {"name": "email", "type": "string"}
+            ]
+}

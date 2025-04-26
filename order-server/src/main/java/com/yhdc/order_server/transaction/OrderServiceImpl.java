@@ -65,11 +65,19 @@ public class OrderServiceImpl implements OrderService {
             final Order order = orderRepository.save(createOrder(orderRequestRecord, totalPrice));
 
             // Send message to Kafka topic
-            OrderProcessEvent orderProcessEvent
-                    = new OrderProcessEvent(order.getId().toString(), orderRequestRecord.userDetail().userEmail());
-            log.info("Order process event sent to kafka topic: {}", orderProcessEvent);
+            OrderProcessEvent orderProcessEvent = new OrderProcessEvent(
+                    order.getId().toString(),
+                    orderRequestRecord.userDetail().username(),
+                    orderRequestRecord.userDetail().firsName(),
+                    orderRequestRecord.userDetail().lastName(),
+                    orderRequestRecord.userDetail().userEmail()
+            );
+            log.info("Order process event sent to kafka topic: [ {} ]", order.getId());
+
+            // Kafka
             kafkaTemplate.send("order-process", orderProcessEvent);
 
+            log.info("Order process event completed: [ {} ]", order.getId());
             return new ResponseEntity<>(order.getId(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(orderRequestRecord, HttpStatus.NOT_ACCEPTABLE);

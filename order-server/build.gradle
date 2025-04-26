@@ -7,6 +7,9 @@ plugins {
 group = 'com.yhdc'
 version = '1.0.0'
 
+//def avroGeneratedDir = layout.buildDirectory.dir("avroGenerated")
+//sourceSets.main.java.srcDir(avroGeneratedDir)
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -17,6 +20,9 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+//    avroTools {
+//        transitive = false // Ensures only the primary JAR is included
+//    }
 }
 
 repositories {
@@ -40,6 +46,10 @@ dependencies {
 
     // KAFKA
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'io.confluent:kafka-schema-registry-client:7.9.0'
+//    implementation 'io.confluent:kafka-avro-serializer:7.9.0'
+//    implementation 'org.apache.avro:avro:1.12.0'
+//    implementation 'org.apache.avro:avro-tools:1.12.0'
 
     // CONFIG
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
@@ -79,3 +89,13 @@ tasks.named('test') {
     jvmArgs("-XX:+EnableDynamicAgentLoading")
     useJUnitPlatform()
 }
+
+//tasks.register("avroCompileSchema", JavaExec) {
+//    classpath(configurations.avroTools)
+//    args(
+//            "compile",
+//            "schema",
+//            "src/main/resources/avro/",
+//            avroGeneratedDir.get().asFile.canonicalPath
+//    )
+//}

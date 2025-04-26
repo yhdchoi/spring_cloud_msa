@@ -7,6 +7,6 @@ public record OrderRequestRecord(String userId,
                                  String totalPrice,
                                  UserDetail userDetail) {
 
-    public record UserDetail(String username, String userEmail){}
+    public record UserDetail(String username, String firsName, String lastName, String userEmail){}
 
 }
