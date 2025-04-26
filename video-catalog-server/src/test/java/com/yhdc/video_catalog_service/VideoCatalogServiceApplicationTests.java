@@ -1,4 +1,4 @@
-package com.yhdc.video_catalog_server;
+package com.yhdc.video_catalog_service;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterAll;
@@ -13,7 +13,7 @@ import org.testcontainers.containers.MongoDBContainer;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class VideoCatalogServerApplicationTests {
+class VideoCatalogServiceApplicationTests {
 
     @LocalServerPort
     private int port;

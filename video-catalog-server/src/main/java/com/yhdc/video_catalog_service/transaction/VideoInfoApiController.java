@@ -1,8 +1,7 @@
-package com.yhdc.video_catalog_server.transaction;
+package com.yhdc.video_catalog_service.transaction;
 
-import com.yhdc.video_catalog_server.transaction.data.VideoInfo;
-import com.yhdc.video_catalog_server.transaction.object.VideoInfoSaveRecord;
-import com.yhdc.video_catalog_server.transaction.object.VideoInfoUpdateRecord;
+import com.yhdc.video_catalog_service.transaction.data.VideoInfo;
+import com.yhdc.video_catalog_service.transaction.object.VideoInfoUpdateRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

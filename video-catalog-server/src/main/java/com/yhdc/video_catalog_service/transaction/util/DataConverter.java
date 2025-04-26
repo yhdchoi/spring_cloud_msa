@@ -1,13 +1,13 @@
-package com.yhdc.video_catalog_server.transaction.util;
+package com.yhdc.video_catalog_service.transaction.util;
 
-import com.yhdc.video_catalog_server.transaction.data.VideoInfo;
-import com.yhdc.video_catalog_server.transaction.object.VideoInfoDto;
-import com.yhdc.video_catalog_server.transaction.object.VideoInfoSaveRecord;
+import com.yhdc.video_catalog_service.transaction.data.VideoInfo;
+import com.yhdc.video_catalog_service.transaction.object.VideoInfoDto;
+import com.yhdc.video_catalog_service.transaction.object.VideoInfoSaveRecord;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 
-import static com.yhdc.video_catalog_server.transaction.type.Constants.VIDEO_BASE_DIR;
+import static com.yhdc.video_catalog_service.transaction.type.Constants.VIDEO_BASE_DIR;
 
 @Component
 public class DataConverter {

@@ -1,8 +1,8 @@
-package com.yhdc.video_catalog_server.transaction;
+package com.yhdc.video_catalog_service.transaction;
 
-import com.yhdc.video_catalog_server.transaction.data.VideoInfo;
-import com.yhdc.video_catalog_server.transaction.object.VideoInfoSaveRecord;
-import com.yhdc.video_catalog_server.transaction.object.VideoInfoUpdateRecord;
+import com.yhdc.video_catalog_service.transaction.data.VideoInfo;
+import com.yhdc.video_catalog_service.transaction.object.VideoInfoSaveRecord;
+import com.yhdc.video_catalog_service.transaction.object.VideoInfoUpdateRecord;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public interface VideoInfoService {
 
     ResponseEntity<?> updateVideoInfo(VideoInfoUpdateRecord videoInfoUpdateRecord);
 
-    ResponseEntity<?> deleteSelectedVideoInfo(String userId, List<String> videoInfoIdList);
+    ResponseEntity<?> deleteSelectedVideoInfo(List<String> videoInfoIdList);
 
     ResponseEntity<?> deleteProductVideoInfo(String userId, String productId);
 

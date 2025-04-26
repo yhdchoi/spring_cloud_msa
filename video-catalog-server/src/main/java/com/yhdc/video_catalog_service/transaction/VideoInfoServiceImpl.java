@@ -1,11 +1,11 @@
-package com.yhdc.video_catalog_server.transaction;
+package com.yhdc.video_catalog_service.transaction;
 
-import com.yhdc.video_catalog_server.transaction.data.VideoInfo;
-import com.yhdc.video_catalog_server.transaction.data.VideoInfoRepository;
-import com.yhdc.video_catalog_server.transaction.object.VideoInfoDto;
-import com.yhdc.video_catalog_server.transaction.object.VideoInfoSaveRecord;
-import com.yhdc.video_catalog_server.transaction.object.VideoInfoUpdateRecord;
-import com.yhdc.video_catalog_server.transaction.util.DataConverter;
+import com.yhdc.video_catalog_service.transaction.data.VideoInfo;
+import com.yhdc.video_catalog_service.transaction.data.VideoInfoRepository;
+import com.yhdc.video_catalog_service.transaction.object.VideoInfoDto;
+import com.yhdc.video_catalog_service.transaction.object.VideoInfoSaveRecord;
+import com.yhdc.video_catalog_service.transaction.object.VideoInfoUpdateRecord;
+import com.yhdc.video_catalog_service.transaction.util.DataConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.yhdc.video_catalog_server.transaction.type.Constants.VIDEO_BASE_DIR;
+import static com.yhdc.video_catalog_service.transaction.type.Constants.VIDEO_BASE_DIR;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -110,14 +110,13 @@ public class VideoInfoServiceImpl implements VideoInfoService {
     /**
      * DELETE SELECTED VIDEO CATALOG AND VIDEOS
      *
-     * @param userId
      * @param videoInfoIdList
      * @implNote
      * @implSpec
      */
     @Override
     @Transactional
-    public ResponseEntity<?> deleteSelectedVideoInfo(String userId, List<String> videoInfoIdList) {
+    public ResponseEntity<?> deleteSelectedVideoInfo(List<String> videoInfoIdList) {
         try {
             List<VideoInfo> videoInfoList = new ArrayList<>();
             List<String> videoPathList = new ArrayList<>();

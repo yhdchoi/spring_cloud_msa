@@ -1,4 +1,4 @@
-package com.yhdc.video_catalog_server.transaction.type;
+package com.yhdc.video_catalog_service.transaction.type;
 
 public class Constants {
 

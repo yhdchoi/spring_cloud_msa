@@ -1,4 +1,4 @@
-package com.yhdc.video_catalog_server.transaction;
+package com.yhdc.video_catalog_service.transaction;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
