@@ -1,8 +1,8 @@
-package com.yhdc.account_server.transaction;
+package com.yhdc.account_service.transaction;
 
-import com.yhdc.account_server.object.UserCreateRecord;
-import com.yhdc.account_server.object.UserPatchRecord;
-import com.yhdc.account_server.object.UserPutRecord;
+import com.yhdc.account_service.object.UserCreateRecord;
+import com.yhdc.account_service.object.UserPatchRecord;
+import com.yhdc.account_service.object.UserPutRecord;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

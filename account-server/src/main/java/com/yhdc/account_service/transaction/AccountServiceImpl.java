@@ -1,10 +1,10 @@
-package com.yhdc.account_server.transaction;
+package com.yhdc.account_service.transaction;
 
-import com.yhdc.account_server.data.*;
-import com.yhdc.account_server.object.UserCreateRecord;
-import com.yhdc.account_server.object.UserDto;
-import com.yhdc.account_server.object.UserPatchRecord;
-import com.yhdc.account_server.object.UserPutRecord;
+import com.yhdc.account_service.data.*;
+import com.yhdc.account_service.object.UserCreateRecord;
+import com.yhdc.account_service.object.UserDto;
+import com.yhdc.account_service.object.UserPatchRecord;
+import com.yhdc.account_service.object.UserPutRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import static com.yhdc.account_server.transaction.Constants.USER_MANAGER;
-import static com.yhdc.account_server.transaction.Constants.USER_SELLER;
+import static com.yhdc.account_service.transaction.Constants.USER_MANAGER;
+import static com.yhdc.account_service.transaction.Constants.USER_SELLER;
 
 @Slf4j
 @RequiredArgsConstructor

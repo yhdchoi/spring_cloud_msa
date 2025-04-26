@@ -1,4 +1,4 @@
-package com.yhdc.account_server.object;
+package com.yhdc.account_service.object;
 
 import java.util.Objects;
 

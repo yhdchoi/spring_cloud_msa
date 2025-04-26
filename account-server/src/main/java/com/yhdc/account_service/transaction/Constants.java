@@ -1,4 +1,4 @@
-package com.yhdc.account_server.transaction;
+package com.yhdc.account_service.transaction;
 
 public class Constants {
 

@@ -1,4 +1,4 @@
-package com.yhdc.account_server;
+package com.yhdc.account_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.yhdc.account_server;
+package com.yhdc.account_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

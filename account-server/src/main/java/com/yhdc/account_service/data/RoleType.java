@@ -1,4 +1,4 @@
-package com.yhdc.account_server.data;
+package com.yhdc.account_service.data;
 
 public enum RoleType {
 

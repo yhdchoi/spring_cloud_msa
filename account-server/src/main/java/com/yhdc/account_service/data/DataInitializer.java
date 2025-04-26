@@ -1,4 +1,4 @@
-package com.yhdc.account_server.data;
+package com.yhdc.account_service.data;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
