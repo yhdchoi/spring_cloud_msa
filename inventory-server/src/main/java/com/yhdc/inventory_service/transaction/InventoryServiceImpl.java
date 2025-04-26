@@ -1,10 +1,10 @@
-package com.yhdc.inventory_server.transaction;
+package com.yhdc.inventory_service.transaction;
 
-import com.yhdc.inventory_server.transaction.data.DatabaseSequenceGeneratorService;
-import com.yhdc.inventory_server.transaction.data.Inventory;
-import com.yhdc.inventory_server.transaction.data.InventoryRepository;
-import com.yhdc.inventory_server.transaction.object.InventoryCommonRecord;
-import com.yhdc.inventory_server.transaction.object.InventoryCreateRecord;
+import com.yhdc.inventory_service.transaction.data.DatabaseSequenceGeneratorService;
+import com.yhdc.inventory_service.transaction.data.Inventory;
+import com.yhdc.inventory_service.transaction.data.InventoryRepository;
+import com.yhdc.inventory_service.transaction.object.InventoryCommonRecord;
+import com.yhdc.inventory_service.transaction.object.InventoryCreateRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

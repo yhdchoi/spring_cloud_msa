@@ -1,4 +1,4 @@
-package com.yhdc.inventory_server;
+package com.yhdc.inventory_service;
 
 import org.springframework.boot.test.context.TestConfiguration;
 

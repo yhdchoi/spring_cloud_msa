@@ -1,4 +1,4 @@
-package com.yhdc.inventory_server.configuration;
+package com.yhdc.inventory_service.configuration;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;

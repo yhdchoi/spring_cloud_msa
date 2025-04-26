@@ -1,7 +1,7 @@
-package com.yhdc.inventory_server.transaction;
+package com.yhdc.inventory_service.transaction;
 
-import com.yhdc.inventory_server.transaction.object.InventoryCommonRecord;
-import com.yhdc.inventory_server.transaction.object.InventoryCreateRecord;
+import com.yhdc.inventory_service.transaction.object.InventoryCommonRecord;
+import com.yhdc.inventory_service.transaction.object.InventoryCreateRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

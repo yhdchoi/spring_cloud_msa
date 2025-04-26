@@ -1,4 +1,4 @@
-package com.yhdc.inventory_server.transaction.data;
+package com.yhdc.inventory_service.transaction.data;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoOperations;

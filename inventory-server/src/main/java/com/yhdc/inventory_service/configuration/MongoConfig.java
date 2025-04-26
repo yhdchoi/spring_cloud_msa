@@ -1,4 +1,4 @@
-package com.yhdc.inventory_server.configuration;
+package com.yhdc.inventory_service.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
-@EnableMongoRepositories("com.yhdc.inventory_server.transaction")
+@EnableMongoRepositories("com.yhdc.inventory_service.transaction")
 @EnableMongoAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
 @Configuration
 public class MongoConfig {
