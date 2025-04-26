@@ -1,4 +1,4 @@
-package com.yhdc.ai_server.service;
+package com.yhdc.ai_service.service;
 
 import groovy.util.logging.Slf4j;
 import org.slf4j.Logger;

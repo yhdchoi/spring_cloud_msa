@@ -1,4 +1,4 @@
-package com.yhdc.ai_server;
+package com.yhdc.ai_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,10 +6,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-public class AiServerApplication {
+public class AiServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AiServerApplication.class, args);
+        SpringApplication.run(AiServiceApplication.class, args);
     }
 
 }

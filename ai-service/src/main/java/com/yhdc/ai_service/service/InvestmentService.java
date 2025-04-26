@@ -1,4 +1,4 @@
-package com.yhdc.ai_server.service;
+package com.yhdc.ai_service.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
