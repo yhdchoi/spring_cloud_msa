@@ -1,4 +1,4 @@
-# Spring Cloud Microservice and Event-Driven Architecture
+# Spring Cloud Event-Driven Microservice Architecture
 
 ![yes](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
 ![commit](https://img.shields.io/github/commits-since/yhdchoi/fiorano/1.0.svg)
