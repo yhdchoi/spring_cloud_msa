@@ -25,9 +25,12 @@
 
 [//]: # (<img src="./readme/image/architecture-diagram.png" width="800" height="800" />)
 
-> For this project, I am demonstrating a [Microservice Architecture](https://yhdchoi.notion.site/Microservice-Architecture-1d40b6ddbce580cdb8cfe3bcc877912b?pvs=4)
-> with an [Event-Driven Architecture](https://yhdchoi.notion.site/Event-Driven-Architecture-1d40b6ddbce580f1a39fe756daf040d2?pvs=4). 
-> MSA and EDA has become an industry standard due to its collection of loosely coupled services that operate together which can be modified, scaled, tested and deployed.
+> For this project, I am demonstrating
+> a [Microservice Architecture](https://yhdchoi.notion.site/Microservice-Architecture-1d40b6ddbce580cdb8cfe3bcc877912b?pvs=4)
+> with
+> an [Event-Driven Architecture](https://yhdchoi.notion.site/Event-Driven-Architecture-1d40b6ddbce580f1a39fe756daf040d2?pvs=4).
+> MSA and EDA has become an industry standard due to its collection of loosely coupled services that operate together
+> which can be modified, scaled, tested and deployed.
 > With Event-Driven services, you can allow data transmission in real-time through asynchronous events.
 
 ## Getting Started
@@ -96,8 +99,9 @@ resilience4j.retry.configs.default.wait-duration.seconds=2
 ```
 
 ```java
- @Bean
-    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+
+@Bean
+public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
     return builder.routes()
             // Account Route
             .route("account_route", accoutnRoute -> accoutnRoute
@@ -191,7 +195,8 @@ springdoc.swagger-ui.urls[1].url=/aggregate/store-server/v3/api-docs
 ```
 
 ```java
-  @Bean
+
+@Bean
 public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
     return builder.routes()
             // SKIP //
@@ -296,6 +301,7 @@ For the synchronous communication between Video-Catalog service and Video-Stream
 Template.
 
 ```java
+
 @Configuration
 public class RestClientConfig {
     @Bean
@@ -319,7 +325,7 @@ public class RestClientConfig {
 
 ## 9. Kafka
 
-As a part of Event-Driven Architecture, Kafaka has been implemented for notification service 
+As a part of Event-Driven Architecture, Kafaka has been implemented for notification service
 since it can handle massive ammount of data in real-time through event streaming and stream processing.
 
 <img src="./readme/image/kafka_diagram.png" width="500" height="200" />
@@ -332,11 +338,11 @@ spring.kafka.producer.value-serializer=org.springframework.kafka.support.seriali
 spring.kafka.producer.properties.schema.registry.url=http://127.0.0.1:8201
 ```
 
-
 ```java
-   @Override
-    @Transactional
-    public ResponseEntity<?> processOrder(OrderRequestRecord orderRequestRecord) {
+
+@Override
+@Transactional
+public ResponseEntity<?> processOrder(OrderRequestRecord orderRequestRecord) {
     // SKIP //
 
     // Save order and process
@@ -354,17 +360,20 @@ spring.kafka.producer.properties.schema.registry.url=http://127.0.0.1:8201
 
     // Kafka
     kafkaTemplate.send("order-process", orderProcessEvent);
-    
-   // SKIP // 
-    }
+
+    // SKIP // 
+}
 ```
 
 ## 10. Testcontainers
 
-Testcontainers is a library that provides easy and lightweight APIs for bootstrapping local development 
-and test dependencies with real services wrapped in Docker containers. Using Testcontainers, 
-you can write tests that depend on the same services you use in production without mocks or 
-in-memory services.
+> Testcontainers is a library that provides easy and lightweight APIs for bootstrapping local development
+> and test dependencies with real services wrapped in Docker containers. Using Testcontainers,
+> you can write tests that depend on the same services you use in production without mocks or
+> in-memory services.
+
+
+
 
 ```java
 
@@ -423,11 +432,13 @@ class StoreServiceApplicationTests {
 }
 ```
 
+## 11. Environment
 
-## 11. Docker & Kubernetes
+> Kubernetes is a platform for managing containers, which bundle the code, configuration, and dependencies of an application, 
+> allowing it to run as an isolated process with its own resources. Each application gets its own container or multiple containers, 
+> which are grouped into Kubernetes pods.
 
-In modern application 
-
+### Docker Compose
 ```yaml
   ### KAFKA ORCHESTRATION
   zookeeper:
@@ -484,5 +495,7 @@ In modern application
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
       SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
-
 ```
+
+
+### 
