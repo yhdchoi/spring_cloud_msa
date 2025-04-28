@@ -1,4 +1,4 @@
-# Account Microservice
+# Image Microservice
 
 ## API - Swagger
 
@@ -35,7 +35,7 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 }
 ```
 
-## 3. Testing - Testcontainers
+## Testing - Testcontainers
 
 > Testcontainers is a library that provides easy and lightweight APIs for bootstrapping local development
 > and test dependencies with real services wrapped in Docker containers. Using Testcontainers,

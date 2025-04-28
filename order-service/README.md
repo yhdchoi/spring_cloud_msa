@@ -1,4 +1,4 @@
-# Account Microservice
+# Order Microservice
 
 ## API - Swagger
 
@@ -35,7 +35,77 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 }
 ```
 
-## 3. Testing - Testcontainers
+## Communication - Rest Client
+
+For the synchronous communication between Video-Catalog service and Video-Stream service, I have implemented Rest
+Template.
+
+```java
+
+@Configuration
+public class RestClientConfig {
+    @Bean
+    public InventoryRestClient inventoryRestClient() {
+        final String inventoryUrl = "http://localhost:8085/inventory";
+
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(30000);
+        requestFactory.setReadTimeout(30000);
+
+        RestClient inventoryClient = RestClient.builder()
+                .requestFactory(requestFactory)
+                .baseUrl(inventoryUrl).build();
+
+        RestClientAdapter restClientAdapter = RestClientAdapter.create(inventoryClient);
+        HttpServiceProxyFactory httpServiceProxyFactory = HttpServiceProxyFactory.builderFor(restClientAdapter).build();
+        return httpServiceProxyFactory.createClient(InventoryRestClient.class);
+    }
+}
+```
+
+## Messaging - Kafka
+
+As a part of Event-Driven Architecture, Kafaka has been implemented for notification service
+since it can handle massive ammount of data in real-time through event streaming and stream processing.
+
+<img src="./readme/image/kafka_diagram.png" width="500" height="200" />
+
+```properties
+spring.kafka.bootstrap-servers=localhost:9092
+spring.kafka.template.default-topic=order-process
+spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringDeserializer
+spring.kafka.producer.value-serializer=org.springframework.kafka.support.serializer.JsonDeserializer
+spring.kafka.producer.properties.schema.registry.url=http://127.0.0.1:8201
+```
+
+```java
+
+@Override
+@Transactional
+public ResponseEntity<?> processOrder(OrderRequestRecord orderRequestRecord) {
+    // SKIP //
+
+    // Save order and process
+    final Order order = orderRepository.save(createOrder(orderRequestRecord, totalPrice));
+
+    // Send message to Kafka topic
+    OrderProcessEvent orderProcessEvent = new OrderProcessEvent(
+            order.getId().toString(),
+            orderRequestRecord.userDetail().username(),
+            orderRequestRecord.userDetail().firsName(),
+            orderRequestRecord.userDetail().lastName(),
+            orderRequestRecord.userDetail().userEmail()
+    );
+    log.info("Order process event sent to kafka topic: [ {} ]", order.getId());
+
+    // Kafka
+    kafkaTemplate.send("order-process", orderProcessEvent);
+
+    // SKIP // 
+}
+```
+
+## Testing - Testcontainers
 
 > Testcontainers is a library that provides easy and lightweight APIs for bootstrapping local development
 > and test dependencies with real services wrapped in Docker containers. Using Testcontainers,
@@ -116,3 +186,4 @@ info.app.description=Account(User) Management Service
 info.app.version=1.0.0
 info.app.author=Daniel Choi
 ```
+

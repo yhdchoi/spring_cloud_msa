@@ -29,7 +29,7 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 You can find more endpoints for your routes here:
 https://docs.spring.io/spring-boot/reference/actuator/endpoints.html
 
-## 1. Circuit Breaker - Resilience4j
+## Circuit Breaker - Resilience4j
 
 A distributed system, which comprises many services interacting to achieve business goals, is prone to failures in the
 chain of service dependencies.
@@ -92,7 +92,7 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 }
 ```
 
-## 2. Security - Keycloak
+## Security - Keycloak
 
 When it comes to hacking prevention, Keycloak offers a more comprehensive set of features than Spring Security. Keycloak
 provides advanced features like multi-factor authentication (MFA), brute force protection, and CAPTCHA support. MFA adds
@@ -154,7 +154,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 Above configuration will redirect all requests to the Keycloak authentication server.
 The Keycloak authentication server then will handle issuing and validating JWT.
 
-## 3. API - Swagger
+## API - Swagger
 
 The Swagger aka. OpenAPI has become a standard for API documentation which is crucial for managing APIs efficiently.
 It simplifies API development by documenting, designing and consuming RESTful services.
@@ -189,7 +189,7 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 }
 ```
 
-## 4. Monitoring - Actuator
+## Monitoring - Actuator
 
 Spring Boot Actuator is a sub-project of Spring Boot that provides a set of built-in production-ready features to help
 you monitor and manage your application.
