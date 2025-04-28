@@ -75,7 +75,7 @@ public class RouteConfig {
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                        .uri("http://localhost:8085")
+                        .uri("http://localhost:8084")
 
                 )
 
@@ -85,7 +85,7 @@ public class RouteConfig {
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                        .uri("http://localhost:8084")
+                        .uri("http://localhost:8085")
 
                 )
 
