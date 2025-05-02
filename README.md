@@ -25,12 +25,8 @@
 
 [//]: # (<img src="./readme/image/architecture-diagram.png" width="800" height="800" />)
 
-> For this project, I am demonstrating
->
-a [Microservice Architecture](https://yhdchoi.notion.site/Microservice-Architecture-1d40b6ddbce580cdb8cfe3bcc877912b?pvs=4)
-> with
->
-an [Event-Driven Architecture](https://yhdchoi.notion.site/Event-Driven-Architecture-1d40b6ddbce580f1a39fe756daf040d2?pvs=4).
+> For this project, I am demonstrating a [Microservice Architecture](https://yhdchoi.notion.site/Microservice-Architecture-1d40b6ddbce580cdb8cfe3bcc877912b?pvs=4)
+> with an [Event-Driven Architecture](https://yhdchoi.notion.site/Event-Driven-Architecture-1d40b6ddbce580f1a39fe756daf040d2?pvs=4).
 > MSA and EDA has become an industry standard due to its collection of loosely coupled services that operate together
 > which can be modified, scaled, tested and deployed.
 > With Event-Driven services, you can allow data transmission in real-time through asynchronous events.
@@ -43,14 +39,9 @@ application.
 
 > ❗️IMPORTANT: This project is set up so that you can run on local environment as a demonstrations ONLY.
 
-## Environment
+## Containerization - Docker
 
-### Container - Docker + Jib
-
-
-
-
-### Orchestration - Kubernetes
+## Orchestration - Kubernetes
 
 > Kubernetes is a platform for managing containers, which bundle the code, configuration, and dependencies of an
 > application,
@@ -58,16 +49,5 @@ application.
 > containers,
 > which are grouped into Kubernetes pods.
 
-## Build the Microservices
-
-> Run the following command to build and package each of the microservices into docker
-
-```shell
-
-```
-
-## Run the Microservices
-
-
-
+## AWS - EKS
 
