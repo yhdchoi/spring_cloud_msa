@@ -4,15 +4,15 @@ services:
 
   ### DISCOVERY EUREKA SERVER
   eureka-server:
-    image: eureka-server:1.0.0
+    image: yhdc/eureka-server:1.0.0
     container_name: eureka-server
     ports:
       - "8761:8761"
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://eureka-server:8761/health || exit 1" ]
-      interval: 10s
-      timeout: 3s
-      retries: 3
+#    healthcheck:
+#      test: [ "CMD-SHELL", "curl -f http://eureka-server:8761/health || exit 1" ]
+#      interval: 10s
+#      timeout: 3s
+#      retries: 3
     networks:
       - cloud-network
     restart: on-failure
@@ -25,13 +25,13 @@ services:
     ports:
       - "8888:8888"
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://api-gateway-service:8888/actuator/health || exit 1" ]
+      test: [ "CMD-SHELL", "curl -f http://config-server:8888/actuator/health || exit 1" ]
       interval: 10s
       timeout: 3s
       retries: 3
     depends_on:
       eureka-server:
-        condition: service_healthy
+        condition: service_started
     networks:
       - cloud-network
     restart: on-failure
@@ -47,9 +47,9 @@ services:
       - CONFIG_SERVER_URL=http://config-server:8761/health
     depends_on:
       eureka-server:
-        condition: service_healthy
+        condition: service_started
       config-server:
-        condition: service_healthy
+        condition: service_started
     networks:
       - cloud-network
     restart: on-failure
@@ -198,6 +198,7 @@ services:
       - cloud-network
     restart: on-failure
 
+
   ### INVENTORY SERVICE
   inventory-service:
     container_name: inventory-service
@@ -315,21 +316,21 @@ services:
     restart: on-failure
 
   ### SCHEMA
-  schema-registry:
-    image: confluentinc/cp-schema-registry:latest
-    hostname: schema-registry
-    container_name: schema-registry
-    depends_on:
-      - kafka
-    ports:
-      - "8201:8081"
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
-      SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
-    networks:
-      - cloud-network
-    restart: on-failure
+#  schema-registry:
+#    image: confluentinc/cp-schema-registry:latest
+#    hostname: schema-registry
+#    container_name: schema-registry
+#    depends_on:
+#      - kafka
+#    ports:
+#      - "8201:8081"
+#    environment:
+#      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+#      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
+#      SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
+#    networks:
+#      - cloud-network
+#    restart: on-failure
 
 
   ### IMAGE SERVICE
@@ -352,7 +353,7 @@ services:
     container_name: video-catalog-service
     image: yhdc/video-catalog-service:1.0.0
     ports:
-      - "8100:8100"
+      - "8101:8101"
     depends_on:
       api-gateway:
         condition: service_started
@@ -367,7 +368,7 @@ services:
     container_name: video-stream-service
     image: yhdc/video-stream-service:1.0.0
     ports:
-      - "8100:8100"
+      - "8102:8102"
     depends_on:
       api-gateway:
         condition: service_started

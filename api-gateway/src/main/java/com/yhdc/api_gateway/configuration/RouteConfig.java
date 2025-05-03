@@ -14,49 +14,29 @@ public class RouteConfig {
                 // Account Route
                 .route("account_route", accoutnRoute -> accoutnRoute
                         .path("/account/**")
-                        .filters(f -> f
-                                .circuitBreaker(breaker -> breaker
-                                        .setName("account_breaker")
-                                        .setFallbackUri("forward:/fallback")
-                                )
-                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
-                        )
-                        .uri("http://localhost:8081")
+                        .uri("lb://ACCOUNT-SERVICE")
 
                 )
                 .route("account_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
-                        .path("/aggregate/account-service/v3/api-docs")
+                        .path("/account/api-docs/**")
                         .filters(f -> f
-                                .circuitBreaker(breaker -> breaker
-                                        .setName("account_swagger_breaker")
-                                        .setFallbackUri("forward:/fallback")
-                                )
+                                .rewritePath("/account/(?<path>.*)", "/${path}")
                         )
-                        .uri("http://localhost:8081")
+                        .uri("lb://ACCOUNT-SERVICE")
                 )
 
                 // Store Route
                 .route("store_route", storeRoute -> storeRoute
                         .path("/store/**")
-                        .filters(f -> f
-                                .circuitBreaker(breaker -> breaker
-                                        .setName("account_breaker")
-                                        .setFallbackUri("forward:/fallback")
-                                )
-                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
-                        )
-                        .uri("http://localhost:8082")
+                        .uri("lb://STORE-SERVICE")
 
                 )
                 .route("store_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
-                        .path("/aggregate/store-service/v3/api-docs")
+                        .path("/store/api-docs/**")
                         .filters(f -> f
-                                .circuitBreaker(breaker -> breaker
-                                        .setName("store_swagger_breaker")
-                                        .setFallbackUri("forward:/fallback")
-                                )
+                                .rewritePath("/store/(?<path>.*)", "/${path}")
                         )
-                        .uri("http://localhost:8082")
+                        .uri("lb://STORE-SERVICE")
                 )
 
                 // Product Route
@@ -65,8 +45,14 @@ public class RouteConfig {
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                        .uri("http://localhost:8083")
-
+                        .uri("lb://PRODUCT-SERVICE")
+                )
+                .route("product_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
+                        .path("/product/api-docs/**")
+                        .filters(f -> f
+                                .rewritePath("/product/(?<path>.*)", "/${path}")
+                        )
+                        .uri("lb://PRODUCT-SERVICE")
                 )
 
                 // Inventory Route
@@ -75,8 +61,15 @@ public class RouteConfig {
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                        .uri("http://localhost:8084")
+                        .uri("lb://INVENTORY-SERVICE")
 
+                )
+                .route("inventory_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
+                        .path("/inventory/api-docs/**")
+                        .filters(f -> f
+                                .rewritePath("/inventory/(?<path>.*)", "/${path}")
+                        )
+                        .uri("lb://INVENTORY-SERVICE")
                 )
 
                 // Order Route
@@ -85,8 +78,15 @@ public class RouteConfig {
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                        .uri("http://localhost:8085")
+                        .uri("lb://ORDER-SERVICE")
 
+                )
+                .route("order_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
+                        .path("/order/api-docs/**")
+                        .filters(f -> f
+                                .rewritePath("/order/(?<path>.*)", "/${path}")
+                        )
+                        .uri("lb://ORDER-SERVICE")
                 )
 
                 // Notification Route
@@ -96,8 +96,15 @@ public class RouteConfig {
                                 .prefixPath("/event")
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                        .uri("http://localhost:8086")
+                        .uri("lb://NOTIFICATION-SERVICE")
 
+                )
+                .route("notification_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
+                        .path("/notification/api-docs/**")
+                        .filters(f -> f
+                                .rewritePath("/notification/(?<path>.*)", "/${path}")
+                        )
+                        .uri("lb://NOTIFICATION-SERVICE")
                 )
 
                 // Image Route
@@ -106,7 +113,14 @@ public class RouteConfig {
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                        .uri("http://localhost:8100")
+                        .uri("lb://IMAGE-SERVICE")
+                )
+                .route("image_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
+                        .path("/image/api-docs/**")
+                        .filters(f -> f
+                                .rewritePath("/image/(?<path>.*)", "/${path}")
+                        )
+                        .uri("lb://IMAGE-SERVICE")
                 )
 
                 // Video Route
@@ -115,31 +129,36 @@ public class RouteConfig {
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                        .uri("http://localhost:8101")
+                        .uri("lb://VIDEO-CATALOG-SERVICE")
                 )
+                .route("video_catalog_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
+                        .path("/video-catalog/api-docs/**")
+                        .filters(f -> f
+                                .rewritePath("/video-catalog/(?<path>.*)", "/${path}")
+                        )
+                        .uri("lb://VIDEO-CATALOG-SERVICE")
+                )
+
                 .route("video_streaming_route", videoStreamRoute -> videoStreamRoute
                         .path("/video-stream/**")
                         .filters(f -> f
                                 .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                         )
-                        .uri("http://localhost:8102")
+                        .uri("lb://VIDEO-STREAM-SERVICE")
                 )
-
-                // Ai Route
-                .route("ai_route", aiRoute -> aiRoute
-                        .path("/chat-client/**")
+                .route("video_stream_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
+                        .path("/video_stream/api-docs/**")
                         .filters(f -> f
-                                .prefixPath("/ai")
-                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
+                                .rewritePath("/video_stream/(?<path>.*)", "/${path}")
                         )
-                        .uri("http://localhost:8200")
+                        .uri("lb://VIDEO-STREAM-SERVICE")
                 )
 
                 // Fallback Route
-                .route("fallback_route", fallbackRoute -> fallbackRoute
-                        .path("/fallback")
-                        .uri("http://localhost:8080")
-                )
+//                .route("fallback_route", fallbackRoute -> fallbackRoute
+//                        .path("/fallback")
+//                        .uri("http://localhost:8080")
+//                )
                 .build();
     }
 

@@ -129,7 +129,7 @@ public class AccountServiceImpl implements AccountService {
             final Pageable pageable = pageProducer.getPageable(pageNo, pageSize, sortBy, sortOrder);
             log.info("Pageable: {}", pageable);
 
-            Page<User> userPage = null;
+            Page<User> userPage;
             log.info("Keyword: {}", keyword);
             if (keyword.equals("*")) {
                 log.info("Listing user... Keyword: {}", keyword);
@@ -138,6 +138,7 @@ public class AccountServiceImpl implements AccountService {
                 log.info("Searching user by keyword: {}", keyword);
                 userPage = userRepository.searchUserByKeyword(keyword, pageable);
             }
+            log.info("PageSize: {}", userPage.getSize());
             Page<UserDto> userDtoPage = userPage.map(dataConverter::convertUserToDto);
             return new ResponseEntity<>(userDtoPage, HttpStatus.OK);
 
