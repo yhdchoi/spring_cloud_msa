@@ -15,6 +15,8 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.context.annotation.Import;
 import org.testcontainers.containers.MongoDBContainer;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Import(TestcontainersConfiguration.class)
@@ -71,8 +73,27 @@ class StoreServiceApplicationTests {
     }
 
     @Test
-    void shouldSearchStore() {
+    void shouldGetStore() {
 
+    }
+
+    @Test
+    void shouldSearchStore() {
+        Map<String, String> searchParams = new HashMap<>();
+        searchParams.put("keyword", "Test");
+        searchParams.put("pageNo", "0");
+        searchParams.put("pageSize", "10");
+        searchParams.put("pageBy", "ASC");
+        searchParams.put("pageOrder", "createdAt");
+
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .queryParams(searchParams)
+                .when()
+                .get("/store/search")
+                .then()
+                .statusCode(200);
     }
 
     @Test

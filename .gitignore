@@ -1,3 +1,4 @@
+### Application
 HELP.md
 .gradle
 build/
@@ -6,6 +7,8 @@ build/
 !**/src/test/**/build/
 **/container
 **/.env
+.volumes
+
 
 ### STS ###
 .apt_generated
