@@ -72,8 +72,10 @@ services:
     volumes:
       - ./volumes/keycloak/realms/:/opt/keycloak/data/import
     depends_on:
-      - api-gateway
-      - mariadb-keycloak
+      api-gateway:
+        condition: service_started
+      mariadb-keycloak:
+        condition: service_started
     networks:
       - cloud-network
     restart: on-failure
@@ -105,10 +107,10 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - eureka-server
-      - config-server
-      - api-gateway
-      - mariadb-account
+      api-gateway:
+        condition: service_started
+      mariadb-account:
+        condition: service_started
     networks:
       - cloud-network
     restart: on-failure
@@ -133,6 +135,21 @@ services:
 
 
 
+  ### STORE SERVICE
+  store-service:
+    container_name: store-service
+    image: yhdc/store-service:1.0.0
+    ports:
+      - "8082:8082"
+    depends_on:
+      api-gateway:
+        condition: service_started
+      mongodb-store:
+        condition: service_started
+    networks:
+      - cloud-network
+    restart: on-failure
+
   ### STORE DB
   mongodb-store:
     image: mongo:latest
@@ -149,6 +166,22 @@ services:
       - cloud-network
     restart: on-failure
 
+
+  ### PRODUCT SERVICE
+  product-service:
+    container_name: product-service
+    image: yhdc/product-service:1.0.0
+    ports:
+      - "8083:8083"
+    depends_on:
+      api-gateway:
+        condition: service_started
+      mongodb-product:
+        condition: service_started
+    networks:
+      - cloud-network
+    restart: on-failure
+
   ### PRODUCT DB
   mongodb-product:
     image: mongo:latest
@@ -161,6 +194,40 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: fiorano1q2w
     volumes:
       - ./volumes/product-db:/data/db
+    networks:
+      - cloud-network
+    restart: on-failure
+
+  ### INVENTORY SERVICE
+  inventory-service:
+    container_name: inventory-service
+    image: yhdc/inventory-service:1.0.0
+    ports:
+      - "8084:8084"
+    depends_on:
+      api-gateway:
+        condition: service_started
+      mongodb-product:
+        condition: service_started
+    networks:
+      - cloud-network
+    restart: on-failure
+
+
+  ### ORDER SERVICE
+  order-service:
+    container_name: order-service
+    image: yhdc/order-service:1.0.0
+    ports:
+      - "8085:8085"
+    depends_on:
+      api-gateway:
+        condition: service_started
+      mongodb-product:
+        condition: service_started
+    networks:
+      - cloud-network
+    restart: on-failure
 
   ### ORDER DB
   mongodb-order:
@@ -174,19 +241,26 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: fiorano1q2w
     volumes:
       - ./volumes/order-db:/data/db
+    networks:
+      - cloud-network
+    restart: on-failure
 
-  ### FILE DB
-  postgres-file:
-    image: postgres:15
-    container_name: file-db
+
+  ### NOTIFICATION SERVICE
+  notification-service:
+    container_name: notification-service
+    image: yhdc/notification-service:1.0.0
     ports:
-      - "5433:5432"
-    environment:
-      POSTGRES_DB: file_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: fiorano1q2we
-    volumes:
-      - ./volumes/file-db:/var/lib/postgresql/data
+      - "8086:8086"
+    depends_on:
+      api-gateway:
+        condition: service_started
+      order-service:
+        condition: service_started
+    networks:
+      - cloud-network
+    restart: on-failure
+
 
   ### KAFKA ORCHESTRATION
   zookeeper:
@@ -198,6 +272,9 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - cloud-network
+    restart: on-failure
 
   ### KAFKA
   kafka:
@@ -215,7 +292,11 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - cloud-network
+    restart: on-failure
 
+  ### KAFKA-UI
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
@@ -229,6 +310,9 @@ services:
       KAFKA_CLUSTERS_ZOOKEEPER: zookeeper:2181
       KAFKA_CLUSTER_SCHEMAREGISTRY: http://schema-registry:8081
       DYNAMIC_CONFIG_ENABLED: 'true'
+    networks:
+      - cloud-network
+    restart: on-failure
 
   ### SCHEMA
   schema-registry:
@@ -243,6 +327,71 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
       SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
+    networks:
+      - cloud-network
+    restart: on-failure
+
+
+  ### IMAGE SERVICE
+  image-service:
+    container_name: image-service
+    image: yhdc/image-service:1.0.0
+    ports:
+      - "8100:8100"
+    depends_on:
+      api-gateway:
+        condition: service_started
+      postgres-file:
+        condition: service_started
+    networks:
+      - cloud-network
+    restart: on-failure
+
+  ### VIDEO-CATALOG-SERVICE
+  video-catalog-service:
+    container_name: video-catalog-service
+    image: yhdc/video-catalog-service:1.0.0
+    ports:
+      - "8100:8100"
+    depends_on:
+      api-gateway:
+        condition: service_started
+      postgres-file:
+        condition: service_started
+    networks:
+      - cloud-network
+    restart: on-failure
+
+  ### VIDEO-STREAM-SERVICE
+  video-stream-service:
+    container_name: video-stream-service
+    image: yhdc/video-stream-service:1.0.0
+    ports:
+      - "8100:8100"
+    depends_on:
+      api-gateway:
+        condition: service_started
+      video-catalog-service:
+        condition: service_started
+    networks:
+      - cloud-network
+    restart: on-failure
+
+  ### FILE DB
+  postgres-file:
+    image: postgres:15
+    container_name: file-db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: file_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: fiorano1q2we
+    volumes:
+      - ./volumes/file-db:/var/lib/postgresql/data
+    networks:
+      - cloud-network
+    restart: on-failure
 
 
 
