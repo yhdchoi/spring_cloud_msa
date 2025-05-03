@@ -24,7 +24,7 @@ public class DataConverter {
         log.info("Converting to userDto...");
         try {
             UserDto userDto = new UserDto();
-            userDto.setId(user.getId().toString());
+            userDto.setUserId(user.getId().toString());
             userDto.setUsername(user.getUsername());
             userDto.setFirstName(user.getFirstName());
             userDto.setLastName(user.getLastName());

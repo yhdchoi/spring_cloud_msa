@@ -153,7 +153,6 @@ class StoreServiceApplicationTests {
 
     @Test
     void shouldDeleteStore() {
-
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .queryParams("storeId", storeId)

@@ -65,7 +65,9 @@ public class AccountServiceImpl implements AccountService {
 
             // Save a new user
             User newUser = userRepository.save(dataConverter.convertDtoToUser(userCreateRecord, passwordEnc, role));
-            return new ResponseEntity<>(newUser.getId().toString(), HttpStatus.CREATED);
+            UserDto userDto = dataConverter.convertUserToDto(newUser);
+
+            return new ResponseEntity<>(userDto, HttpStatus.CREATED);
 
         } catch (NoSuchElementException nse) {
             return new ResponseEntity<>("Role not allowed", HttpStatus.BAD_REQUEST);
