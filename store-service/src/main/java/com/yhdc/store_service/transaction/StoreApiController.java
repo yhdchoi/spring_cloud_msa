@@ -26,6 +26,7 @@ public class StoreApiController {
         return storeService.createStore(storeCreateRecord);
     }
 
+
     /**
      * STORE DETAIL
      *
@@ -33,7 +34,7 @@ public class StoreApiController {
      * @apiNote
      */
     @GetMapping("/detail")
-    public ResponseEntity<?> detailStore(@RequestParam String storeId) {
+    public ResponseEntity<?> detailStore(@RequestParam(value = "storeId") String storeId) {
         return storeService.detailStore(storeId);
     }
 
@@ -81,6 +82,7 @@ public class StoreApiController {
         return storeService.patchStoreStatus(storePatchRecord);
     }
 
+
     /**
      * DELETE STORE
      *
@@ -88,7 +90,7 @@ public class StoreApiController {
      * @apiNote
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteStore(@RequestParam String storeId) {
+    public ResponseEntity<?> deleteStore(@RequestParam(value = "storeId") String storeId) {
         return storeService.deleteStore(storeId);
     }
 

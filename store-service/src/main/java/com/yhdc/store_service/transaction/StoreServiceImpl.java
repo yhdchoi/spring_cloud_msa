@@ -53,7 +53,9 @@ public class StoreServiceImpl implements StoreService {
             store.setDescription(storeCreateRecord.description());
             store.setStatus(StoreStatus.ACTIVE.selection());
             final Store newStore = storeRepository.save(store);
-            return new ResponseEntity<>(newStore, HttpStatus.CREATED);
+
+            StoreDto storeDto = dataConverter.convertStoreToDto(newStore);
+            return new ResponseEntity<>(storeDto, HttpStatus.CREATED);
 
         } catch (Exception e) {
             log.error("Unable to create store!!!", e);
@@ -134,7 +136,8 @@ public class StoreServiceImpl implements StoreService {
             if (storeOptional.isPresent()) {
                 Store store = storeOptional.get();
                 store.setName(storePutRecord.name());
-                return new ResponseEntity<>(HttpStatus.OK);
+                StoreDto storeDto = dataConverter.convertStoreToDto(store);
+                return new ResponseEntity<>(storeDto, HttpStatus.OK);
 
             } else {
                 return new ResponseEntity<>("Store not found", HttpStatus.NOT_FOUND);
@@ -173,6 +176,9 @@ public class StoreServiceImpl implements StoreService {
                 }
 
                 storeRepository.save(store);
+
+                StoreDto storeDto = dataConverter.convertStoreToDto(store);
+
                 return new ResponseEntity<>(HttpStatus.OK);
 
             } else {
