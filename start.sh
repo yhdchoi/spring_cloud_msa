@@ -64,3 +64,9 @@ echo "Video stream service is containerized. Sart running the image..."
 docker run -d -p 8102:8102 yhdc/api-gateway:1.0.0
 
 echo "All services are containerized and running."
+
+wait
+
+docker compose up -d
+wait
+echo "All services are containerized and running."

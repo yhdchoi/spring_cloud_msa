@@ -37,17 +37,7 @@ To run the project you will need Docker. You need to run the docker compose file
 starting the project for the first time since the docker-compose.yml contains all the necessary containers to run the
 application.
 
-> ❗️IMPORTANT: This project is set up so that you can run on local environment as a demonstrations ONLY.
-
-## Containerization - Docker
-
-## Orchestration - Kubernetes
-
-> Kubernetes is a platform for managing containers, which bundle the code, configuration, and dependencies of an
-> application,
-> allowing it to run as an isolated process with its own resources. Each application gets its own container or multiple
-> containers,
-> which are grouped into Kubernetes pods.
-
-## AWS - EKS
+```shell
+sudo sh start.sh
+```
 

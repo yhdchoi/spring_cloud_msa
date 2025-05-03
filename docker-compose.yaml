@@ -1,21 +1,58 @@
 version: "1.0.0"
 
 services:
-  ### KEYCLOAK DB
-  mariadb-keycloak:
-    image: mariadb:latest
-    container_name: keycloak-db
+
+  ### DISCOVERY EUREKA SERVER
+  eureka-server:
+    image: eureka-server:1.0.0
+    container_name: eureka-server
     ports:
-      - "3399:3306"
+      - "8761:8761"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://eureka-server:8761/health || exit 1" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - cloud-network
+    restart: on-failure
+
+
+  ### CONFIG SERVER
+  config-server:
+    image: yhdc/config-server:1.0.0
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://api-gateway-service:8888/actuator/health || exit 1" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - cloud-network
+    restart: on-failure
+
+
+  ### API GATEWAY
+  api-gateway:
+    image: yhdc/api-gateway:1.0.0
+    ports:
+      - "8080:8080"
     environment:
-      MARIADB_DATABASE: keycloak
-      MARIADB_ROOT_PASSWORD: fiorano1q2w
-      MARIADB_USER: fiorano
-      MARIADB_PASSWORD: fiorano
-    volumes:
-      - ./container/keycloak-db/conf.d:/etc/mysql/conf.d
-      - ./container/keycloak-db/data:/var/lib/mysql
-    restart: unless-stopped
+      - EUREKA_SERVER_URL=http://eureka-server:8761/eureka
+      - CONFIG_SERVER_URL=http://config-server:8761/health
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    networks:
+      - cloud-network
+    restart: on-failure
 
   ### KEYCLOAK
   keycloak:
@@ -33,9 +70,48 @@ services:
     ports:
       - "8181:8080"
     volumes:
-      - ./container/keycloak/realms/:/opt/keycloak/data/import
+      - ./volumes/keycloak/realms/:/opt/keycloak/data/import
     depends_on:
+      - api-gateway
       - mariadb-keycloak
+    networks:
+      - cloud-network
+    restart: on-failure
+
+  ### KEYCLOAK DB
+  mariadb-keycloak:
+    image: mariadb:latest
+    container_name: keycloak-db
+    ports:
+      - "3399:3306"
+    environment:
+      MARIADB_DATABASE: keycloak
+      MARIADB_ROOT_PASSWORD: fiorano1q2w
+      MARIADB_USER: fiorano
+      MARIADB_PASSWORD: fiorano
+    volumes:
+      - ./volumes/keycloak-db/conf.d:/etc/mysql/conf.d
+      - ./volumes/keycloak-db/data:/var/lib/mysql
+    networks:
+      - cloud-network
+    restart: on-failure
+
+
+
+  ### ACCOUNT SERVICE
+  account-service:
+    container_name: account-service
+    image: yhdc/account-service:1.0.0
+    ports:
+      - "8081:8081"
+    depends_on:
+      - eureka-server
+      - config-server
+      - api-gateway
+      - mariadb-account
+    networks:
+      - cloud-network
+    restart: on-failure
 
   ### ACCOUNT DB
   mariadb-account:
@@ -49,9 +125,13 @@ services:
       MARIADB_USER: fiorano
       MARIADB_PASSWORD: fiorano
     volumes:
-      - ./container/account-db/conf.d:/etc/mysql/conf.d
-      - ./container/account-db/data:/var/lib/mysql
-    restart: unless-stopped
+      - ./volumes/account-db/conf.d:/etc/mysql/conf.d
+      - ./volumes/account-db/data:/var/lib/mysql
+    networks:
+      - cloud-network
+    restart: on-failure
+
+
 
   ### STORE DB
   mongodb-store:
@@ -64,7 +144,10 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: fiorano1q2w
     volumes:
-      - ./container/store-db:/data/db
+      - ./volumes/store-db:/data/db
+    networks:
+      - cloud-network
+    restart: on-failure
 
   ### PRODUCT DB
   mongodb-product:
@@ -77,7 +160,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: fiorano1q2w
     volumes:
-      - ./container/product-db:/data/db
+      - ./volumes/product-db:/data/db
 
   ### ORDER DB
   mongodb-order:
@@ -90,7 +173,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: fiorano1q2w
     volumes:
-      - ./container/order-db:/data/db
+      - ./volumes/order-db:/data/db
 
   ### FILE DB
   postgres-file:
@@ -103,7 +186,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: fiorano1q2we
     volumes:
-      - ./container/file-db:/var/lib/postgresql/data
+      - ./volumes/file-db:/var/lib/postgresql/data
 
   ### KAFKA ORCHESTRATION
   zookeeper:
@@ -161,6 +244,14 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
       SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
 
+
+
+## NETWORK
+networks:
+  cloud-network:
+
+
+
   #  mariadb-file:
   #    image: mariadb:latest
   #    container_name: file-db
@@ -175,9 +266,9 @@ services:
   #      - --character-set-server=utf8mb4
   #      - --collation-server=utf8mb4_unicode_ci
   #    volumes:
-  #      - ./container/file-db/conf.d:/etc/mysql/conf.d
-  #      - ./container/file-db/data:/var/lib/mysql
-  #    restart: unless-stopped
+  #      - ./volumes/file-db/conf.d:/etc/mysql/conf.d
+  #      - ./volumes/file-db/data:/var/lib/mysql
+  #    restart: on-failure
 
 
   ### AI VECTOR DB
