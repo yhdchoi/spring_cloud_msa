@@ -1,6 +1,6 @@
 # Account Microservice
 
-## API - Swagger
+## API Documentation - Swagger
 
 The Swagger aka. OpenAPI has become a standard for API documentation which is crucial for managing APIs efficiently.
 It simplifies API development by documenting, designing and consuming RESTful services.
