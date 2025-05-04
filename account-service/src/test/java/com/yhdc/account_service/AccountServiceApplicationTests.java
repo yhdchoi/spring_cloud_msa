@@ -1,6 +1,7 @@
 package com.yhdc.account_service;
 
 import com.yhdc.account_service.object.UserCreateRecord;
+import com.yhdc.account_service.object.UserPatchRecord;
 import com.yhdc.account_service.object.UserPutRecord;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -127,14 +128,30 @@ class AccountServiceApplicationTests {
 
     @Test
     void shouldUpdatePassword() {
+        UserPatchRecord userPatchRecord = new UserPatchRecord(testUserId,
+                "fiorano1q2w",
+                "update1q2w3e4r");
 
-
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(userPatchRecord)
+                .when()
+                .patch("/patch/pwd")
+                .then()
+                .statusCode(200)
+                .body("username", Matchers.equalTo("updateuser"));
     }
 
 
     @Test
     void shouldDeleteAccount() {
-
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .queryParams("userId", testUserId)
+                .when()
+                .delete("/delete")
+                .then()
+                .statusCode(200);
     }
 
 }

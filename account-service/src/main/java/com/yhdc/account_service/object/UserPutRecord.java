@@ -10,7 +10,7 @@ import java.util.Objects;
 public record UserPutRecord(String id, String username, String firstName, String lastName, String email, String phone) {
 
     public UserPutRecord {
-        Objects.requireNonNull(id, "id must not be null");
+        Objects.requireNonNull(id, "userId must not be null");
         Objects.requireNonNull(username, " username must not be null");
         Objects.requireNonNull(firstName, "firstName must not be null");
         Objects.requireNonNull(lastName, "lastName must not be null");

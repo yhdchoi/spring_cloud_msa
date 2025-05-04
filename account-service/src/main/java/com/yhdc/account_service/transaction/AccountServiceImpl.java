@@ -187,16 +187,15 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public ResponseEntity<?> updateUserPassword(UserPatchRecord userPatchRecord) {
         try {
-            User user = userRepository.getReferenceById(UUID.fromString(userPatchRecord.id()));
-
+            User user = userRepository.getReferenceById(UUID.fromString(userPatchRecord.userId()));
             if (!passwordEncoder.matches(userPatchRecord.password(), user.getPassword())) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
-
             user.setPassword(passwordEncoder.encode(userPatchRecord.newPassword()));
             userRepository.save(user);
+            UserDto userDto = dataConverter.convertUserToDto(user);
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
 
-            return detailUser(userPatchRecord.id());
         } catch (Exception e) {
             return new ResponseEntity<>("Unable to update password", HttpStatus.INTERNAL_SERVER_ERROR);
         }

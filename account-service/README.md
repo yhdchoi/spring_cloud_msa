@@ -8,32 +8,33 @@ It simplifies API development by documenting, designing and consuming RESTful se
 ```properties
 springdoc.swagger-ui.path=/swagger-ui.html
 springdoc.api-docs.path=/api-docs
-springdoc.swagger-ui.urls[0].name=Account Server
-springdoc.swagger-ui.urls[0].url=/aggregate/account-server/v3/api-docs
-springdoc.swagger-ui.urls[1].name=Store Server
-springdoc.swagger-ui.urls[1].url=/aggregate/store-server/v3/api-docs
 ```
 
 ```java
 
-@Bean
-public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-    return builder.routes()
-            // SKIP //
-            .route("account_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
-                    .path("/aggregate/account-service/v3/api-docs")
-                    .filters(f -> f
-                            .circuitBreaker(breaker -> breaker
-                                    .setName("account_swagger_breaker")
-                                    .setFallbackUri("forward:/fallback")
-                            )
-                    )
-                    .uri("http://localhost:8081")
-            )
-            // SKIP//
-            .build();
+@Configuration
+public class OpenApiConfig {
+    @Bean
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .info(new Info().title("Account Service API")
+                        .description("REST API for account service")
+                        .version("1.0.0")
+                        .license(new License().name("Apache 2.0")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("Account service Wiki")
+                        .url("https://github.com/yhdc/spring_cloud_msa/store_server"));
+    }
 }
 ```
+
+Spring Boot’s integration with OpenAPI through Springdoc OpenAPI is a dynamic process that continuously
+reflects the state of an application’s API. By scanning controllers, analyzing method signatures,
+and structuring metadata into a machine-readable format, Springdoc OpenAPI generates real-time documentation
+without requiring manual updates. This mechanism works directly within the Spring Boot lifecycle,
+automatically detecting changes and exposing the API specification through standardized endpoints.
+Developers can customize the documentation process using annotations and configuration settings,
+allowing precise control over how API details are presented.
 
 ## 3. Testing - Testcontainers
 
@@ -46,56 +47,58 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class StoreServiceApplicationTests {
+class AccountServiceApplicationTests {
+
+    String testUserId;
 
     @LocalServerPort
     private int port;
 
     @ServiceConnection
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
+    static MariaDBContainer mariaDBContainer = new MariaDBContainer("mariadb:latest");
 
     @BeforeAll
     static void beforeAll() {
-        mongoDBContainer.start();
+        mariaDBContainer.start();
     }
 
     @AfterAll
     static void afterAll() {
-        mongoDBContainer.stop();
+        mariaDBContainer.stop();
     }
 
     @BeforeEach
     void setUp() {
-        RestAssured.baseURI = "http://localhost:" + port;
+        RestAssured.baseURI = "http://localhost:" + port + "/account";
     }
 
     @Test
-    void shouldCreateStore() {
-        final String testSellerId = UUID.randomUUID().toString();
-        final String testName = "Test Store";
-        final String testDescription = "Test Description";
-        final String testStatus = StoreStatus.ACTIVE.selection();
+    void shouldCreateAccount() {
+        UserCreateRecord account = new UserCreateRecord("testuser",
+                "password@1q2w3e",
+                "Daniel",
+                "Choi",
+                "63 Young st",
+                "yhdc@email.com",
+                "010-2233-4234",
+                "MANAGER");
 
-        StoreCreateRecord store = new StoreCreateRecord(
-                testSellerId,
-                testName,
-                testDescription,
-                testStatus
-        );
-
-        RestAssured.given()
+        JsonPath jsonPath = RestAssured.given()
                 .contentType(ContentType.JSON)
-                .body(store)
+                .body(account)
                 .when()
-                .post("/store/create")
+                .post("/register")
                 .then()
                 .statusCode(201)
-                .body("id", Matchers.notNullValue())
-                .body("sellerId", Matchers.equalTo(testSellerId))
-                .body("name", Matchers.equalTo(testName))
-                .body("description", Matchers.equalTo(testDescription))
-                .body("status", Matchers.equalTo(testStatus));
+                .body("userId", Matchers.notNullValue())
+                .extract()
+                .jsonPath();
+
+        testUserId = jsonPath.getString("userId");
     }
+
+    // <<< SKIP >>>
+
 }
 ```
 
@@ -110,7 +113,7 @@ and perform various management tasks.
 management.endpoints.web.exposure.include=*
 management.endpoint.health.show-details=always
 management.info.env.enabled=true
-# For the actuator/info page
+# For the actuator "/info"
 info.app.name=Account Server
 info.app.description=Account(User) Management Service
 info.app.version=1.0.0

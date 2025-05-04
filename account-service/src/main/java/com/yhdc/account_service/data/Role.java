@@ -24,7 +24,7 @@ public class Role {
 
     @Id
     @UuidGenerator(style = UuidGenerator.Style.AUTO)
-    @Column(name = "id",
+    @Column(name = "userId",
             columnDefinition = "BINARY(16)",
             updatable = false, nullable = false, unique = true)
     private UUID id;

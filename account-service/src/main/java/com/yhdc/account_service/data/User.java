@@ -23,7 +23,7 @@ public class User {
 
     @Id
     @UuidGenerator(style = UuidGenerator.Style.AUTO)
-    @Column(name = "id", columnDefinition = "BINARY(16)", updatable = false, nullable = false, unique = true)
+    @Column(name = "userId", columnDefinition = "BINARY(16)", updatable = false, nullable = false, unique = true)
     private UUID id;
 
     @Column(name = "username", length = 100, nullable = false)

@@ -79,7 +79,7 @@ public class AccountController {
      * @param userPatchRecord
      * @apiNote Updates user password only
      */
-    @PatchMapping("/patch")
+    @PatchMapping("/patch/pwd")
     public ResponseEntity<?> updateUserPassword(@RequestBody UserPatchRecord userPatchRecord) {
         return accountService.updateUserPassword(userPatchRecord);
     }
