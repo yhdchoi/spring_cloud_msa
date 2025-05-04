@@ -1,6 +1,6 @@
 # Store Microservice
 
-## API - Swagger
+## API Documentation - Swagger
 
 The Swagger aka. OpenAPI has become a standard for API documentation which is crucial for managing APIs efficiently.
 It simplifies API development by documenting, designing and consuming RESTful services.
@@ -8,57 +8,22 @@ It simplifies API development by documenting, designing and consuming RESTful se
 ```properties
 springdoc.swagger-ui.path=/swagger-ui.html
 springdoc.api-docs.path=/api-docs
-springdoc.swagger-ui.urls[0].name=Account Server
-springdoc.swagger-ui.urls[0].url=/aggregate/account-server/v3/api-docs
-springdoc.swagger-ui.urls[1].name=Store Server
-springdoc.swagger-ui.urls[1].url=/aggregate/store-server/v3/api-docs
 ```
-
-```java
-
-@Bean
-public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-    return builder.routes()
-            // SKIP //
-            .route("account_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
-                    .path("/aggregate/account-service/v3/api-docs")
-                    .filters(f -> f
-                            .circuitBreaker(breaker -> breaker
-                                    .setName("account_swagger_breaker")
-                                    .setFallbackUri("forward:/fallback")
-                            )
-                    )
-                    .uri("http://localhost:8081")
-            )
-            // SKIP//
-            .build();
-}
-```
-
-## Communication - Rest Client
-
-For the synchronous communication between Video-Catalog service and Video-Stream service, I have implemented Rest
-Template.
 
 ```java
 
 @Configuration
-public class RestClientConfig {
+public class OpenApiConfig {
     @Bean
-    public InventoryRestClient inventoryRestClient() {
-        final String inventoryUrl = "http://localhost:8085/inventory";
-
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(30000);
-        requestFactory.setReadTimeout(30000);
-
-        RestClient inventoryClient = RestClient.builder()
-                .requestFactory(requestFactory)
-                .baseUrl(inventoryUrl).build();
-
-        RestClientAdapter restClientAdapter = RestClientAdapter.create(inventoryClient);
-        HttpServiceProxyFactory httpServiceProxyFactory = HttpServiceProxyFactory.builderFor(restClientAdapter).build();
-        return httpServiceProxyFactory.createClient(InventoryRestClient.class);
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .info(new Info().title("Store Service API")
+                        .description("REST API for store service")
+                        .version("1.0.0")
+                        .license(new License().name("Apache 2.0")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("Store service Wiki")
+                        .url("https://github.com/yhdc/spring_cloud_msa/store_service"));
     }
 }
 ```
@@ -124,6 +89,9 @@ class StoreServiceApplicationTests {
                 .body("description", Matchers.equalTo(testDescription))
                 .body("status", Matchers.equalTo(testStatus));
     }
+
+    // <<< SKIP >>>
+
 }
 ```
 
@@ -138,9 +106,9 @@ and perform various management tasks.
 management.endpoints.web.exposure.include=*
 management.endpoint.health.show-details=always
 management.info.env.enabled=true
-# For the actuator/info page
-info.app.name=Account Server
-info.app.description=Account(User) Management Service
+# For the actuator "/info"
+info.app.name=Store Service
+info.app.description=Store Management Service
 info.app.version=1.0.0
 info.app.author=Daniel Choi
 ```

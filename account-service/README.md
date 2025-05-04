@@ -28,14 +28,6 @@ public class OpenApiConfig {
 }
 ```
 
-Spring Boot’s integration with OpenAPI through Springdoc OpenAPI is a dynamic process that continuously
-reflects the state of an application’s API. By scanning controllers, analyzing method signatures,
-and structuring metadata into a machine-readable format, Springdoc OpenAPI generates real-time documentation
-without requiring manual updates. This mechanism works directly within the Spring Boot lifecycle,
-automatically detecting changes and exposing the API specification through standardized endpoints.
-Developers can customize the documentation process using annotations and configuration settings,
-allowing precise control over how API details are presented.
-
 ## 3. Testing - Testcontainers
 
 > Testcontainers is a library that provides easy and lightweight APIs for bootstrapping local development
