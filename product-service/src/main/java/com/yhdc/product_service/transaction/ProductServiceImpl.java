@@ -79,7 +79,8 @@ public class ProductServiceImpl implements ProductService {
 
             if (inventoryCreated) {
                 log.info("Product saved successfully!!!");
-                return new ResponseEntity<>(productId, HttpStatus.CREATED);
+                ProductDto productDto = dataProcessor.convertProductToDto(newProduct);
+                return new ResponseEntity<>(productDto, HttpStatus.CREATED);
             } else {
                 log.error("Failed to save Inventory!!!");
                 return new ResponseEntity<>(productId, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -17,7 +17,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .info(new Info().title("Store Service API")
+                .info(new Info().title("Store Service")
                         .description("REST API for store service")
                         .version("1.0.0")
                         .license(new License().name("Apache 2.0")))

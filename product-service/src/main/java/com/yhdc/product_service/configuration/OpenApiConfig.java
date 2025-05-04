@@ -12,12 +12,12 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .info(new Info().title("Product Server API")
-                        .description("REST API for product server")
+                .info(new Info().title("Product Service")
+                        .description("REST API for product service")
                         .version("1.0.0")
                         .license(new License().name("Apache 2.0")))
                 .externalDocs(new ExternalDocumentation()
-                        .description("Product server Wiki")
-                        .url("https://github.com/yhdc/fiorano/product_server"));
+                        .description("Product service Wiki")
+                        .url("https://github.com/yhdc/spring_cloud_msa/product_service"));
     }
 }

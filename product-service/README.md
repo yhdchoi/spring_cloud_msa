@@ -1,6 +1,6 @@
 # Product Microservice
 
-## API - Swagger
+## API Documentation - Swagger
 
 The Swagger aka. OpenAPI has become a standard for API documentation which is crucial for managing APIs efficiently.
 It simplifies API development by documenting, designing and consuming RESTful services.
@@ -8,45 +8,38 @@ It simplifies API development by documenting, designing and consuming RESTful se
 ```properties
 springdoc.swagger-ui.path=/swagger-ui.html
 springdoc.api-docs.path=/api-docs
-springdoc.swagger-ui.urls[0].name=Account Server
-springdoc.swagger-ui.urls[0].url=/aggregate/account-server/v3/api-docs
-springdoc.swagger-ui.urls[1].name=Store Server
-springdoc.swagger-ui.urls[1].url=/aggregate/store-server/v3/api-docs
 ```
 
 ```java
-
-@Bean
-public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-    return builder.routes()
-            // SKIP //
-            .route("account_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
-                    .path("/aggregate/account-service/v3/api-docs")
-                    .filters(f -> f
-                            .circuitBreaker(breaker -> breaker
-                                    .setName("account_swagger_breaker")
-                                    .setFallbackUri("forward:/fallback")
-                            )
-                    )
-                    .uri("http://localhost:8081")
-            )
-            // SKIP//
-            .build();
+@Configuration
+public class OpenApiConfig {
+    @Bean
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .info(new Info().title("Product Service")
+                        .description("REST API for product service")
+                        .version("1.0.0")
+                        .license(new License().name("Apache 2.0")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("Product service Wiki")
+                        .url("https://github.com/yhdc/spring_cloud_msa/product_service"));
+    }
 }
 ```
 
-## Communication - Rest Client
+## Server-to-Server Communication - Rest Client
 
-For the synchronous communication between Video-Catalog service and Video-Stream service, I have implemented Rest
-Template.
+For the communication between services, I have implemented RestClient.
+There are three rest client services. First one is for managing inventory for each product 
+and the other two for managing images and videos for each of products.
 
 ```java
-
+// RestClient configuration for the Inventory service
 @Configuration
 public class RestClientConfig {
     @Bean
     public InventoryRestClient inventoryRestClient() {
-        final String inventoryUrl = "http://localhost:8085/inventory";
+        final String inventoryUrl = "lb://INVENTORY-SERVICE/inventory";
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.setConnectTimeout(30000);
@@ -63,6 +56,8 @@ public class RestClientConfig {
 }
 ```
 
+> NOTE: gRpc protocol will be added as a comparison for the next major release version
+
 ## Testing - Testcontainers
 
 > Testcontainers is a library that provides easy and lightweight APIs for bootstrapping local development
@@ -76,6 +71,10 @@ public class RestClientConfig {
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class StoreServiceApplicationTests {
 
+    String testUserId = UUID.randomUUID().toString();
+    String testStoreId = UUID.randomUUID().toString();
+    String testProductId;
+    
     @LocalServerPort
     private int port;
 
@@ -94,36 +93,39 @@ class StoreServiceApplicationTests {
 
     @BeforeEach
     void setUp() {
-        RestAssured.baseURI = "http://localhost:" + port;
+        RestAssured.baseURI = "http://localhost:" + port + "/product";
     }
 
     @Test
-    void shouldCreateStore() {
-        final String testSellerId = UUID.randomUUID().toString();
-        final String testName = "Test Store";
-        final String testDescription = "Test Description";
-        final String testStatus = StoreStatus.ACTIVE.selection();
+    void shouldCreateProduct() {
 
-        StoreCreateRecord store = new StoreCreateRecord(
-                testSellerId,
-                testName,
-                testDescription,
-                testStatus
+        ProductCreateRecord productCreateRecord = new ProductCreateRecord(
+                testUserId,
+                testStoreId,
+                "Test Product",
+                "Testing product",
+                "12000",
+                "ACTIVE",
+                "20",
+                UUID.randomUUID().toString()
         );
 
-        RestAssured.given()
+        JsonPath jsonPath = RestAssured.given()
                 .contentType(ContentType.JSON)
-                .body(store)
+                .body(productCreateRecord)
                 .when()
-                .post("/store/create")
+                .post("/create")
                 .then()
                 .statusCode(201)
-                .body("id", Matchers.notNullValue())
-                .body("sellerId", Matchers.equalTo(testSellerId))
-                .body("name", Matchers.equalTo(testName))
-                .body("description", Matchers.equalTo(testDescription))
-                .body("status", Matchers.equalTo(testStatus));
+                .body("productId", Matchers.notNullValue())
+                .extract()
+                .jsonPath();
+
+        testProductId = jsonPath.getString("productId");
     }
+    
+    // <<< SKIP >>>
+    
 }
 ```
 
@@ -139,8 +141,8 @@ management.endpoints.web.exposure.include=*
 management.endpoint.health.show-details=always
 management.info.env.enabled=true
 # For the actuator/info page
-info.app.name=Account Server
-info.app.description=Account(User) Management Service
+info.app.name=Product Service
+info.app.description=Product Management Service
 info.app.version=1.0.0
 info.app.author=Daniel Choi
 ```

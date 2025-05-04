@@ -95,7 +95,6 @@ class StoreServiceApplicationTests {
                 .then()
                 .statusCode(200)
                 .body("storeId", Matchers.equalTo(storeId));
-
     }
 
     @Test

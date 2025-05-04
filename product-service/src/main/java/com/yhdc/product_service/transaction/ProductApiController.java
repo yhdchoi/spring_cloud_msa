@@ -49,12 +49,12 @@ public class ProductApiController {
      * @param sortOrder
      * @apiNote
      */
-    @GetMapping("/list/str")
-    public ResponseEntity<?> listStoreProducts(@RequestParam String storeId,
-                                               @RequestParam String pageNo,
-                                               @RequestParam String pageSize,
-                                               @RequestParam String sortBy,
-                                               @RequestParam String sortOrder) {
+    @GetMapping("/list/store")
+    public ResponseEntity<?> listStoreProducts(@RequestParam(value = "storeId") String storeId,
+                                               @RequestParam(defaultValue = "0", value = "pageNo") String pageNo,
+                                               @RequestParam(defaultValue = "10", value = "pageSize") String pageSize,
+                                               @RequestParam(defaultValue = "DESC", value = "pageBy") String sortBy,
+                                               @RequestParam(defaultValue = "createdAt", value = "pageOrder") String sortOrder) {
         return productService.pageStoreProducts(storeId, pageNo, pageSize, sortBy, sortOrder);
     }
 
@@ -69,13 +69,13 @@ public class ProductApiController {
      * @param sortOrder
      * @apiNote
      */
-    @GetMapping("/search/str")
-    public ResponseEntity<?> searchStoreProducts(@RequestParam String storeId,
-                                                 @RequestParam String keyword,
-                                                 @RequestParam String pageNo,
-                                                 @RequestParam String pageSize,
-                                                 @RequestParam String sortBy,
-                                                 @RequestParam String sortOrder) {
+    @GetMapping("/search/store")
+    public ResponseEntity<?> searchStoreProducts(@RequestParam(value = "storeId") String storeId,
+                                                 @RequestParam(required = false, defaultValue = "*", value = "keyword") String keyword,
+                                                 @RequestParam(defaultValue = "0", value = "pageNo") String pageNo,
+                                                 @RequestParam(defaultValue = "10", value = "pageSize") String pageSize,
+                                                 @RequestParam(defaultValue = "DESC", value = "pageBy") String sortBy,
+                                                 @RequestParam(defaultValue = "createdAt", value = "pageOrder") String sortOrder) {
         return productService.searchStoreProducts(storeId, keyword, pageNo, pageSize, sortBy, sortOrder);
     }
 
@@ -91,11 +91,11 @@ public class ProductApiController {
      * @apiNote Search all products in the
      */
     @GetMapping("/search")
-    public ResponseEntity<?> searchAllProducts(@RequestParam String keyword,
-                                               @RequestParam String pageNo,
-                                               @RequestParam String pageSize,
-                                               @RequestParam String sortBy,
-                                               @RequestParam String sortOrder) {
+    public ResponseEntity<?> searchAllProducts(@RequestParam(required = false, defaultValue = "*", value = "keyword") String keyword,
+                                               @RequestParam(defaultValue = "0", value = "pageNo") String pageNo,
+                                               @RequestParam(defaultValue = "10", value = "pageSize") String pageSize,
+                                               @RequestParam(defaultValue = "DESC", value = "pageBy") String sortBy,
+                                               @RequestParam(defaultValue = "createdAt", value = "pageOrder") String sortOrder) {
         return productService.searchAllProducts(keyword, pageNo, pageSize, sortBy, sortOrder);
     }
 
@@ -105,7 +105,7 @@ public class ProductApiController {
      * @param productPutRecord
      * @apiNote Update ONLY the product detail without the images
      */
-    @PutMapping("/put")
+    @PutMapping("/update")
     public ResponseEntity<?> updateProduct(@RequestBody ProductPutRecord productPutRecord) {
         return productService.updateProduct(productPutRecord);
     }
@@ -118,7 +118,7 @@ public class ProductApiController {
      * @apiNote Delete product data permanently
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteProduct(@RequestParam String productId) {
+    public ResponseEntity<?> deleteProduct(@RequestParam(value = "productId") String productId) {
         return productService.deleteProduct(productId);
     }
 

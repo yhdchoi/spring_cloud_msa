@@ -12,12 +12,12 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .info(new Info().title("Inventory Server API")
-                        .description("REST API Docs for inventory server")
+                .info(new Info().title("Inventory Service")
+                        .description("REST API Docs for inventory service")
                         .version("1.0.0")
                         .license(new License().name("Apache 2.0")))
                 .externalDocs(new ExternalDocumentation()
-                        .description("Inventory server Wiki")
-                        .url("https://github.com/yhdc/fiorano/inventory_server"));
+                        .description("Inventory service Wiki")
+                        .url("https://github.com/yhdc/spring_cloud_msa/inventory_service"));
     }
 }

@@ -23,7 +23,7 @@ public class OpenApiConfig {
                         .license(new License().name("Apache 2.0")))
                 .externalDocs(new ExternalDocumentation()
                         .description("Account service Wiki")
-                        .url("https://github.com/yhdc/spring_cloud_msa/store_server"));
+                        .url("https://github.com/yhdc/spring_cloud_msa/store_service"));
     }
 }
 ```
@@ -106,7 +106,7 @@ management.endpoints.web.exposure.include=*
 management.endpoint.health.show-details=always
 management.info.env.enabled=true
 # For the actuator "/info"
-info.app.name=Account Server
+info.app.name=Account Service
 info.app.description=Account(User) Management Service
 info.app.version=1.0.0
 info.app.author=Daniel Choi
