@@ -44,12 +44,12 @@ After the timeout expires the circuit breaker allows a limited number of test re
 If those requests succeed the circuit breaker resumes normal operation. Otherwise, if there is a failure the timeout
 period begins again.***
 
+<img src="../readme/image/circuitbreaker_resilience4j.png" width="600" height="400" />
+
 For example, if the Store service fails due a sudden surge in traffic, the circuit breaker will cut off to the service.
 After a
 certain amount of time breaker will let part of the traffic in to check if the service operates as normal.
 If it checks out to be ok, then breaker will let the service back to the original state.
-
-<img src="../readme/image/circuitbreaker_resilience4j.png" width="600" height="400" />
 
 #### Configurations:
 
