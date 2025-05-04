@@ -1,74 +1,11 @@
 # Notification Microservice
 
-## API - Swagger
-
-The Swagger aka. OpenAPI has become a standard for API documentation which is crucial for managing APIs efficiently.
-It simplifies API development by documenting, designing and consuming RESTful services.
-
-```properties
-springdoc.swagger-ui.path=/swagger-ui.html
-springdoc.api-docs.path=/api-docs
-springdoc.swagger-ui.urls[0].name=Account Server
-springdoc.swagger-ui.urls[0].url=/aggregate/account-server/v3/api-docs
-springdoc.swagger-ui.urls[1].name=Store Server
-springdoc.swagger-ui.urls[1].url=/aggregate/store-server/v3/api-docs
-```
-
-```java
-
-@Bean
-public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-    return builder.routes()
-            // SKIP //
-            .route("account_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
-                    .path("/aggregate/account-service/v3/api-docs")
-                    .filters(f -> f
-                            .circuitBreaker(breaker -> breaker
-                                    .setName("account_swagger_breaker")
-                                    .setFallbackUri("forward:/fallback")
-                            )
-                    )
-                    .uri("http://localhost:8081")
-            )
-            // SKIP//
-            .build();
-}
-```
-
-## Communication - Rest Client
-
-For the synchronous communication between Video-Catalog service and Video-Stream service, I have implemented Rest
-Template.
-
-```java
-
-@Configuration
-public class RestClientConfig {
-    @Bean
-    public InventoryRestClient inventoryRestClient() {
-        final String inventoryUrl = "http://localhost:8085/inventory";
-
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(30000);
-        requestFactory.setReadTimeout(30000);
-
-        RestClient inventoryClient = RestClient.builder()
-                .requestFactory(requestFactory)
-                .baseUrl(inventoryUrl).build();
-
-        RestClientAdapter restClientAdapter = RestClientAdapter.create(inventoryClient);
-        HttpServiceProxyFactory httpServiceProxyFactory = HttpServiceProxyFactory.builderFor(restClientAdapter).build();
-        return httpServiceProxyFactory.createClient(InventoryRestClient.class);
-    }
-}
-```
-
 ## Messaging - Kafka
 
-As a part of Event-Driven Architecture, Kafaka has been implemented for notification service
-since it can handle massive ammount of data in real-time through event streaming and stream processing.
+As a part of Event-Driven Architecture, Kafka has been implemented for notification service
+since it can handle massive amount of data in real-time through event streaming and stream processing.
 
-<img src="./readme/image/kafka_diagram.png" width="500" height="200" />
+<img src="../readme/image/kafka_diagram.png" width="500" height="200" />
 
 ```properties
 spring.kafka.bootstrap-servers=localhost:9092
@@ -77,96 +14,61 @@ spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.Strin
 spring.kafka.producer.value-serializer=org.springframework.kafka.support.serializer.JsonDeserializer
 spring.kafka.producer.properties.schema.registry.url=http://127.0.0.1:8201
 ```
+Below, the topic sent from the Order service is received, and from the topic the order information is used to sent confirmation email to the buyer.
 
 ```java
 
-@Override
-@Transactional
-public ResponseEntity<?> processOrder(OrderRequestRecord orderRequestRecord) {
-    // SKIP //
+public class NotificationServiceImpl {
 
-    // Save order and process
-    final Order order = orderRepository.save(createOrder(orderRequestRecord, totalPrice));
+    private final JavaMailSender mailSender;
 
-    // Send message to Kafka topic
-    OrderProcessEvent orderProcessEvent = new OrderProcessEvent(
-            order.getId().toString(),
-            orderRequestRecord.userDetail().username(),
-            orderRequestRecord.userDetail().firsName(),
-            orderRequestRecord.userDetail().lastName(),
-            orderRequestRecord.userDetail().userEmail()
-    );
-    log.info("Order process event sent to kafka topic: [ {} ]", order.getId());
+    @KafkaListener(topics = {"order-process"})
+    public void listen(OrderProcessEvent orderProcessEvent) {
+        log.info("Received order process event: {}", orderProcessEvent);
 
-    // Kafka
-    kafkaTemplate.send("order-process", orderProcessEvent);
+        // Compose email to the customer
+        MimeMessagePreparator messagePreparator = mimeMessage -> {
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+            messageHelper.setFrom("yhdc@yhdc.com");
+            messageHelper.setTo(orderProcessEvent.getEmail());
+            messageHelper.setSubject(String.format("Order with ID %s is processed successfully",
+                    orderProcessEvent.getOrderId()));
+            messageHelper.setText(String.format(
+                    """
+                            Hello.
+                            Your order has been processed successfully.
+                            
+                            OrderID: %s
+                            
+                            Best regards,
+                            Cloud Store staff
+                            
+                            """
+                    , orderProcessEvent.getOrderId()));
+        };
 
-    // SKIP // 
+        // Send mail
+        try {
+            mailSender.send(messagePreparator);
+            log.info("Mail has been sent for order process event ID: {}", orderProcessEvent.getOrderId());
+
+        } catch (MailException me) {
+            throw new RuntimeException(me);
+        }
+    }
+
 }
 ```
 
-## Testing - Testcontainers
+## Email - SMTP
 
-> Testcontainers is a library that provides easy and lightweight APIs for bootstrapping local development
-> and test dependencies with real services wrapped in Docker containers. Using Testcontainers,
-> you can write tests that depend on the same services you use in production without mocks or
-> in-memory services.
+> To send email to the users, we need SMTP server. For this project I am using mailtrap.io server. 
 
-```java
-
-@Import(TestcontainersConfiguration.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class StoreServiceApplicationTests {
-
-    @LocalServerPort
-    private int port;
-
-    @ServiceConnection
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
-
-    @BeforeAll
-    static void beforeAll() {
-        mongoDBContainer.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        mongoDBContainer.stop();
-    }
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.baseURI = "http://localhost:" + port;
-    }
-
-    @Test
-    void shouldCreateStore() {
-        final String testSellerId = UUID.randomUUID().toString();
-        final String testName = "Test Store";
-        final String testDescription = "Test Description";
-        final String testStatus = StoreStatus.ACTIVE.selection();
-
-        StoreCreateRecord store = new StoreCreateRecord(
-                testSellerId,
-                testName,
-                testDescription,
-                testStatus
-        );
-
-        RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(store)
-                .when()
-                .post("/store/create")
-                .then()
-                .statusCode(201)
-                .body("id", Matchers.notNullValue())
-                .body("sellerId", Matchers.equalTo(testSellerId))
-                .body("name", Matchers.equalTo(testName))
-                .body("description", Matchers.equalTo(testDescription))
-                .body("status", Matchers.equalTo(testStatus));
-    }
-}
+```properties
+mail.host=sandbox.smtp.mailtrap.io
+mail.port=${MAIL_PORT}
+mail.username=${MAIL_USERNAME}
+mail.password=${MAIL_PASSWORD}
 ```
 
 ## Monitoring - Actuator
@@ -181,9 +83,8 @@ management.endpoints.web.exposure.include=*
 management.endpoint.health.show-details=always
 management.info.env.enabled=true
 # For the actuator/info page
-info.app.name=Account Server
-info.app.description=Account(User) Management Service
+info.app.name=Notification Service
+info.app.description=Notification Management Service
 info.app.version=1.0.0
 info.app.author=Daniel Choi
 ```
-
