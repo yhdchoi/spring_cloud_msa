@@ -12,12 +12,12 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .info(new Info().title("File Server API")
-                        .description("REST API Docs for file server")
+                .info(new Info().title("Image Service")
+                        .description("REST API Docs for image service")
                         .version("1.0.0")
                         .license(new License().name("Apache 2.0")))
                 .externalDocs(new ExternalDocumentation()
-                        .description("File server Wiki")
-                        .url("https://github.com/yhdc/fiorano/file_server"));
+                        .description("Image server Wiki")
+                        .url("https://github.com/yhdc/spring_cloud_msa/image_service"));
     }
 }
