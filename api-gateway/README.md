@@ -10,18 +10,16 @@ update routes.
 @Bean
 public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
     return builder.routes()
-            .route(userRoute -> userRoute.path("/usr/**")
+            .route("account_route", accoutnRoute -> accoutnRoute
+                    .path("/account/**")
                     .filters(f -> f
                             .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
                     )
-                    .uri("http://localhost:8081")
+                    .uri("lb://ACCOUNT-SERVICE")
             )
-            .route(storeRoute -> storeRoute.path("/str/**")
-                    .filters(f -> f
-                            .addResponseHeader("X-Powered-By", "Fiorano Gateway Service")
-                    )
-                    .uri("http://localhost:8082")
-            )
+
+            // <<< SKIP >>>
+            
             .build();
 }
 ```
@@ -83,10 +81,11 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
                             )
                             .addResponseHeader("X-Powered-By", "MSC Gateway Service")
                     )
-                    .uri("http://localhost:8081")
-
+                    .uri("lb://ACCOUNT-SERVICE")
             )
-            // skip //
+            
+            // <<< SKIP >>>
+            
             .build();
 
 }
@@ -101,48 +100,22 @@ as a fingerprint or a security token. Brute force protection prevents attackers 
 locking out the user’s account after a certain number of failed login attempts. CAPTCHA support helps prevent automated
 bot attacks by requiring users to solve a puzzle or answer a question before logging in.
 
-### A. Up and running the Keycloak
-
-For this project you need to deploy a keycloak container with its own database for metadata.
-
-```shell
-  docker compose up -d
-```
-
-```yaml
-  keycloak:
-    container_name: keycloak
-    image: quay.io/keycloak/keycloak:26.2.0
-    command: [ "start-dev", "--import-realm" ]
-    environment:
-      DB_VENDOR: MARIADB
-      DB_ADDR: mariadb
-      DB_DATABASE: keycloak
-      DB_USER: root
-      DB_PASSWORD: fiorano1q2w
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-    ports:
-      - "8181:8080"
-    volumes:
-      - ./container/keycloak/realms/:/opt/keycloak/data/import
-    depends_on:
-      - mariadb-keycloak
-```
-
-### B. Setting up the keycloak client
+### 1. Setting up the keycloak client
 
 Now you can login to the keycloak dashboard and create a client for this project.
 <br/>
 After creating the credential, you can access the OpenID endpoints through the link provided under 'Realm settings'.
 
-### C. API Gateway security configuration
+### 2. API Gateway security configuration
 
 ```java
 
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http.authorizeHttpRequests(authorizeRequests ->
+            
+                    // <<< SKIP >>>
+            
                     authorizeRequests.anyRequest()
                             .authenticated())
             .oauth2ResourceServer(oauth2 ->
