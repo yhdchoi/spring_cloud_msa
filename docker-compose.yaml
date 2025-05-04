@@ -8,11 +8,11 @@ services:
     container_name: eureka-server
     ports:
       - "8761:8761"
-#    healthcheck:
-#      test: [ "CMD-SHELL", "curl -f http://eureka-server:8761/health || exit 1" ]
-#      interval: 10s
-#      timeout: 3s
-#      retries: 3
+    #    healthcheck:
+    #      test: [ "CMD-SHELL", "curl -f http://eureka-server:8761/health || exit 1" ]
+    #      interval: 10s
+    #      timeout: 3s
+    #      retries: 3
     networks:
       - cloud-network
     restart: on-failure
@@ -208,7 +208,7 @@ services:
     depends_on:
       api-gateway:
         condition: service_started
-      mongodb-product:
+      product-service:
         condition: service_started
     networks:
       - cloud-network
@@ -316,21 +316,21 @@ services:
     restart: on-failure
 
   ### SCHEMA
-#  schema-registry:
-#    image: confluentinc/cp-schema-registry:latest
-#    hostname: schema-registry
-#    container_name: schema-registry
-#    depends_on:
-#      - kafka
-#    ports:
-#      - "8201:8081"
-#    environment:
-#      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-#      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
-#      SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
-#    networks:
-#      - cloud-network
-#    restart: on-failure
+  #  schema-registry:
+  #    image: confluentinc/cp-schema-registry:latest
+  #    hostname: schema-registry
+  #    container_name: schema-registry
+  #    depends_on:
+  #      - kafka
+  #    ports:
+  #      - "8201:8081"
+  #    environment:
+  #      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+  #      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
+  #      SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
+  #    networks:
+  #      - cloud-network
+  #    restart: on-failure
 
 
   ### IMAGE SERVICE

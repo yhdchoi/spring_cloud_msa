@@ -27,8 +27,7 @@ public interface InventoryRestClient {
                      @RequestParam String skuCode,
                      @RequestParam String quantity);
 
-    default boolean fallbackMethod(String productId, String skuCode, String quantity) {
-        // TODO:
+    default boolean fallbackMethod() {
         return false;
     }
 

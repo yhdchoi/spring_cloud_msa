@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 public class InventoryRestClientService {
 
-    private static final String inventoryServerUrl = "http://localhost:8085/inventory";
+    private static final String inventoryServerUrl = "lb://INVENTORY-SERVICE/inventory";
 
     private final RestClient restClient;
 

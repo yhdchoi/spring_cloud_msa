@@ -13,7 +13,7 @@ public class RestClientConfig {
 
     @Bean
     public InventoryRestClient inventoryRestClient() {
-        final String inventoryUrl = "http://localhost:8085/inventory";
+        final String inventoryUrl = "lb://INVENTORY_SERVICE/inventory";
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.setConnectTimeout(30000);

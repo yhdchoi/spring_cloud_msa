@@ -12,12 +12,12 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .info(new Info().title("Video Catalog Server API")
-                        .description("REST API Docs for video catalog server")
+                .info(new Info().title("Video Catalog Service")
+                        .description("REST API Docs for video catalog service")
                         .version("1.0.0")
                         .license(new License().name("Apache 2.0")))
                 .externalDocs(new ExternalDocumentation()
-                        .description("Video catalog server Wiki")
-                        .url("https://github.com/yhdc/fiorano/video_catalog_server"));
+                        .description("Video catalog service Wiki")
+                        .url("https://github.com/yhdc/spring_cloud_msa/video_catalog_service"));
     }
 }

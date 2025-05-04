@@ -51,7 +51,7 @@ After a
 certain amount of time breaker will let part of the traffic in to check if the service operates as normal.
 If it checks out to be ok, then breaker will let the service back to the original state.
 
-<img src="./readme/image/circuitbreaker_resilience4j.png" width="600" height="400" />
+<img src="../readme/image/circuitbreaker_resilience4j.png" width="600" height="400" />
 
 #### Configurations:
 

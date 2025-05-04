@@ -7,7 +7,6 @@ import org.springframework.web.client.RestClient;
 
 @Configuration
 public class RestClientConfig {
-
     @Bean
     public RestClient customRestClient(RestClient.Builder restClientBuilder) {
 
@@ -19,5 +18,4 @@ public class RestClientConfig {
                 .requestFactory(requestFactory)
                 .build();
     }
-
 }

@@ -35,10 +35,10 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 }
 ```
 
-## Communication - Rest Client
+## Server-toServer Communication - Rest Client
 
-For the synchronous communication between Video-Catalog service and Video-Stream service, I have implemented Rest
-Template.
+Unlike the other rest client configuration, I have implemented a custom rest client specific to the inventory service.
+As shown below, the RestClient is pre-defined with the request URL for the inventory service.
 
 ```java
 
@@ -46,7 +46,7 @@ Template.
 public class RestClientConfig {
     @Bean
     public InventoryRestClient inventoryRestClient() {
-        final String inventoryUrl = "http://localhost:8085/inventory";
+        final String inventoryUrl = "lb://INVENTORY-SERVICE/inventory";
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.setConnectTimeout(30000);
@@ -63,12 +63,44 @@ public class RestClientConfig {
 }
 ```
 
+I have created a Inventory Rest Client interface with @HttpExchange which supports
+Http methods such as POST, GET, PUT, PATCH, and DELETE.
+
+Also, with the @CircuitBreaker annotation we can prepare for a fallback from the target service.
+
+```java
+
+@HttpExchange
+@Component
+public interface InventoryRestClient {
+
+    /**
+     * CHECK STOCK FOR ORDER QUANTITY
+     *
+     * @param productId
+     * @param skuCode
+     * @param quantity
+     * @implNote For checking product stock if it is ok to process with the order
+     * @implSpec RestClient is configured in RestClientConfig. Timeout is set in to RestClient configuration.
+     */
+    @CircuitBreaker(name = "inventory", fallbackMethod = "fallbackMethod")
+    @Retry(name = "inventory")
+    @GetExchange("/stock")
+    String isInStock(@RequestParam String productId,
+                     @RequestParam String skuCode,
+                     @RequestParam String quantity);
+
+    // <<< SKIP >>>
+    
+}
+```
+
 ## Messaging - Kafka
 
 As a part of Event-Driven Architecture, Kafaka has been implemented for notification service
 since it can handle massive ammount of data in real-time through event streaming and stream processing.
 
-<img src="./readme/image/kafka_diagram.png" width="500" height="200" />
+<img src="../readme/image/kafka_diagram.png" width="500" height="200" />
 
 ```properties
 spring.kafka.bootstrap-servers=localhost:9092

@@ -13,7 +13,7 @@ import org.springframework.web.client.RestClient;
 @Service
 public class VideoCatalogRestClientService {
 
-    private static final String videoCatalogServerUrl = "http://localhost:8101/video-info";
+    private static final String videoCatalogServerUrl = "lb://VIDEO-CATALOG-SERVICE/video-catalog";
 
     private final RestClient restClient;
 

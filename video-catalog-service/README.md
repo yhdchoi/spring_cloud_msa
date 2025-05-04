@@ -1,6 +1,6 @@
 # Video Catalog Microservice
 
-## API - Swagger
+## API Documentation - Swagger
 
 The Swagger aka. OpenAPI has become a standard for API documentation which is crucial for managing APIs efficiently.
 It simplifies API development by documenting, designing and consuming RESTful services.
@@ -8,124 +8,83 @@ It simplifies API development by documenting, designing and consuming RESTful se
 ```properties
 springdoc.swagger-ui.path=/swagger-ui.html
 springdoc.api-docs.path=/api-docs
-springdoc.swagger-ui.urls[0].name=Account Server
-springdoc.swagger-ui.urls[0].url=/aggregate/account-server/v3/api-docs
-springdoc.swagger-ui.urls[1].name=Store Server
-springdoc.swagger-ui.urls[1].url=/aggregate/store-server/v3/api-docs
 ```
-
-```java
-
-@Bean
-public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-    return builder.routes()
-            // SKIP //
-            .route("account_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
-                    .path("/aggregate/account-service/v3/api-docs")
-                    .filters(f -> f
-                            .circuitBreaker(breaker -> breaker
-                                    .setName("account_swagger_breaker")
-                                    .setFallbackUri("forward:/fallback")
-                            )
-                    )
-                    .uri("http://localhost:8081")
-            )
-            // SKIP//
-            .build();
-}
-```
-
-## Communication - Rest Client
-
-For the synchronous communication between Video-Catalog service and Video-Stream service, I have implemented Rest
-Template.
 
 ```java
 
 @Configuration
-public class RestClientConfig {
+public class OpenApiConfig {
     @Bean
-    public InventoryRestClient inventoryRestClient() {
-        final String inventoryUrl = "http://localhost:8085/inventory";
-
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(30000);
-        requestFactory.setReadTimeout(30000);
-
-        RestClient inventoryClient = RestClient.builder()
-                .requestFactory(requestFactory)
-                .baseUrl(inventoryUrl).build();
-
-        RestClientAdapter restClientAdapter = RestClientAdapter.create(inventoryClient);
-        HttpServiceProxyFactory httpServiceProxyFactory = HttpServiceProxyFactory.builderFor(restClientAdapter).build();
-        return httpServiceProxyFactory.createClient(InventoryRestClient.class);
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .info(new Info().title("Video Catalog Service")
+                        .description("REST API Docs for video catalog service")
+                        .version("1.0.0")
+                        .license(new License().name("Apache 2.0")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("Video catalog service Wiki")
+                        .url("https://github.com/yhdc/spring_cloud_msa/video_catalog_service"));
     }
 }
 ```
 
-## Testing - Testcontainers
+## Server-to-Server Communication - Rest Client
 
-> Testcontainers is a library that provides easy and lightweight APIs for bootstrapping local development
-> and test dependencies with real services wrapped in Docker containers. Using Testcontainers,
-> you can write tests that depend on the same services you use in production without mocks or
-> in-memory services.
+For the communication between services, I have implemented RestClient.
+This is a custom rest client which can be modified to fit for the multiple client services.
 
 ```java
+// RestClient configuration for the Inventory service
+@Configuration
+public class RestClientConfig {
+    @Bean
+    public RestClient customRestClient(RestClient.Builder restClientBuilder) {
 
-@Import(TestcontainersConfiguration.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class StoreServiceApplicationTests {
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(5000);
+        requestFactory.setReadTimeout(5000);
 
-    @LocalServerPort
-    private int port;
-
-    @ServiceConnection
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
-
-    @BeforeAll
-    static void beforeAll() {
-        mongoDBContainer.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        mongoDBContainer.stop();
-    }
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.baseURI = "http://localhost:" + port;
-    }
-
-    @Test
-    void shouldCreateStore() {
-        final String testSellerId = UUID.randomUUID().toString();
-        final String testName = "Test Store";
-        final String testDescription = "Test Description";
-        final String testStatus = StoreStatus.ACTIVE.selection();
-
-        StoreCreateRecord store = new StoreCreateRecord(
-                testSellerId,
-                testName,
-                testDescription,
-                testStatus
-        );
-
-        RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(store)
-                .when()
-                .post("/store/create")
-                .then()
-                .statusCode(201)
-                .body("id", Matchers.notNullValue())
-                .body("sellerId", Matchers.equalTo(testSellerId))
-                .body("name", Matchers.equalTo(testName))
-                .body("description", Matchers.equalTo(testDescription))
-                .body("status", Matchers.equalTo(testStatus));
+        return restClientBuilder
+                .requestFactory(requestFactory)
+                .build();
     }
 }
 ```
+
+For example, below is a method for deleting a video file from the Video Stream server.
+Video files are saved under file system in the Video Stream server which has to be deleted along with the video catalog.
+
+```java
+public class VideoFileRestClientService {
+
+    private static final String VideoServerUrl = "lb://VIDEO-STREAM-SERVICE/video-stream";
+
+    private final RestClient restClient;
+
+
+    /**
+     * DELETE SELECTED VIDEOS
+     *
+     * @param videoPathList
+     */
+    public ResponseEntity<?> deleteSelectedVideoFiles(List<String> videoPathList) {
+        return restClient.delete()
+                .uri(VideoServerUrl + "/delete/selected-video/{videoPathList}", videoPathList)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange((request, response) -> {
+                    if (response.getStatusCode().is4xxClientError()) {
+                        return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+                    } else if (response.getStatusCode().is5xxServerError()) {
+                        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                    } else {
+                        return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+                    }
+                });
+    }
+}
+```
+
+> NOTE: gRpc protocol will be added as a comparison for the next major release version
 
 ## Monitoring - Actuator
 
@@ -139,9 +98,8 @@ management.endpoints.web.exposure.include=*
 management.endpoint.health.show-details=always
 management.info.env.enabled=true
 # For the actuator/info page
-info.app.name=Account Server
-info.app.description=Account(User) Management Service
+info.app.name=Video Catalog Service
+info.app.description=Video Catalog Management Service
 info.app.version=1.0.0
 info.app.author=Daniel Choi
 ```
-

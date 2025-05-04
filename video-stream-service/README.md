@@ -8,121 +8,73 @@ It simplifies API development by documenting, designing and consuming RESTful se
 ```properties
 springdoc.swagger-ui.path=/swagger-ui.html
 springdoc.api-docs.path=/api-docs
-springdoc.swagger-ui.urls[0].name=Account Server
-springdoc.swagger-ui.urls[0].url=/aggregate/account-server/v3/api-docs
-springdoc.swagger-ui.urls[1].name=Store Server
-springdoc.swagger-ui.urls[1].url=/aggregate/store-server/v3/api-docs
 ```
 
 ```java
 
-@Bean
-public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-    return builder.routes()
-            // SKIP //
-            .route("account_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
-                    .path("/aggregate/account-service/v3/api-docs")
-                    .filters(f -> f
-                            .circuitBreaker(breaker -> breaker
-                                    .setName("account_swagger_breaker")
-                                    .setFallbackUri("forward:/fallback")
-                            )
-                    )
-                    .uri("http://localhost:8081")
-            )
-            // SKIP//
-            .build();
+@Configuration
+public class OpenApiConfig {
+    @Bean
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .info(new Info().title("Video Stream Service API")
+                        .description("REST API Docs for video stream service")
+                        .version("1.0.0")
+                        .license(new License().name("Apache 2.0")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("Video stream service Wiki")
+                        .url("https://github.com/yhdc/spring_cloud_msa/video-stream-service"));
+    }
 }
 ```
 
-## Communication - Rest Client
+## Server-to-Server Communication - Rest Client
 
-For the synchronous communication between Video-Catalog service and Video-Stream service, I have implemented Rest
-Template.
+For the communication between services, I have implemented RestClient.
+This is a custom rest client which can be modified to fit for the multiple client services.
 
 ```java
 
 @Configuration
 public class RestClientConfig {
+
     @Bean
-    public InventoryRestClient inventoryRestClient() {
-        final String inventoryUrl = "http://localhost:8085/inventory";
+    public RestClient customRestClient(RestClient.Builder restClientBuilder) {
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(30000);
-        requestFactory.setReadTimeout(30000);
+        requestFactory.setConnectTimeout(5000);
+        requestFactory.setReadTimeout(5000);
 
-        RestClient inventoryClient = RestClient.builder()
+        return restClientBuilder
                 .requestFactory(requestFactory)
-                .baseUrl(inventoryUrl).build();
-
-        RestClientAdapter restClientAdapter = RestClientAdapter.create(inventoryClient);
-        HttpServiceProxyFactory httpServiceProxyFactory = HttpServiceProxyFactory.builderFor(restClientAdapter).build();
-        return httpServiceProxyFactory.createClient(InventoryRestClient.class);
+                .build();
     }
+
 }
 ```
-
-## Testing - Testcontainers
-
-> Testcontainers is a library that provides easy and lightweight APIs for bootstrapping local development
-> and test dependencies with real services wrapped in Docker containers. Using Testcontainers,
-> you can write tests that depend on the same services you use in production without mocks or
-> in-memory services.
+Below example demonstrates a scenario where the client-side requests to stream the video, the video stream service requests
+video catalog service for the video path to stream the correct video file.
 
 ```java
+public class VideoCatalogRestClientService {
 
-@Import(TestcontainersConfiguration.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class StoreServiceApplicationTests {
+    private static final String videoCatalogServerUrl = "lb://VIDEO-CATALOG-SERVICE/video-catalog";
 
-    @LocalServerPort
-    private int port;
+    private final RestClient restClient;
 
-    @ServiceConnection
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
 
-    @BeforeAll
-    static void beforeAll() {
-        mongoDBContainer.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        mongoDBContainer.stop();
-    }
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.baseURI = "http://localhost:" + port;
-    }
-
-    @Test
-    void shouldCreateStore() {
-        final String testSellerId = UUID.randomUUID().toString();
-        final String testName = "Test Store";
-        final String testDescription = "Test Description";
-        final String testStatus = StoreStatus.ACTIVE.selection();
-
-        StoreCreateRecord store = new StoreCreateRecord(
-                testSellerId,
-                testName,
-                testDescription,
-                testStatus
-        );
-
-        RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(store)
-                .when()
-                .post("/store/create")
-                .then()
-                .statusCode(201)
-                .body("id", Matchers.notNullValue())
-                .body("sellerId", Matchers.equalTo(testSellerId))
-                .body("name", Matchers.equalTo(testName))
-                .body("description", Matchers.equalTo(testDescription))
-                .body("status", Matchers.equalTo(testStatus));
+    /**
+     * GET VIDEO PATH
+     *
+     * @param videoInfoId
+     * @implNote For streaming video
+     */
+    public String loadVideoPath(String videoInfoId) {
+        return restClient.get()
+                .uri(videoCatalogServerUrl + "/find-path/{videoInfoId}", videoInfoId)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(String.class);
     }
 }
 ```
@@ -139,8 +91,8 @@ management.endpoints.web.exposure.include=*
 management.endpoint.health.show-details=always
 management.info.env.enabled=true
 # For the actuator/info page
-info.app.name=Account Server
-info.app.description=Account(User) Management Service
+info.app.name=Video Stream Service
+info.app.description=Video Stream Management Service
 info.app.version=1.0.0
 info.app.author=Daniel Choi
 ```

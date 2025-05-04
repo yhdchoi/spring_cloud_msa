@@ -15,8 +15,6 @@ import org.testcontainers.containers.MongoDBContainer;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class InventoryServiceApplicationTests {
 
-
-
     @LocalServerPort
     private int port;
 
@@ -35,11 +33,12 @@ class InventoryServiceApplicationTests {
 
     @BeforeEach
     void setUp() {
-        RestAssured.baseURI = "http://localhost:" + port;
+        RestAssured.baseURI = "http://localhost:" + port + "/inventory";
     }
 
     @Test
     void shouldCreateInventory() {
+
     }
 
 }

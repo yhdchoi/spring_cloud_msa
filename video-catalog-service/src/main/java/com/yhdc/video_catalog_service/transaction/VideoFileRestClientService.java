@@ -17,7 +17,7 @@ import java.util.Map;
 @Service
 public class VideoFileRestClientService {
 
-    private static final String VideoServerUrl = "http://localhost:8102/video-file";
+    private static final String VideoServerUrl = "lb://VIDEO-STREAM-SERVICE/video-stream";
 
     private final RestClient restClient;
 

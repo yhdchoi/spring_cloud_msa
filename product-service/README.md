@@ -30,6 +30,7 @@ public class OpenApiConfig {
 ## Server-to-Server Communication - Rest Client
 
 For the communication between services, I have implemented RestClient.
+Here I have set up a single custom rest client so that multiple services can implement.
 There are three rest client services. First one is for managing inventory for each product 
 and the other two for managing images and videos for each of products.
 
@@ -38,20 +39,48 @@ and the other two for managing images and videos for each of products.
 @Configuration
 public class RestClientConfig {
     @Bean
-    public InventoryRestClient inventoryRestClient() {
-        final String inventoryUrl = "lb://INVENTORY-SERVICE/inventory";
+    public RestClient customRestClient(RestClient.Builder restClientBuilder) {
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(30000);
-        requestFactory.setReadTimeout(30000);
+        requestFactory.setConnectTimeout(5000);
+        requestFactory.setReadTimeout(5000);
 
-        RestClient inventoryClient = RestClient.builder()
+        return restClientBuilder
                 .requestFactory(requestFactory)
-                .baseUrl(inventoryUrl).build();
+                .build();
+    }
+}
+```
+As an example, below is the Inventory Rest Client service that calls for stock check for a product.
 
-        RestClientAdapter restClientAdapter = RestClientAdapter.create(inventoryClient);
-        HttpServiceProxyFactory httpServiceProxyFactory = HttpServiceProxyFactory.builderFor(restClientAdapter).build();
-        return httpServiceProxyFactory.createClient(InventoryRestClient.class);
+```java
+public class InventoryRestClientService {
+
+    private static final String inventoryServerUrl = "lb://INVENTORY-SERVICE/inventory";
+    private final RestClient restClient;
+    
+    /**
+     * CHECK STOCK
+     *
+     * @param productId
+     * @param skuCode
+     * @param quantity
+     * @implNote
+     */
+    public String isInStock(String productId,
+                            String skuCode,
+                            String quantity) {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("productId", productId);
+        params.put("skuCode", skuCode);
+        params.put("quantity", quantity);
+
+        return restClient.get()
+                .uri(inventoryServerUrl + "/stock-check", params)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(String.class);
     }
 }
 ```
@@ -69,7 +98,7 @@ public class RestClientConfig {
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class StoreServiceApplicationTests {
+class ProductServiceApplicationTests {
 
     String testUserId = UUID.randomUUID().toString();
     String testStoreId = UUID.randomUUID().toString();

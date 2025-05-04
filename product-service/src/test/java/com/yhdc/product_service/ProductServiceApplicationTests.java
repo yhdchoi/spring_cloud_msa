@@ -47,7 +47,7 @@ class ProductServiceApplicationTests {
 
     @BeforeEach
     void setUp() {
-        RestAssured.baseURI = "http://localhost:" + port;
+        RestAssured.baseURI = "http://localhost:" + port + "/product";
     }
 
 
