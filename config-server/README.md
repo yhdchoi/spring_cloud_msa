@@ -16,6 +16,4 @@ spring.profiles.active=native
 > congiuration
 > files under config server's resources directory.
 
-<br/>
-
-<img src="./readme/image/config-file-list.png" width="200" height="200"/>
+<img src="../readme/image/config-file-list.png" width="200" height="200"/>

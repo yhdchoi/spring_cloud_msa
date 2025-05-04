@@ -101,7 +101,7 @@ as a fingerprint or a security token. Brute force protection prevents attackers 
 locking out the user’s account after a certain number of failed login attempts. CAPTCHA support helps prevent automated
 bot attacks by requiring users to solve a puzzle or answer a question before logging in.
 
-#### A. Up and running the Keycloak
+### A. Up and running the Keycloak
 
 For this project you need to deploy a keycloak container with its own database for metadata.
 
@@ -130,13 +130,13 @@ For this project you need to deploy a keycloak container with its own database f
       - mariadb-keycloak
 ```
 
-#### B. Setting up the keycloak client
+### B. Setting up the keycloak client
 
 Now you can login to the keycloak dashboard and create a client for this project.
 <br/>
 After creating the credential, you can access the OpenID endpoints through the link provided under 'Realm settings'.
 
-#### C. API Gateway security configuration
+### C. API Gateway security configuration
 
 ```java
 
@@ -154,37 +154,57 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 Above configuration will redirect all requests to the Keycloak authentication server.
 The Keycloak authentication server then will handle issuing and validating JWT.
 
-## API - Swagger
+## API Documentation - Swagger
 
 The Swagger aka. OpenAPI has become a standard for API documentation which is crucial for managing APIs efficiently.
 It simplifies API development by documenting, designing and consuming RESTful services.
 
 ```properties
+springdoc.swagger-ui.use-root-path=true
 springdoc.swagger-ui.path=/swagger-ui.html
 springdoc.api-docs.path=/api-docs
-springdoc.swagger-ui.urls[0].name=Account Server
-springdoc.swagger-ui.urls[0].url=/aggregate/account-server/v3/api-docs
-springdoc.swagger-ui.urls[1].name=Store Server
-springdoc.swagger-ui.urls[1].url=/aggregate/store-server/v3/api-docs
+springdoc.swagger-ui.urls[0].name=account-service
+springdoc.swagger-ui.urls[0].url=/account/api-docs
+springdoc.swagger-ui.urls[1].name=store-service
+springdoc.swagger-ui.urls[1].url=/store/api-docs
+springdoc.swagger-ui.urls[2].name=product-service
+springdoc.swagger-ui.urls[2].url=/product/api-docs
+springdoc.swagger-ui.urls[3].name=inventory-service
+springdoc.swagger-ui.urls[3].url=/inventory/api-docs
+springdoc.swagger-ui.urls[4].name=order-service
+springdoc.swagger-ui.urls[4].url=/order/api-docs
+springdoc.swagger-ui.urls[5].name=notification-service
+springdoc.swagger-ui.urls[5].url=/notification/api-docs
+springdoc.swagger-ui.urls[6].name=image-service
+springdoc.swagger-ui.urls[6].url=/image/api-docs
+springdoc.swagger-ui.urls[7].name=video-catalog-service
+springdoc.swagger-ui.urls[7].url=/video-catalog/api-docs
+springdoc.swagger-ui.urls[8].name=video-stream-service
+springdoc.swagger-ui.urls[8].url=/video-stream/api-docs
 ```
+
+We have set up Swagger to each services but here we can aggregate the Swagger from each services into the gateway.
 
 ```java
 
 @Bean
 public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
     return builder.routes()
-            // SKIP //
-            .route("account_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
-                    .path("/aggregate/account-service/v3/api-docs")
-                    .filters(f -> f
-                            .circuitBreaker(breaker -> breaker
-                                    .setName("account_swagger_breaker")
-                                    .setFallbackUri("forward:/fallback")
-                            )
-                    )
-                    .uri("http://localhost:8081")
+            .route("account_route", accoutnRoute -> accoutnRoute
+                    .path("/account/**")
+                    .uri("lb://ACCOUNT-SERVICE")
+
             )
-            // SKIP//
+            .route("account_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
+                    .path("/account/api-docs/**")
+                    .filters(f -> f
+                            .rewritePath("/account/(?<path>.*)", "/${path}")
+                    )
+                    .uri("lb://ACCOUNT-SERVICE")
+            )
+            
+            // <<< SKIP >>>
+            
             .build();
 }
 ```
@@ -200,9 +220,8 @@ and perform various management tasks.
 management.endpoints.web.exposure.include=*
 management.endpoint.health.show-details=always
 management.info.env.enabled=true
-# For the actuator/info page
-info.app.name=Account Server
-info.app.description=Account(User) Management Service
+info.app.name=Gateway Server
+info.app.description=API Gateway Server
 info.app.version=1.0.0
 info.app.author=Daniel Choi
 ```
