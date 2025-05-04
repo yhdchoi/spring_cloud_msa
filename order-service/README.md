@@ -1,6 +1,6 @@
 # Order Microservice
 
-## API - Swagger
+## API Documentation - Swagger
 
 The Swagger aka. OpenAPI has become a standard for API documentation which is crucial for managing APIs efficiently.
 It simplifies API development by documenting, designing and consuming RESTful services.
@@ -28,7 +28,7 @@ public class OpenApiConfig {
 }
 ```
 
-## Server-toServer Communication - Rest Client
+## Server-to-Server Communication - Rest Client
 
 Unlike the other rest client configuration, I have implemented a custom rest client specific to the inventory service.
 As shown below, the RestClient is pre-defined with the request URL for the inventory service.
