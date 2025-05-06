@@ -56,14 +56,14 @@ public class RouteConfig {
                 )
 
                 // Inventory Route
-                .route("inventory_route", inventoryRoute -> inventoryRoute
-                        .path("/inventory/**")
-                        .filters(f -> f
-                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
-                        )
-                        .uri("lb://INVENTORY-SERVICE")
-
-                )
+//                .route("inventory_route", inventoryRoute -> inventoryRoute
+//                        .path("/inventory/**")
+//                        .filters(f -> f
+//                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
+//                        )
+//                        .uri("lb://INVENTORY-SERVICE")
+//
+//                )
                 .route("inventory_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
                         .path("/inventory/api-docs/**")
                         .filters(f -> f
@@ -90,15 +90,15 @@ public class RouteConfig {
                 )
 
                 // Notification Route
-                .route("notification_route", notificationRoute -> notificationRoute
-                        .path("/notification/**")
-                        .filters(f -> f
-                                .prefixPath("/event")
-                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
-                        )
-                        .uri("lb://NOTIFICATION-SERVICE")
-
-                )
+//                .route("notification_route", notificationRoute -> notificationRoute
+//                        .path("/notification/**")
+//                        .filters(f -> f
+//                                .prefixPath("/event")
+//                                .addResponseHeader("X-Powered-By", "MSC Gateway Service")
+//                        )
+//                        .uri("lb://NOTIFICATION-SERVICE")
+//
+//                )
                 .route("notification_swagger_route", accountSwaggerRoute -> accountSwaggerRoute
                         .path("/notification/api-docs/**")
                         .filters(f -> f

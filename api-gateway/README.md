@@ -1,9 +1,13 @@
 # Spring Cloud Gateway Reactive
 
+> https://docs.spring.io/spring-cloud-gateway/reference/index.html
+
 I have used the Fluent Java Routes APi since I am using Reactive for my gateway. In this way I can easily manage and
 update routes.
 
 ## Fluent Java Routes API
+
+> https://docs.spring.io/spring-cloud-gateway/reference/spring-cloud-gateway/fluent-java-routes-api.html
 
 ```java
 
@@ -19,20 +23,23 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
             )
 
             // <<< SKIP >>>
-            
+
             .build();
 }
 ```
 
-You can find more endpoints for your routes here:
-https://docs.spring.io/spring-boot/reference/actuator/endpoints.html
+> You can find more endpoints for your routes here:
+> https://docs.spring.io/spring-boot/reference/actuator/endpoints.html
 
 ## Circuit Breaker - Resilience4j
 
-A distributed system, which comprises many services interacting to achieve business goals, is prone to failures in the
-chain of service dependencies.
-Suppose service A calls service B, which calls service C, but C does not respond. Service C may be down, or overloaded,
-and take a long time to respond, causing errors that may cascade and cause the system to fail.
+> https://docs.spring.io/spring-cloud-circuitbreaker/docs/current/reference/html/spring-cloud-circuitbreaker-resilience4j.html
+
+> A distributed system, which comprises many services interacting to achieve business goals, is prone to failures in the
+> chain of service dependencies.
+> Suppose service A calls service B, which calls service C, but C does not respond. Service C may be down, or
+> overloaded,
+> and take a long time to respond, causing errors that may cascade and cause the system to fail.
 
 **According to Chris Richardson's *"Microservice Patterns"*:**
 
@@ -46,10 +53,10 @@ period begins again.***
 
 <img src="../readme/image/circuitbreaker_resilience4j.png" width="600" height="400" />
 
-For example, if the Store service fails due a sudden surge in traffic, the circuit breaker will cut off to the service.
-After a
-certain amount of time breaker will let part of the traffic in to check if the service operates as normal.
-If it checks out to be ok, then breaker will let the service back to the original state.
+> For example, if the Store service fails due a sudden surge in traffic, the circuit breaker will cut off to the
+> service.
+> After a certain amount of time breaker will let part of the traffic in to check if the service operates as normal.
+> If it checks out to be ok, then breaker will let the service back to the original state.
 
 #### Configurations:
 
@@ -83,9 +90,9 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
                     )
                     .uri("lb://ACCOUNT-SERVICE")
             )
-            
+
             // <<< SKIP >>>
-            
+
             .build();
 
 }
@@ -93,17 +100,32 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 
 ## Security - Keycloak
 
-When it comes to hacking prevention, Keycloak offers a more comprehensive set of features than Spring Security. Keycloak
-provides advanced features like multi-factor authentication (MFA), brute force protection, and CAPTCHA support. MFA adds
-an extra layer of security by requiring users to provide additional authentication factors besides their password, such
-as a fingerprint or a security token. Brute force protection prevents attackers from repeatedly guessing passwords by
-locking out the user’s account after a certain number of failed login attempts. CAPTCHA support helps prevent automated
-bot attacks by requiring users to solve a puzzle or answer a question before logging in.
+> https://www.keycloak.org/
+
+In this project We are using Keycloak as an dedicated authorization server which is open-source and widley used in this
+industry.
+There are other alternatives such as AWS Cognito, MS Azure AD, Google Identity Platform, Okta, Spring Authorization
+Server, etc...
+
+> When it comes to hacking prevention, Keycloak offers a more comprehensive set of features than Spring Security.
+> Keycloak
+> provides advanced features like multi-factor authentication (MFA), brute force protection, and CAPTCHA support. MFA
+> adds
+> an extra layer of security by requiring users to provide additional authentication factors besides their password,
+> such
+> as a fingerprint or a security token. Brute force protection prevents attackers from repeatedly guessing passwords by
+> locking out the user’s account after a certain number of failed login attempts. CAPTCHA support helps prevent
+> automated
+> bot attacks by requiring users to solve a puzzle or answer a question before logging in.
+
+
+### Proof Key Code Enhanced(PKCE) Authorization Code Flow
+
+
 
 ### 1. Setting up the keycloak client
 
 Now you can login to the keycloak dashboard and create a client for this project.
-<br/>
 After creating the credential, you can access the OpenID endpoints through the link provided under 'Realm settings'.
 
 ### 2. API Gateway security configuration
@@ -113,9 +135,9 @@ After creating the credential, you can access the OpenID endpoints through the l
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http.authorizeHttpRequests(authorizeRequests ->
-            
+
                     // <<< SKIP >>>
-            
+
                     authorizeRequests.anyRequest()
                             .authenticated())
             .oauth2ResourceServer(oauth2 ->
@@ -129,8 +151,10 @@ The Keycloak authentication server then will handle issuing and validating JWT.
 
 ## API Documentation - Swagger
 
-The Swagger aka. OpenAPI has become a standard for API documentation which is crucial for managing APIs efficiently.
-It simplifies API development by documenting, designing and consuming RESTful services.
+> https://springdoc.org/
+
+> The Swagger aka. OpenAPI has become a standard for API documentation which is crucial for managing APIs efficiently.
+> It simplifies API development by documenting, designing and consuming RESTful services.
 
 ```properties
 springdoc.swagger-ui.use-root-path=true
@@ -175,19 +199,19 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
                     )
                     .uri("lb://ACCOUNT-SERVICE")
             )
-            
+
             // <<< SKIP >>>
-            
+
             .build();
 }
 ```
 
 ## Monitoring - Actuator
 
-Spring Boot Actuator is a sub-project of Spring Boot that provides a set of built-in production-ready features to help
-you monitor and manage your application.
-Actuator includes several endpoints that allow you to interact with the application, gather metrics, check the health,
-and perform various management tasks.
+> Spring Boot Actuator is a sub-project of Spring Boot that provides a set of built-in production-ready features to help
+> you monitor and manage your application.
+> Actuator includes several endpoints that allow you to interact with the application, gather metrics, check the health,
+> and perform various management tasks.
 
 ```properties
 management.endpoints.web.exposure.include=*
@@ -198,3 +222,6 @@ info.app.description=API Gateway Server
 info.app.version=1.0.0
 info.app.author=Daniel Choi
 ```
+
+> More endpoints can be found here:
+> https://docs.spring.io/spring-boot/reference/actuator/endpoints.html
