@@ -8,6 +8,7 @@ build/
 **/container
 **/.env
 .volumes
+.DS_Store
 
 
 ### STS ###
@@ -40,3 +41,25 @@ out/
 
 ### VS Code ###
 .vscode/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
