@@ -44,6 +44,7 @@ out/
 .vscode/*
 !.vscode/extensions.json
 
+### Frontend ###
 # Logs
 logs
 *.log
@@ -53,11 +54,13 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# node
 node_modules
 dist
 dist-ssr
 *.local
 
+# files
 *.suo
 *.ntvs*
 *.njsproj
