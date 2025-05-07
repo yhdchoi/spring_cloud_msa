@@ -118,14 +118,14 @@ Server, etc...
 > automated
 > bot attacks by requiring users to solve a puzzle or answer a question before logging in.
 
+### Proof Key Code Enhanced(PKCE) - Authorization Code Flow
 
-### Proof Key Code Enhanced(PKCE) Authorization Code Flow
-
-
+![pkce](../readme/image/authorization-code-flow.png)
 
 ### 1. Setting up the keycloak client
 
-Now you can login to the keycloak dashboard and create a client for this project.
+First, login with default credentials then create a project realm.
+Now you can create a client for this project with an ID of 'spring-cloud-msa' and under the Advance settings change the Challenge Method to 'S256'.
 After creating the credential, you can access the OpenID endpoints through the link provided under 'Realm settings'.
 
 ### 2. API Gateway security configuration
