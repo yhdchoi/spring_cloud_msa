@@ -122,10 +122,17 @@ Server, etc...
 
 ![pkce](../readme/image/authorization-code-flow.png)
 
+> PKCE stands for Proof Key for Code Exchange. We use it whenever, client application is not able to store secret
+> securely. Any Javascript based client will not be able to store secret securely so there we can use this flow. We can
+> also use it with react/angular based client application. The main difference between Authorization code grant type and
+> authorization code + PKCE is that client secret is optional in PKCE and code_challenge and code_verifier are used to
+> identify that the token is being shared with right client.
+
 ### 1. Setting up the keycloak client
 
 First, login with default credentials then create a project realm.
-Now you can create a client for this project with an ID of 'spring-cloud-msa' and under the Advance settings change the Challenge Method to 'S256'.
+Now you can create a client for this project with an ID of 'spring-cloud-msa' and under the Advance settings change the
+Challenge Method to 'S256'.
 After creating the credential, you can access the OpenID endpoints through the link provided under 'Realm settings'.
 
 ### 2. API Gateway security configuration
