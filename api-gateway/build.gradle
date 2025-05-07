@@ -32,7 +32,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-jose'
 
     // BREAKER
-//    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
 
     // SWAGGER
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.6'

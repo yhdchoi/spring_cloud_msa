@@ -14,6 +14,10 @@ public class RouteConfig {
                 // Account Route
                 .route("account_route", accoutnRoute -> accoutnRoute
                         .path("/account/**")
+                        .filters(f -> f
+                                .circuitBreaker( config -> config
+                                        .setName("customCircuitBreaker")
+                                        .setFallbackUri("forward:/fallback")))
                         .uri("lb://ACCOUNT-SERVICE")
 
                 )
@@ -155,10 +159,10 @@ public class RouteConfig {
                 )
 
                 // Fallback Route
-//                .route("fallback_route", fallbackRoute -> fallbackRoute
-//                        .path("/fallback")
-//                        .uri("http://localhost:8080")
-//                )
+                .route("fallback_route", fallbackRoute -> fallbackRoute
+                        .path("/fallback")
+                        .uri("http://localhost:8080")
+                )
                 .build();
     }
 

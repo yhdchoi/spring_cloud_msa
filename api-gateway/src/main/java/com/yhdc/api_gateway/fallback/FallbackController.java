@@ -1,4 +1,4 @@
-package com.yhdc.api_gateway.circuit_breaker;
+package com.yhdc.api_gateway.fallback;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
